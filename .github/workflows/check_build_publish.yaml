@@ -1,0 +1,150 @@
+name: Lint, Type-Check, Test, Build and Publish Package
+
+on:
+    pull_request:
+        branches: [main]
+    push:
+        branches: [main]
+
+jobs:
+    uv-check:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Install uv
+              uses: astral-sh/setup-uv@v3
+              with:
+                enable-cache: true
+                cache-dependency-glob: uv.lock
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version-file: pyproject.toml
+
+            - name: Check uv.lock
+              run: uv lock --locked
+
+    mypy:
+        needs: uv-check
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                python-version: [3.9, 3.10, 3.11, 3.12, 3.13]
+
+        steps:
+            - name: Install uv
+              uses: astral-sh/setup-uv@v3
+              with:
+                enable-cache: true
+                cache-dependency-glob: uv.lock
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: ${{ matrix.python-version }}
+
+            - name: Install the project & its dependencies
+              run: uv sync --no-python-downloads --all-extras --only-group type-check
+                --frozen
+
+            - name: Run mypy
+              run: uv run --no-sync --no-python-downloads mypy .
+
+    pytest:
+        needs: uv-check
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                python-version: [3.9, 3.10, 3.11, 3.12, 3.13]
+
+        steps:
+            - name: Install uv
+              uses: astral-sh/setup-uv@v3
+              with:
+                enable-cache: true
+                cache-dependency-glob: uv.lock
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: ${{ matrix.python-version }}
+
+            - name: Install the project & its dependencies
+              run: uv sync --no-python-downloads --all-extras --only-group test
+                --frozen
+
+            - name: Run pytest
+              run: uv run --no-sync --no-python-downloads pytest
+
+    ruff:
+        needs: uv-check
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                python-version: [3.9, 3.10, 3.11, 3.12, 3.13]
+
+        steps:
+            - name: Install uv
+              uses: astral-sh/setup-uv@v3
+              with:
+                enable-cache: true
+                cache-dependency-glob: uv.lock
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: ${{ matrix.python-version }}
+
+            - name: Install the project & its dependencies
+              run: uv sync --no-python-downloads --all-extras --only-group lint
+                --frozen
+
+            - name: Run Ruff
+              run: uv run --no-sync --no-python-downloads ruff check --output-format=github
+
+    taplo-format:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Install uv
+              uses: astral-sh/setup-uv@v3
+              with:
+                enable-cache: true
+                cache-dependency-glob: uv.lock
+
+            - name: Run Taplo
+              run: uvx taplo format . --check --option reorder_arrays=true --option
+                reorder_keys=true --option "indent_string=    "
+
+    taplo-lint:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Install uv
+              uses: astral-sh/setup-uv@v3
+              with:
+                enable-cache: true
+                cache-dependency-glob: uv.lock
+
+            - name: Run Taplo
+              run: uvx taplo lint . --default-schema-catalogs
+
+    yamlfmt:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Install Golang
+              uses: actions/setup-go@v5
+
+            - name: Install yamlfmt
+              run: go install github.com/google/yamlfmt/cmd/yamlfmt@latest
+
+            - name: Run yamlfmt
+              run: yamlfmt . -lint -formatter indent=4 -formatter line_ending=lf
+                -formatter disallow_anchors=true -formatter max_line_length=75
+                -formatter trim_trailing_whitespace=true -formatter eof_newline=true
+                -formatter retain_line_breaks_single=true -formatter pad_line_comments=2

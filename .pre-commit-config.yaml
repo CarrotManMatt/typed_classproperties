@@ -1,22 +1,25 @@
 default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit, pre-merge-commit, manual]
 
 default_language_version:
     python: python3.13
+
+ci:
+    skip:
+        - check-github-workflows
+        - ruff
+        - ruff-format
+        - taplo-format
+        - uv-lock
+        - ymlfmt
+
+    autofix_prs: false
 
 repos:
     - repo: https://github.com/python-jsonschema/check-jsonschema
       rev: 0.29.4
       hooks:
         - id: check-github-workflows
-          stages: [pre-commit, pre-merge-commit, manual]
-
-    - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-      rev: v1.3.3
-      hooks:
-        - id: python-safety-dependencies-check
-          args: ['--groups=dev,main', --short-report]
-          files: pyproject.toml
-          stages: [manual]
 
     - repo: https://github.com/jorisroovers/gitlint
       rev: v0.19.1
@@ -28,7 +31,6 @@ repos:
       rev: v8.21.2
       hooks:
         - id: gitleaks
-          stages: [pre-commit, pre-merge-commit, manual]
 
     - repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v5.0.0
@@ -36,79 +38,60 @@ repos:
         - id: check-added-large-files
         - id: trailing-whitespace
         - id: check-executables-have-shebangs
-        - id: end-of-file-fixer
+        - id: check-illegal-windows-names
+        - id: check-shebang-scripts-are-executable
         - id: check-json
-          stages: [pre-commit, pre-merge-commit, manual]
-        - id: check-yaml
-          stages: [pre-commit, pre-merge-commit, manual]
-        - id: check-toml
-          stages: [pre-commit, pre-merge-commit, manual]
         - id: check-xml
-          stages: [pre-commit, pre-merge-commit, manual]
         - id: check-symlinks
-          stages: [pre-commit, pre-merge-commit, manual]
         - id: check-merge-conflict
-          stages: [pre-commit, pre-merge-commit, manual]
         - id: check-vcs-permalinks
-          stages: [pre-commit, pre-merge-commit, manual]
         - id: destroyed-symlinks
-          stages: [pre-commit, pre-merge-commit, manual]
         - id: mixed-line-ending
-          stages: [pre-commit, pre-merge-commit, manual]
           args: [--fix=lf]
         - id: check-case-conflict
-          stages: [pre-commit, pre-merge-commit, manual]
-        - id: check-ast
-          stages: [pre-commit, pre-merge-commit, manual]
         - id: detect-private-key
-          stages: [pre-commit, pre-merge-commit, manual]
         - id: fix-byte-order-marker
-          stages: [pre-commit, pre-merge-commit, manual]
-        - id: fix-encoding-pragma
-          args: [--remove]
-          stages: [pre-commit, pre-merge-commit, manual]
+          args: [-h]
         - id: name-tests-test
           args: [--pytest-test-first]
-          stages: [pre-commit, pre-merge-commit, manual]
         - id: pretty-format-json
           args: [--autofix, --indent, '4']
-          stages: [pre-commit, pre-merge-commit, manual]
-
-    - repo: https://github.com/pre-commit/pygrep-hooks
-      rev: v1.10.0
-      hooks:
-        - id: python-check-blanket-noqa
-          stages: [pre-commit, pre-merge-commit, manual]
-        - id: python-check-blanket-type-ignore
-          stages: [pre-commit, pre-merge-commit, manual]
-        - id: python-no-eval
-          stages: [pre-commit, pre-merge-commit, manual]
-        - id: python-no-log-warn
-          stages: [pre-commit, pre-merge-commit, manual]
-        - id: python-use-type-annotations
-          stages: [pre-commit, pre-merge-commit, manual]
-
-    - repo: https://github.com/ComPWA/taplo-pre-commit
-      rev: v0.9.3
-      hooks:
-        - id: taplo-format
-          stages: [pre-commit, pre-merge-commit, manual]
-          args: [--option, 'indent_string=    ', --option, reorder_arrays=true,
-            --option, reorder_keys=true]
-
-    - repo: https://github.com/google/yamlfmt
-      rev: v0.14.0
-      hooks:
-        - id: yamlfmt
-          stages: [pre-commit, pre-merge-commit, manual]
-          args: [-formatter, indent=4, -formatter, line_ending=lf, -formatter,
-            disallow_anchors=true, -formatter, max_line_length=75, -formatter,
-            trim_trailing_whitespace=true, -formatter, eof_newline=true, -formatter,
-            retain_line_breaks_single=true, -formatter, pad_line_comments=2]
 
     - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
       rev: v2.14.0
       hooks:
         - id: pretty-format-ini
-          stages: [pre-commit, pre-merge-commit, manual]
           args: [--autofix]
+
+    - repo: https://github.com/ComPWA/taplo-pre-commit
+      rev: v0.9.3
+      hooks:
+        - id: taplo-format
+          args: [--option, 'indent_string=    ', --option, reorder_arrays=true,
+            --option, reorder_keys=true]
+
+        - id: taplo-lint
+          args: [--default-schema-catalogs]
+          stages: [manual]
+
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.7.2
+      hooks:
+        - id: ruff
+          args: [--fix]
+
+        - id: ruff-format
+
+    - repo: https://github.com/astral-sh/uv-pre-commit
+      rev: 0.4.29
+      hooks:
+        - id: uv-lock
+
+    - repo: https://github.com/google/yamlfmt
+      rev: v0.14.0
+      hooks:
+        - id: yamlfmt
+          args: [-formatter, indent=4, -formatter, line_ending=lf, -formatter,
+            disallow_anchors=true, -formatter, max_line_length=75, -formatter,
+            trim_trailing_whitespace=true, -formatter, eof_newline=true, -formatter,
+            retain_line_breaks_single=true, -formatter, pad_line_comments=2]
