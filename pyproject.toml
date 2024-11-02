@@ -1,0 +1,231 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[dependency-groups]
+dev = [
+    "pre-commit",
+    { include-group = "lint" },
+    { include-group = "test" },
+    { include-group = "type-check" },
+]
+lint = ["ruff>=0.4"]
+test = ["pytest"]
+type-check = ["mypy>=1.10"]
+
+[project]
+authors = [
+    { name = "Jonathan Clarke", email = "jonathan.a.clarke@gmail.com" },
+    { name = "Matt Norton", email = "matt@carrotmanmatt.com" },
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+]
+description = "Decorators for classproperty and cached_classproperty."
+keywords = ["classmethod", "decorator", "property"]
+maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
+name = "classproperties"
+readme = "README.md"
+requires-python = ">=3.9"
+version = "1.0.0"
+
+[project.urls]
+Homepage = "https://www.example.com"
+Issues = "https://github.com/CarrotManMatt/classproperties/issues"
+Repository = "https://github.com/CarrotManMatt/classproperties"
+
+[tool.hatch.build]
+only-packages = true
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_any_unimported = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+extra_checks = true
+no_implicit_reexport = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+python_files = "tests.py"
+
+[tool.ruff]
+extend = "~/.config/ruff/ruff.toml"
+line-length = 95
+
+[tool.ruff.format]
+docstring-code-format = true
+line-ending = "lf"
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+ignore = [
+    "ANN101",
+    "ANN102",
+    "C90",
+    "COM812",
+    "COM819",
+    "D206",
+    "D207",
+    "D208",
+    "D212",
+    "D300",
+    "E111",
+    "E114",
+    "E117",
+    "PIE808",
+    "Q000",
+    "Q001",
+    "Q002",
+    "Q003",
+    "S603",
+    "SIM910",
+    "TD002",
+    "TD003",
+    "W191",
+]
+select = [
+    "A",
+    "ANN",
+    "ARG",
+    "ASYNC",
+    "B",
+    "BLE",
+    "C",
+    "COM",
+    "D",
+    "D204",
+    "D213",
+    "D400",
+    "D401",
+    "D404",
+    "DOC",
+    "DTZ",
+    "E",
+    "EM",
+    "ERA",
+    "EXE",
+    "F",
+    "FBT",
+    "FIX",
+    "FLY",
+    "FURB",
+    "G",
+    "I",
+    "ICN",
+    "INP",
+    "INT",
+    "ISC",
+    "LOG",
+    "N",
+    "PERF",
+    "PGH",
+    "PIE",
+    "PL",
+    "PT",
+    "PTH",
+    "PYI",
+    "Q",
+    "RET",
+    "RSE",
+    "RUF",
+    "S",
+    "SIM",
+    "SLF",
+    "SLOT",
+    "T",
+    "TCH",
+    "TD",
+    "TID",
+    "TRY",
+    "UP",
+    "W",
+    "YTT",
+]
+task-tags = [
+    "BUG",
+    "DONE",
+    "FIXME",
+    "HACK",
+    "IDEA",
+    "ISSUE",
+    "NOBUG",
+    "NOTE",
+    "REQ",
+    "TODO",
+]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+mark-parentheses = true
+parametrize-values-type = "tuple"
+
+[tool.ruff.lint.flake8-self]
+extend-ignore-names = ["_original_cached_classproperties"]
+
+[tool.ruff.lint.flake8-type-checking]
+quote-annotations = true
+strict = true
+
+[tool.ruff.lint.pep8-naming]
+classmethod-decorators = [
+    "classproperties.cached_classproperty",
+    "classproperties.classproperty",
+]
+extend-ignore-names = [
+    "BROKEN_*_MESSAGE",
+    "INVALID_*_MESSAGE",
+    "NO_*_MESSAGE",
+    "cached_classproperty",
+    "classproperty",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests.py" = ["S101"]
+"tests/**/test_*.py" = ["S101"]
+
+[tool.ruff.lint.pycodestyle]
+ignore-overlong-task-comments = true
+max-doc-length = 95
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+property-decorators = [
+    "classproperties.cached_classproperty",
+    "classproperties.classproperty",
+]
+
+[tool.ruff.lint.pylint]
+allow-magic-value-types = ["bytes", "int", "str"]
+max-args = 7
+max-branches = 19
+max-returns = 10
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
+
+[tool.uv]
+default-groups = ["dev"]

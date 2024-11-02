@@ -1,20 +1,181 @@
-# see https://github.com/github/gitignore/blob/master/Python.gitignore
+### Python
 
 # Byte-compiled / optimized / DLL files
-**/__pycache__/
+__pycache__/
+__pycache__
 *.py[cod]
+*$py.class
+
+# C extensions
+*.so
+*.pyc
 
 # Distribution / packaging
-bin/
+.Python
 build/
 develop-eggs/
 dist/
+downloads/
 eggs/
+.eggs/
 lib/
 lib64/
 parts/
 sdist/
 var/
+wheels/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Translations
+*.mo
+*.pot
+
+# PyBuilder
+.pybuilder/
+target/
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pdm
+.pdm.toml
+
+# PEP 582;
+__pypackages__/
+
+# Cython debug symbols
+cython_debug/
+
+### Local Cache / Environment Files
+
+# Logs
+logs
+*.log
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Stack Dump Files
+*.stackdump
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Caches
+.mypy_cache
+.mypy_cache/
+.pytest_cache
+.pytest_cache/
+.ruff_cache
+.ruff_cache/
+.cache
+.cache/
+.dmypy.json
+dmypy.json
+
+# Environments
+.env
+._env
+.env.test
+.env.original
+.venv
+env
+venv
+ENV
+env.bak
+venv.bak
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+pip-selfcheck.json
+.env.backup
+.env.bkp
+.env.bckp
+.env.bak
+env.test
+venv.test
+env.original
+venv.original
+env.backup
+venv.backup
+env.bkp
+venv.bkp
+env.bckp
+venv.bckp
+
+# Local Files/Databases
+local/
+*.sqlite3
+*.sqlite
+*.sqlite3-journal
+*.db
+local_stubs/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+cover/
+
+### Local Config & Settings
+
+# VSCode settings
+.vscode
+
+# JetBrains IDE settings
+.idea
+*.iws
+.idea_modules/
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Windows Directory Settings Files
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# Windows Thumbnail Cache Files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
