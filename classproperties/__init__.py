@@ -2,11 +2,22 @@
 
 import sys
 from functools import cached_property
-from typing import TYPE_CHECKING, Any, Callable, Final, Generic, TypeVar, overload
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Final,
+    Generic,
+    Optional,
+    TypeVar,
+    Union,
+    overload,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
-    from typing import Self
+
+    from typing_extensions import Self
 
 __all__: "Sequence[str]" = ("classproperty", "cached_classproperty")
 
@@ -24,7 +35,7 @@ class classproperty(property, Generic[T_class, T_value]):
     def __init__(self, func: Callable[[T_class], T_value], /) -> None:  # noqa: D107
         super().__init__(func)
 
-    def __get__(self, owner_self: object, owner_cls: type | None = None, /) -> T_value:  # noqa: D105
+    def __get__(self, owner_self: object, owner_cls: Optional[type] = None, /) -> T_value:  # noqa: D105
         if self.fget is None:
             BROKEN_OBJECT_MESSAGE: Final[str] = "Broken object 'classproperty'."
             raise RuntimeError(BROKEN_OBJECT_MESSAGE)
@@ -63,7 +74,7 @@ class cached_classproperty(
 
         getattr(owner, "_original_cached_classproperties")[self.attrname] = self  # noqa: B009
 
-    def _get_cached_property(self, owner: type[Any] | None) -> Any:  # noqa: ANN401
+    def _get_cached_property(self, owner: Optional[type[Any]]) -> Any:  # noqa: ANN401
         if self.attrname is None or owner is None:
             raise RuntimeError
 
@@ -83,12 +94,14 @@ class cached_classproperty(
         return val
 
     @overload
-    def __get__(self, instance: None, owner: type[Any] | None = None, /) -> "Self": ...
+    def __get__(self, instance: None, owner: Optional[type[Any]] = None, /) -> "Self": ...
 
     @overload
-    def __get__(self, instance: object, owner: type[Any] | None = None, /) -> T_value: ...
+    def __get__(self, instance: object, owner: Optional[type[Any]] = None, /) -> T_value: ...
 
-    def __get__(self, instance: object, owner: type[Any] | None = None, /) -> "Self | T_value":  # noqa: D105
+    def __get__(  # noqa: D105
+        self, instance: object, owner: Optional[type[Any]] = None, /
+    ) -> Union["Self", T_value]:
         if self.attrname is None:
             NO_NAME_SET_MESSAGE: Final[str] = (
                 "Cannot use cached_classproperty instance "
@@ -97,11 +110,11 @@ class cached_classproperty(
             raise TypeError(NO_NAME_SET_MESSAGE)
 
         if sys.version_info >= (3, 12):
-            unlocked_cached_property: Self | T_value = self._get_cached_property(owner)
+            unlocked_cached_property: Union[Self, T_value] = self._get_cached_property(owner)
             return unlocked_cached_property
 
-        with self.lock:  # type: ignore[unreachable]
-            locked_cached_property: Self | T_value = self._get_cached_property(owner)
+        with getattr(self, "lock"):  # noqa: B009  # type: ignore[unreachable,unused-ignore]
+            locked_cached_property: Union[Self, T_value] = self._get_cached_property(owner)
 
         return locked_cached_property
 
