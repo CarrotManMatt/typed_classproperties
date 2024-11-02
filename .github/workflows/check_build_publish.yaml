@@ -50,11 +50,12 @@ jobs:
                 python-version: ${{ matrix.python-version }}
 
             - name: Install the project & its dependencies
-              run: uv sync --no-python-downloads --all-extras --only-group type-check
-                --frozen
+              run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
+                --all-extras --only-group type-check --frozen
 
             - name: Run mypy
-              run: uv run --no-sync --no-python-downloads mypy .
+              run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
+                mypy .
 
     pytest:
         needs: uv-check
@@ -79,11 +80,12 @@ jobs:
                 python-version: ${{ matrix.python-version }}
 
             - name: Install the project & its dependencies
-              run: uv sync --no-python-downloads --all-extras --only-group test
-                --frozen
+              run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
+                --all-extras --only-group test --frozen
 
             - name: Run pytest
-              run: uv run --no-sync --no-python-downloads pytest
+              run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
+                pytest
 
     ruff:
         needs: uv-check
@@ -108,11 +110,12 @@ jobs:
                 python-version: ${{ matrix.python-version }}
 
             - name: Install the project & its dependencies
-              run: uv sync --no-python-downloads --all-extras --only-group lint
-                --frozen
+              run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
+                --all-extras --only-group lint --frozen
 
             - name: Run Ruff
-              run: uv run --no-sync --no-python-downloads ruff check --output-format=github
+              run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
+                ruff check --output-format=github
 
     taplo-format:
         runs-on: ubuntu-latest
