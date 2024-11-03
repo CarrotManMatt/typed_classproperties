@@ -86,6 +86,10 @@ jobs:
             - name: Setup pre-commit environments
               run: uv run --no-sync --no-python-downloads pre-commit install-hooks
 
+            - name: Set pre-commit checks to skip
+              run: echo "SKIP=check-github-workflows,ruff,ruff-format,taplo-format,taplo-lint,uv-lock,yamlfmt"
+                >> $GITHUB_ENV
+
             - name: Run pre-commit
               run: uv run --no-sync --no-python-downloads pre-commit run --all-files
                 --hook-stage manual

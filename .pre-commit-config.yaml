@@ -4,18 +4,6 @@ default_stages: [pre-commit, pre-merge-commit, manual]
 default_language_version:
     python: python3.13
 
-ci:
-    skip:
-        - check-github-workflows
-        - ruff
-        - ruff-format
-        - taplo-format
-        - taplo-lint
-        - uv-lock
-        - yamlfmt
-
-    autofix_prs: false
-
 repos:
     - repo: https://github.com/python-jsonschema/check-jsonschema
       rev: 0.29.4
