@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
     from typing_extensions import Self
 
-__all__: "Sequence[str]" = ("classproperty", "cached_classproperty")
+__all__: "Sequence[str]" = ("cached_classproperty", "classproperty")
 
 T_class = TypeVar("T_class")
 T_value = TypeVar("T_value")
@@ -51,10 +51,10 @@ class cached_classproperty(
     Decorator for a Class-level property whose results are cached.
 
     Example:
-        class MyClass:
-            @cached_classproperty
-            def some_complex_calculation(cls):
-                return 1000
+        >>> class MyClass:
+        ...     @cached_classproperty
+        ...     def some_complex_calculation(cls):
+        ...         return 1000
 
     Property function is executed once, on first access to the property.
     The returned value is stored directly on the class thereafter.
@@ -129,10 +129,14 @@ class cached_classproperty(
         and subsequently accessing `MyClass.some_complex_calculation`
         will result in an AttributeError,
         so this method should be used instead.
+
+        Raises:
+            TypeError: If the classproperty never had any `cached_classproperty` attributes
+                assigned to it.
         """
         if not hasattr(cls_with_cache, "_original_cached_classproperties"):
             NO_CLASS_PROPERTY_MESSAGE: Final[str] = (
-                f"{cls_with_cache} has never had any cached_classproperty attributes "
+                f"{cls_with_cache} has never had any `cached_classproperty` attributes "
                 "assigned to it."
             )
             raise TypeError(NO_CLASS_PROPERTY_MESSAGE)

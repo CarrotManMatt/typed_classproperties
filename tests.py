@@ -8,7 +8,7 @@ from classproperties import cached_classproperty, classproperty
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-__all__: "Sequence[str]" = ("TestClassProperty", "TestCachedClassProperty")
+__all__: "Sequence[str]" = ("TestCachedClassProperty", "TestClassProperty")
 
 
 class BaseTestClassProperty(abc.ABC):  # noqa: B024
