@@ -38,7 +38,7 @@ maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
 name = "typed_classproperties"
 readme = "README.md"
 requires-python = ">=3.9"
-version = "1.0.0"
+version = "0.2.1"
 
 [project.urls]
 Homepage = "https://www.example.com"

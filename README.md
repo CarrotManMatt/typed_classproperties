@@ -6,7 +6,7 @@ Python 3 compatible only. No dependencies.
 
 ## Installation
 
-This package is hosted on PYPI and can be installed using `pip` or `uv`. E.g.
+This package is hosted on PYPI and can be installed using `uv` or `pip`. E.g.
 
 ```bash
 uv add typed_classproperties
