@@ -11,7 +11,7 @@ ci:
         - ruff-format
         - taplo-format
         - uv-lock
-        - ymlfmt
+        - yamlfmt
 
     autofix_prs: false
 
