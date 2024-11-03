@@ -40,12 +40,12 @@ jobs:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
 
-            - name: Set up Python
+            - name: Set Up Python
               uses: actions/setup-python@v5
               with:
                 python-version: ${{ matrix.python-version }}
 
-            - name: Install mypy from locked dependencies
+            - name: Install mypy From Locked Dependencies
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
                 --only-group type-check --frozen
 
@@ -66,15 +66,15 @@ jobs:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
 
-            - name: Set up Python
+            - name: Set Up Python
               uses: actions/setup-python@v5
               with:
                 python-version-file: .python-version
 
-            - name: Install pre-commit from locked dependencies
+            - name: Install pre-commit From Locked Dependencies
               run: uv sync --no-python-downloads --only-group pre-commit --frozen
 
-            - name: Set hashed Python version
+            - name: Save Hashed Python Version
               run: echo "HASHED_PYTHON_VERSION=$(uv run python -VV | sha256sum
                 | cut -d' ' -f1)" >> $GITHUB_ENV
 
@@ -83,10 +83,10 @@ jobs:
                 path: ~/.cache/pre-commit
                 key: pre-commit|${{ env.HASHED_PYTHON_VERSION }}|${{ hashFiles('.pre-commit-config.yaml')}}
 
-            - name: Setup pre-commit environments
+            - name: Setup pre-commit Environments
               run: uv run --no-sync --no-python-downloads pre-commit install-hooks
 
-            - name: Set pre-commit checks to skip
+            - name: Store pre-commit Checks Which Require Skipping
               run: echo "SKIP=check-github-workflows,ruff,ruff-format,taplo-format,taplo-lint,uv-lock,yamlfmt"
                 >> $GITHUB_ENV
 
@@ -111,12 +111,12 @@ jobs:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
 
-            - name: Set up Python
+            - name: Set Up Python
               uses: actions/setup-python@v5
               with:
                 python-version: ${{ matrix.python-version }}
 
-            - name: Install pytest from locked dependencies
+            - name: Install pytest From Locked Dependencies
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
                 --only-group test --frozen
 
@@ -141,12 +141,12 @@ jobs:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
 
-            - name: Set up Python
+            - name: Set Up Python
               uses: actions/setup-python@v5
               with:
                 python-version: ${{ matrix.python-version }}
 
-            - name: Install ruff from locked dependencies
+            - name: Install ruff From Locked Dependencies
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
                 --only-group lint --frozen
 
@@ -218,10 +218,41 @@ jobs:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
 
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                python-version-file: .python-version
-
             - name: Build Package
-              run: uv build
+              run: uv build --no-sources
+
+            - name: Save Build Artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: built-typed_classproperties-package
+                path: dist/
+
+    publish:
+        needs: [build]
+        runs-on: ubuntu-latest
+        environment: publish
+        permissions:
+            id-token: write
+
+        steps:
+            - name: Install uv
+              uses: astral-sh/setup-uv@v3
+              with:
+                enable-cache: true
+                cache-dependency-glob: uv.lock
+
+            - name: Download Build Artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: built-typed_classproperties-package
+                path: dist/
+
+            - name: Publish to PyPI
+              run: uv publish
+              #    release:
+              #        needs: [publish]
+              #        runs-on: ubuntu-latest
+              #        permissions:
+              #            content: write
+              #
+              #        steps:
