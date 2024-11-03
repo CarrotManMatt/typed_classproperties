@@ -113,7 +113,7 @@ class cached_classproperty(
             unlocked_cached_property: Union[Self, T_value] = self._get_cached_property(owner)
             return unlocked_cached_property
 
-        with getattr(self, "lock"):  # noqa: B009  # type: ignore[unreachable,unused-ignore]
+        with getattr(self, "lock"):  # type: ignore[unreachable, unused-ignore]  # noqa: B009
             locked_cached_property: Union[Self, T_value] = self._get_cached_property(owner)
 
         return locked_cached_property

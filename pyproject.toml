@@ -69,7 +69,6 @@ warn_unused_ignores = true
 python_files = "tests.py"
 
 [tool.ruff]
-extend = "~/.config/ruff/ruff.toml"
 line-length = 95
 
 [tool.ruff.format]
