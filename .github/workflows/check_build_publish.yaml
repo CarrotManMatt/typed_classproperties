@@ -75,17 +75,20 @@ jobs:
               run: uv sync --no-python-downloads --only-group pre-commit --frozen
 
             - name: Set hashed Python version
-              run: echo "HASHED_PYTHON=$(uv run python -VV | sha256sum | cut
-                -d' ' -f1)" >> $GITHUB_ENV
+              run: echo "HASHED_PYTHON_VERSION=$(uv run python -VV | sha256sum
+                | cut -d' ' -f1)" >> $GITHUB_ENV
 
             - uses: actions/cache@v3
               with:
                 path: ~/.cache/pre-commit
-                key: pre-commit|${{ env.HASHED_PYTHON }}|${{ hashFiles('.pre-commit-config.yaml')}}
+                key: pre-commit|${{ env.HASHED_PYTHON_VERSION }}|${{ hashFiles('.pre-commit-config.yaml')}}
+
+            - name: Setup pre-commit environments
+              run: uv run --no-sync --no-python-downloads pre-commit install-hooks
 
             - name: Run pre-commit
-              run: uv run --no-sync --no-python-downloads pre-commit run --from-ref
-                origin/HEAD --to-ref HEAD
+              run: uv run --no-sync --no-python-downloads pre-commit run --all-files
+                --hook-stage manual
 
     pytest:
         needs: uv-check
