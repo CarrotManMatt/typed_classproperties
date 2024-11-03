@@ -283,6 +283,9 @@ dev = [
 lint = [
     { name = "ruff" },
 ]
+pre-commit = [
+    { name = "pre-commit" },
+]
 test = [
     { name = "pytest" },
 ]
@@ -300,6 +303,7 @@ dev = [
     { name = "ruff", specifier = ">=0.4" },
 ]
 lint = [{ name = "ruff", specifier = ">=0.4" }]
+pre-commit = [{ name = "pre-commit" }]
 test = [{ name = "pytest" }]
 type-check = [{ name = "mypy", specifier = ">=1.10" }]
 

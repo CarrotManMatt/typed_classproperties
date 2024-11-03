@@ -4,12 +4,13 @@ requires = ["hatchling"]
 
 [dependency-groups]
 dev = [
-    "pre-commit",
     { include-group = "lint" },
+    { include-group = "pre-commit" },
     { include-group = "test" },
     { include-group = "type-check" },
 ]
 lint = ["ruff>=0.4"]
+pre-commit = ["pre-commit"]
 test = ["pytest"]
 type-check = ["mypy>=1.10"]
 
