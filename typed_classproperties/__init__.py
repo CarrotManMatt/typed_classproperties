@@ -1,4 +1,4 @@
-"""Decorators for classproperty and cached_classproperty."""
+"""Typed decorators for classproperty and cached_classproperty."""
 
 import sys
 from functools import cached_property
