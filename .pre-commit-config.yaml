@@ -10,6 +10,7 @@ ci:
         - ruff
         - ruff-format
         - taplo-format
+        - taplo-lint
         - uv-lock
         - yamlfmt
 
