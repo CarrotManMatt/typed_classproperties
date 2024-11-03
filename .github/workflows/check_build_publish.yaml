@@ -49,7 +49,7 @@ jobs:
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
                 --only-group type-check --frozen
 
-            - name: Run mypy
+            - name: Run mypy  # TODO: Save mypy cache between runs with python key
               run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
                 mypy .
 
@@ -120,7 +120,7 @@ jobs:
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
                 --only-group test --frozen
 
-            - name: Run pytest
+            - name: Run pytest  # TODO: Save pytest cache between runs with python key
               run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
                 pytest
 
@@ -150,7 +150,7 @@ jobs:
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
                 --only-group lint --frozen
 
-            - name: Run Ruff
+            - name: Run Ruff  # TODO: Save ruff cache between runs with python key
               run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
                 ruff check --output-format=github
 
@@ -207,8 +207,6 @@ jobs:
         needs: [mypy, pre-commit, pytest, ruff, taplo-format, taplo-lint, yamlfmt]
         runs-on: ubuntu-latest
 
-        if: github.ref_type == 'tag'
-
         steps:
             - uses: actions/checkout@v4
 
@@ -234,6 +232,8 @@ jobs:
         permissions:
             id-token: write
 
+        if: github.ref_type == 'tag'
+
         steps:
             - uses: actions/checkout@v4
 
@@ -251,10 +251,63 @@ jobs:
 
             - name: Publish to PyPI
               run: uv publish
-              #    release:
-              #        needs: [publish]
-              #        runs-on: ubuntu-latest
-              #        permissions:
-              #            content: write
-              #
-              #        steps:
+
+    test-publish:
+        needs: [build]
+        runs-on: ubuntu-latest
+        environment: test-publish
+        permissions:
+            id-token: write
+
+        if: github.ref_type != 'tag'
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v3
+              with:
+                enable-cache: true
+                cache-dependency-glob: uv.lock
+
+            - name: Download Build Artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: built-typed_classproperties-package
+                path: dist/
+
+            - name: Publish to PyPI
+              run: uv publish --publish-url https://test.pypi.org/legacy/
+
+    release:
+        needs: [publish]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            id-token: write
+
+        if: github.ref_type == 'tag'
+
+        steps:
+            - name: Download Build Artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: built-typed_classproperties-package
+                path: dist/
+
+            - name: Sign Build Artifacts
+              uses: sigstore/gh-action-sigstore-python@v3.0.0
+              with:
+                inputs: ./dist/*.tar.gz ./dist/*.whl
+
+            - name: Create GitHub Release
+              env:
+                GITHUB_TOKEN: ${{ github.token }}
+              run: gh release create '${{ github.ref_name }}' --repo '${{ github.repository
+                }}' --notes ""
+
+            - name: Add Signed Build Artifacts To GitHub Release
+              env:
+                GITHUB_TOKEN: ${{ github.token }}
+              run: gh release upload '${{ github.ref_name }}' dist/** --repo
+                github.repository }}'

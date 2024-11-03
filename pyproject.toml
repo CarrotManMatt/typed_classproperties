@@ -232,5 +232,4 @@ keep-runtime-typing = true
 
 [tool.uv]
 default-groups = ["dev"]
-publish-url = "https://test.pypi.org/legacy"
 trusted-publishing = "always"
