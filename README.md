@@ -1,49 +1,66 @@
-# classproperties
+# typed_classproperties
 
-Decorators for classproperty and cached_classproperty
+Typed decorators for classproperty and cached_classproperty.
 
-Python 3 compatible only.  No dependencies.
+Python 3 compatible only. No dependencies.
 
 ## Installation
 
-This package is not hosted on pypi but can be installed using pip using e.g.
+This package is hosted on PYPI and can be installed using `pip` or `uv`. E.g.
 
 ```bash
-pip install git+https://github.com/hottwaj/classproperties.git
+uv add typed_classproperties
+```
+
+```bash
+pip install typed_classproperties
 ```
 
 ## Example usage
 
-```
-from classproperties import classproperty, cached_classproperty
-class C(object):
+```python
+from typing import override
+
+from typed_classproperties import classproperty, cached_classproperty
+
+
+class Foo:
+    @override
+    def __init__(self, bar: str) -> None:
+        self.bar: str = bar
 
     @classproperty
-    def x(cls):
+    def BAR(cls) -> int:
         return 1
 
-assert C.x == 1
-assert C().x == 1
 
-class CCached(object):
+assert Foo.BAR == 1
+assert Foo(bar="one").BAR == 1
+
+
+class CachedFoo:
+    @override
+    def __init__(self, bar: str) -> None:
+        self.bar: str = bar
 
     @cached_classproperty
-    def x(cls):
-        print('executed only once')
+    def BAR(cls) -> int:
+        print("This will be executed only once")
         return 1
 
-assert CCached.x == 1
-assert CCached().x == 1
+
+assert CachedFoo.BAR == 1
+assert CachedFoo(bar="bar").FOO == 1
 ```
 
 ## Tests
 
-See tests.py for example usage and expected behaviour
+See [`tests.py`](tests.py) for usage examples and expected behaviour.
 
 To run tests:
 
-```
-python tests.py
+```bash
+uv run --group test pytest
 ```
 
 ## Credits

@@ -11,41 +11,6 @@ wheels = [
 ]
 
 [[package]]
-name = "classproperties"
-version = "1.0.0"
-source = { editable = "." }
-
-[package.dev-dependencies]
-dev = [
-    { name = "mypy" },
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "ruff" },
-]
-lint = [
-    { name = "ruff" },
-]
-test = [
-    { name = "pytest" },
-]
-type-check = [
-    { name = "mypy" },
-]
-
-[package.metadata]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "mypy", specifier = ">=1.10" },
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "ruff", specifier = ">=0.4" },
-]
-lint = [{ name = "ruff", specifier = ">=0.4" }]
-test = [{ name = "pytest" }]
-type-check = [{ name = "mypy", specifier = ">=1.10" }]
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -302,6 +267,41 @@ sdist = { url = "https://files.pythonhosted.org/packages/35/b9/de2a5c0144d7d75a5
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cf/db/ce8eda256fa131af12e0a76d481711abe4681b6923c27efb9a255c9e4594/tomli-2.0.2-py3-none-any.whl", hash = "sha256:2ebe24485c53d303f690b0ec092806a085f07af5a5aa1464f3931eec36caaa38", size = 13237 },
 ]
+
+[[package]]
+name = "typed-classproperties"
+version = "1.0.0"
+source = { editable = "." }
+
+[package.dev-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "ruff" },
+]
+lint = [
+    { name = "ruff" },
+]
+test = [
+    { name = "pytest" },
+]
+type-check = [
+    { name = "mypy" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy", specifier = ">=1.10" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "ruff", specifier = ">=0.4" },
+]
+lint = [{ name = "ruff", specifier = ">=0.4" }]
+test = [{ name = "pytest" }]
+type-check = [{ name = "mypy", specifier = ">=1.10" }]
 
 [[package]]
 name = "typing-extensions"

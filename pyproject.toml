@@ -32,18 +32,18 @@ classifiers = [
     "Topic :: Software Development",
     "Typing :: Typed",
 ]
-description = "Decorators for classproperty and cached_classproperty."
+description = "Typed decorators for classproperty and cached_classproperty."
 keywords = ["classmethod", "decorator", "property"]
 maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
-name = "classproperties"
+name = "typed_classproperties"
 readme = "README.md"
 requires-python = ">=3.9"
 version = "1.0.0"
 
 [project.urls]
 Homepage = "https://www.example.com"
-Issues = "https://github.com/CarrotManMatt/classproperties/issues"
-Repository = "https://github.com/CarrotManMatt/classproperties"
+Issues = "https://github.com/CarrotManMatt/typed_classproperties/issues"
+Repository = "https://github.com/CarrotManMatt/typed_classproperties"
 
 [tool.hatch.build]
 only-packages = true
@@ -189,6 +189,8 @@ strict = true
 classmethod-decorators = [
     "classproperties.cached_classproperty",
     "classproperties.classproperty",
+    "typed_classproperties.cached_classproperty",
+    "typed_classproperties.classproperty",
 ]
 extend-ignore-names = [
     "BROKEN_*_MESSAGE",
@@ -211,6 +213,8 @@ convention = "google"
 property-decorators = [
     "classproperties.cached_classproperty",
     "classproperties.classproperty",
+    "typed_classproperties.cached_classproperty",
+    "typed_classproperties.classproperty",
 ]
 
 [tool.ruff.lint.pylint]

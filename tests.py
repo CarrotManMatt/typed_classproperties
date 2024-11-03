@@ -1,9 +1,9 @@
-"""Full test suite for 'classproperties' library."""
+"""Full test suite for 'typed_classproperties' library."""
 
 import abc
 from typing import TYPE_CHECKING, Any
 
-from classproperties import cached_classproperty, classproperty
+from typed_classproperties import cached_classproperty, classproperty
 
 if TYPE_CHECKING:
     from collections.abc import Sequence

@@ -5,6 +5,7 @@ on:
         branches: [main]
     push:
         branches: [main]
+        tags: ["v*"]
 
 jobs:
     uv-check:
@@ -165,3 +166,26 @@ jobs:
                 -formatter disallow_anchors=true -formatter max_line_length=75
                 -formatter trim_trailing_whitespace=true -formatter eof_newline=true
                 -formatter retain_line_breaks_single=true -formatter pad_line_comments=2
+
+    build:
+        needs: [mypy, pytest, ruff, taplo-format, taplo-lint, yamlfmt]
+        runs-on: ubuntu-latest
+
+        if: github.ref_type == 'tag'
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v3
+              with:
+                enable-cache: true
+                cache-dependency-glob: uv.lock
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version-file: pyproject.toml
+
+            - name: Build Package
+              run: uv build
