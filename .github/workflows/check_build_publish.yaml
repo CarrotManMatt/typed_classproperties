@@ -54,7 +54,7 @@ jobs:
                 --python ${{ matrix.python-version }} python -VV | sha256sum
                 | cut -d' ' -f1)" >> $GITHUB_ENV
 
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               with:
                 path: ./.mypy_cache
                 key: mypy|${{ env.HASHED_PYTHON_VERSION }}
@@ -89,7 +89,7 @@ jobs:
                 --python ${{ matrix.python-version }} python -VV | sha256sum
                 | cut -d' ' -f1)" >> $GITHUB_ENV
 
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               with:
                 path: ~/.cache/pre-commit
                 key: pre-commit|${{ env.HASHED_PYTHON_VERSION }}|${{ hashFiles('.pre-commit-config.yaml')}}
@@ -136,7 +136,7 @@ jobs:
                 --python ${{ matrix.python-version }} python -VV | sha256sum
                 | cut -d' ' -f1)" >> $GITHUB_ENV
 
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               with:
                 path: ./.pytest_cache
                 key: pytest|${{ env.HASHED_PYTHON_VERSION }}
@@ -176,7 +176,7 @@ jobs:
                 --python ${{ matrix.python-version }} python -VV | sha256sum
                 | cut -d' ' -f1)" >> $GITHUB_ENV
 
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               with:
                 path: ./.ruff_cache
                 key: ruff|${{ env.HASHED_PYTHON_VERSION }}
@@ -224,6 +224,8 @@ jobs:
 
             - name: Install Golang
               uses: actions/setup-go@v5
+              with:
+                cache: false
 
             - name: Install yamlfmt
               run: go install github.com/google/yamlfmt/cmd/yamlfmt@latest
