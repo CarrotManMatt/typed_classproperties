@@ -50,7 +50,8 @@ jobs:
                 --only-group type-check --frozen
 
             - name: Save Hashed Python Version
-              run: echo "HASHED_PYTHON_VERSION=$(uv run python -VV | sha256sum
+              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads
+                --python ${{ matrix.python-version }} python -VV | sha256sum
                 | cut -d' ' -f1)" >> $GITHUB_ENV
 
             - uses: actions/cache@v3
@@ -84,7 +85,8 @@ jobs:
               run: uv sync --no-python-downloads --only-group pre-commit --frozen
 
             - name: Save Hashed Python Version
-              run: echo "HASHED_PYTHON_VERSION=$(uv run python -VV | sha256sum
+              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads
+                --python ${{ matrix.python-version }} python -VV | sha256sum
                 | cut -d' ' -f1)" >> $GITHUB_ENV
 
             - uses: actions/cache@v3
@@ -130,7 +132,8 @@ jobs:
                 --only-group test --frozen
 
             - name: Save Hashed Python Version
-              run: echo "HASHED_PYTHON_VERSION=$(uv run python -VV | sha256sum
+              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads
+                --python ${{ matrix.python-version }} python -VV | sha256sum
                 | cut -d' ' -f1)" >> $GITHUB_ENV
 
             - uses: actions/cache@v3
@@ -169,7 +172,8 @@ jobs:
                 --only-group lint --frozen
 
             - name: Save Hashed Python Version
-              run: echo "HASHED_PYTHON_VERSION=$(uv run python -VV | sha256sum
+              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads
+                --python ${{ matrix.python-version }} python -VV | sha256sum
                 | cut -d' ' -f1)" >> $GITHUB_ENV
 
             - uses: actions/cache@v3
