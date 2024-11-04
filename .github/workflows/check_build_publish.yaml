@@ -49,7 +49,16 @@ jobs:
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
                 --only-group type-check --frozen
 
-            - name: Run mypy  # TODO: Save mypy cache between runs with python key
+            - name: Save Hashed Python Version
+              run: echo "HASHED_PYTHON_VERSION=$(uv run python -VV | sha256sum
+                | cut -d' ' -f1)" >> $GITHUB_ENV
+
+            - uses: actions/cache@v3
+              with:
+                path: ./.mypy_cache
+                key: mypy|${{ env.HASHED_PYTHON_VERSION }}
+
+            - name: Run mypy
               run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
                 mypy .
 
@@ -120,7 +129,16 @@ jobs:
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
                 --only-group test --frozen
 
-            - name: Run pytest  # TODO: Save pytest cache between runs with python key
+            - name: Save Hashed Python Version
+              run: echo "HASHED_PYTHON_VERSION=$(uv run python -VV | sha256sum
+                | cut -d' ' -f1)" >> $GITHUB_ENV
+
+            - uses: actions/cache@v3
+              with:
+                path: ./.pytest_cache
+                key: pytest|${{ env.HASHED_PYTHON_VERSION }}
+
+            - name: Run pytest
               run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
                 pytest
 
@@ -150,7 +168,16 @@ jobs:
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
                 --only-group lint --frozen
 
-            - name: Run Ruff  # TODO: Save ruff cache between runs with python key
+            - name: Save Hashed Python Version
+              run: echo "HASHED_PYTHON_VERSION=$(uv run python -VV | sha256sum
+                | cut -d' ' -f1)" >> $GITHUB_ENV
+
+            - uses: actions/cache@v3
+              with:
+                path: ./.ruff_cache
+                key: ruff|${{ env.HASHED_PYTHON_VERSION }}
+
+            - name: Run Ruff
               run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
                 ruff check --output-format=github
 
