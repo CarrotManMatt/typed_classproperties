@@ -1,0 +1,10 @@
+line_ending: lf
+gitignore_excludes: true
+formatter:
+    indent: 4
+    retain_line_breaks_single: true
+    disallow_anchors: true
+    max_line_length: 95
+    trim_trailing_whitespace: true
+    eof_newline: true
+    pad_line_comments: 2

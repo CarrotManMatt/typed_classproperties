@@ -46,13 +46,12 @@ jobs:
                 python-version: ${{ matrix.python-version }}
 
             - name: Install mypy From Locked Dependencies
-              run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
-                --only-group type-check --frozen
+              run: uv sync --python ${{ matrix.python-version }} --no-python-downloads --only-group
+                type-check --frozen
 
             - name: Save Hashed Python Version
-              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads
-                --python ${{ matrix.python-version }} python -VV | sha256sum
-                | cut -d' ' -f1)" >> $GITHUB_ENV
+              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads --python
+                ${{ matrix.python-version }} python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
 
             - uses: actions/cache@v4
               with:
@@ -60,8 +59,8 @@ jobs:
                 key: mypy|${{ env.HASHED_PYTHON_VERSION }}
 
             - name: Run mypy
-              run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
-                mypy .
+              run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads mypy
+                .
 
     pre-commit:
         needs: uv-check
@@ -85,9 +84,8 @@ jobs:
               run: uv sync --no-python-downloads --only-group pre-commit --frozen
 
             - name: Save Hashed Python Version
-              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads
-                --python ${{ matrix.python-version }} python -VV | sha256sum
-                | cut -d' ' -f1)" >> $GITHUB_ENV
+              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads --python
+                ${{ matrix.python-version }} python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
 
             - uses: actions/cache@v4
               with:
@@ -102,8 +100,8 @@ jobs:
                 >> $GITHUB_ENV
 
             - name: Run pre-commit
-              run: uv run --no-sync --no-python-downloads pre-commit run --all-files
-                --hook-stage manual
+              run: uv run --no-sync --no-python-downloads pre-commit run --all-files --hook-stage
+                manual
 
     pytest:
         needs: uv-check
@@ -128,13 +126,12 @@ jobs:
                 python-version: ${{ matrix.python-version }}
 
             - name: Install pytest From Locked Dependencies
-              run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
-                --only-group test --frozen
+              run: uv sync --python ${{ matrix.python-version }} --no-python-downloads --only-group
+                test --frozen
 
             - name: Save Hashed Python Version
-              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads
-                --python ${{ matrix.python-version }} python -VV | sha256sum
-                | cut -d' ' -f1)" >> $GITHUB_ENV
+              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads --python
+                ${{ matrix.python-version }} python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
 
             - uses: actions/cache@v4
               with:
@@ -142,8 +139,7 @@ jobs:
                 key: pytest|${{ env.HASHED_PYTHON_VERSION }}
 
             - name: Run pytest
-              run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
-                pytest
+              run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads pytest
 
     ruff:
         needs: uv-check
@@ -168,13 +164,12 @@ jobs:
                 python-version: ${{ matrix.python-version }}
 
             - name: Install ruff From Locked Dependencies
-              run: uv sync --python ${{ matrix.python-version }} --no-python-downloads
-                --only-group lint --frozen
+              run: uv sync --python ${{ matrix.python-version }} --no-python-downloads --only-group
+                lint --frozen
 
             - name: Save Hashed Python Version
-              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads
-                --python ${{ matrix.python-version }} python -VV | sha256sum
-                | cut -d' ' -f1)" >> $GITHUB_ENV
+              run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads --python
+                ${{ matrix.python-version }} python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
 
             - uses: actions/cache@v4
               with:
@@ -182,8 +177,8 @@ jobs:
                 key: ruff|${{ env.HASHED_PYTHON_VERSION }}
 
             - name: Run Ruff
-              run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads
-                ruff check --output-format=github
+              run: uv run --python ${{ matrix.python-version }} --no-sync --no-python-downloads ruff
+                check --output-format=github
 
     taplo-format:
         runs-on: ubuntu-latest
@@ -197,9 +192,11 @@ jobs:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
 
+            - name: Install Taplo From Locked Dependencies
+              run: uv sync --no-python-downloads --only-group lint-format --frozen
+
             - name: Run Taplo Formatter
-              run: uvx taplo format . --check --option reorder_arrays=true --option
-                reorder_keys=true --option "indent_string=    "
+              run: uv run taplo format . --check
 
     taplo-lint:
         runs-on: ubuntu-latest
@@ -213,8 +210,11 @@ jobs:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
 
+            - name: Install Taplo From Locked Dependencies
+              run: uv sync --no-python-downloads --only-group lint-format --frozen
+
             - name: Run Taplo Linter
-              run: uvx taplo lint . --default-schema-catalogs
+              run: uv run taplo lint . --default-schema-catalogs
 
     yamlfmt:
         runs-on: ubuntu-latest
@@ -231,10 +231,7 @@ jobs:
               run: go install github.com/google/yamlfmt/cmd/yamlfmt@latest
 
             - name: Run yamlfmt
-              run: yamlfmt . -lint -formatter indent=4 -formatter line_ending=lf
-                -formatter disallow_anchors=true -formatter max_line_length=75
-                -formatter trim_trailing_whitespace=true -formatter eof_newline=true
-                -formatter retain_line_breaks_single=true -formatter pad_line_comments=2
+              run: yamlfmt . -lint
 
     build:
         needs: [mypy, pre-commit, pytest, ruff, taplo-format, taplo-lint, yamlfmt]
@@ -338,11 +335,11 @@ jobs:
             - name: Create GitHub Release
               env:
                 GITHUB_TOKEN: ${{ github.token }}
-              run: gh release create '${{ github.ref_name }}' --repo '${{ github.repository
-                }}' --notes ""
+              run: gh release create '${{ github.ref_name }}' --repo '${{ github.repository }}' --notes
+                ""
 
             - name: Add Signed Build Artifacts To GitHub Release
               env:
                 GITHUB_TOKEN: ${{ github.token }}
-              run: gh release upload '${{ github.ref_name }}' dist/** --repo
-                '${{ github.repository }}'
+              run: gh release upload '${{ github.ref_name }}' dist/** --repo '${{ github.repository
+                }}'

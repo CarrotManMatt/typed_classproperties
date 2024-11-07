@@ -56,8 +56,6 @@ repos:
       rev: v0.9.3
       hooks:
         - id: taplo-format
-          args: [--option, 'indent_string=    ', --option, reorder_arrays=true,
-            --option, reorder_keys=true]
 
         - id: taplo-lint
           args: [--default-schema-catalogs]
@@ -80,7 +78,3 @@ repos:
       rev: v0.14.0
       hooks:
         - id: yamlfmt
-          args: [-formatter, indent=4, -formatter, line_ending=lf, -formatter,
-            disallow_anchors=true, -formatter, max_line_length=75, -formatter,
-            trim_trailing_whitespace=true, -formatter, eof_newline=true, -formatter,
-            retain_line_breaks_single=true, -formatter, pad_line_comments=2]
