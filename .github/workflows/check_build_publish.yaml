@@ -20,7 +20,14 @@ jobs:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
 
-            - name: Check uv.lock
+            - name: Install jq
+              run: sudo apt-get install jq
+
+            - name: Update local package only
+              run: uv lock --upgrade-package $(cat pyproject.toml | uvx --from yq tomlq .project.name
+                -M -r)
+
+            - name: Check uv.lock (ensure all dependencies up to date)
               run: uv lock --locked
 
     mypy:
