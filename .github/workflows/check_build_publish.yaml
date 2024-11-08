@@ -165,7 +165,7 @@ jobs:
 
             - name: Install ruff From Locked Dependencies
               run: uv sync --python ${{ matrix.python-version }} --no-python-downloads --only-group
-                lint --frozen
+                lint-format --frozen
 
             - name: Save Hashed Python Version
               run: echo "HASHED_PYTHON_VERSION=$(uv run --no-sync --no-python-downloads --python
@@ -192,6 +192,11 @@ jobs:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
 
+            - name: Set Up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version-file: .python-version
+
             - name: Install Taplo From Locked Dependencies
               run: uv sync --no-python-downloads --only-group lint-format --frozen
 
@@ -209,6 +214,11 @@ jobs:
               with:
                 enable-cache: true
                 cache-dependency-glob: uv.lock
+
+            - name: Set Up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version-file: .python-version
 
             - name: Install Taplo From Locked Dependencies
               run: uv sync --no-python-downloads --only-group lint-format --frozen
