@@ -327,7 +327,7 @@ jobs:
                 name: built-typed_classproperties-package
                 path: dist/
 
-            - name: Publish to PyPI
+            - name: Publish to Test-PyPI
               run: uv publish --publish-url https://test.pypi.org/legacy/
 
     release:
