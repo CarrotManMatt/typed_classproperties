@@ -42,6 +42,20 @@ class TestClassProperty(BaseTestClassProperty):
         """Test that a classproperty correctly returns its value from an instance."""
         assert self._get_cls_definition(2000)().held_value == 2000
 
+    def test_typed_subclasses(self) -> None:
+        """Test that subclasses can override classproperties."""
+
+        class _BaseClass(abc.ABC):
+            @classproperty
+            @abc.abstractmethod
+            def base_method(cls) -> str:
+                pass
+
+        class _SubClass(_BaseClass):
+            @classproperty
+            def base_method(cls) -> str:
+                return ""
+
 
 class TestCachedClassProperty(BaseTestClassProperty):
     """Test the `cached_classproperty` decorator."""

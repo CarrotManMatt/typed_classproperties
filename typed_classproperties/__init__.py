@@ -32,7 +32,7 @@ class classproperty(property, Generic[T_class, T_value]):
     Credit to Denis Rhyzhkov on Stackoverflow: https://stackoverflow.com/a/13624858/1280629
     """
 
-    def __init__(self, func: Callable[[T_class], T_value], /) -> None:  # noqa: D107
+    def __init__(self, func: Callable[..., T_value], /) -> None:  # noqa: D107
         super().__init__(func)
 
     def __get__(self, owner_self: object, owner_cls: Optional[type] = None, /) -> T_value:  # noqa: D105

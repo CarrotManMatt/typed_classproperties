@@ -76,6 +76,7 @@ python_files = "tests.py"
 [tool.ruff]
 indent-width = 4
 line-length = 95
+output-format = "concise"
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -86,8 +87,6 @@ skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
 ignore = [
-    "ANN101",
-    "ANN102",
     "C90",
     "COM812",
     "COM819",
