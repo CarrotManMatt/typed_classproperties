@@ -32,10 +32,12 @@ class classproperty(property, Generic[T_class, T_value]):
     Credit to Denis Rhyzhkov on Stackoverflow: https://stackoverflow.com/a/13624858/1280629
     """
 
-    def __init__(self, func: Callable[..., T_value], /) -> None:  # noqa: D107
+    def __init__(self, func: Callable[..., T_value], /) -> None:
+        """Initialise the classproperty object."""
         super().__init__(func)
 
-    def __get__(self, owner_self: object, owner_cls: Optional[type] = None, /) -> T_value:  # noqa: D105
+    def __get__(self, owner_self: object, owner_cls: Optional[type] = None, /) -> T_value:
+        """Retrieve the value of the property."""
         if self.fget is None:
             BROKEN_OBJECT_MESSAGE: Final[str] = "Broken object 'classproperty'."
             raise RuntimeError(BROKEN_OBJECT_MESSAGE)
@@ -66,7 +68,8 @@ class cached_classproperty(
     as this will completely remove the cached value and the cached property setter.
     """
 
-    def __set_name__(self, owner: type, name: str, /) -> None:  # noqa: D105
+    def __set_name__(self, owner: type, name: str, /) -> None:
+        """Store the lookupkeyof the cached-classproperty."""
         super().__set_name__(owner, name)
 
         if not hasattr(owner, "_original_cached_classproperties"):
@@ -99,9 +102,10 @@ class cached_classproperty(
     @overload
     def __get__(self, instance: object, owner: Optional[type[Any]] = None, /) -> T_value: ...
 
-    def __get__(  # noqa: D105
+    def __get__(
         self, instance: object, owner: Optional[type[Any]] = None, /
     ) -> Union["Self", T_value]:
+        """Retrieve the value of the property."""
         if self.attrname is None:
             NO_NAME_SET_MESSAGE: Final[str] = (
                 "Cannot use cached_classproperty instance "

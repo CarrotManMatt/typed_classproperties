@@ -35,6 +35,8 @@ classifiers = [
 ]
 dynamic = ["description", "version"]
 keywords = ["classmethod", "decorator", "property"]
+license = "MIT"
+license-files = ["LICENSE"]
 maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
 name = "typed_classproperties"
 readme = "README.md"

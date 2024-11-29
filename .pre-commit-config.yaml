@@ -73,6 +73,7 @@ repos:
       rev: 0.4.29
       hooks:
         - id: uv-lock
+          args: [--upgrade]
           always_run: true
 
     - repo: https://github.com/google/yamlfmt
