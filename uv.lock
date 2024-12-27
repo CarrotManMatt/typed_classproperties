@@ -300,7 +300,7 @@ wheels = [
 
 [[package]]
 name = "typed-classproperties"
-version = "1.1.1.dev6"
+version = "1.1.1.dev8"
 source = { editable = "." }
 
 [package.dev-dependencies]

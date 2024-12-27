@@ -10,6 +10,8 @@ on:
 jobs:
     uv-check:
         runs-on: ubuntu-latest
+        outputs:
+            project_name: ${{steps.store-project-name.outputs.project_name}}
 
         steps:
             - uses: actions/checkout@v4
@@ -24,9 +26,13 @@ jobs:
             - name: Install jq
               run: sudo apt-get install jq
 
+            - name: Store Project Name
+              id: store-project-name
+              run: echo "project_name=$(cat pyproject.toml | uvx --from yq tomlq .project.name -M
+                -r)" >> $GITHUB_OUTPUT
+
             - name: Update local package only
-              run: uv lock --upgrade-package $(cat pyproject.toml | uvx --from yq tomlq .project.name
-                -M -r)
+              run: uv lock --upgrade-package ${{steps.store-project-name.outputs.project_name}}
 
             - name: Check uv.lock (ensure all dependencies up to date)
               run: uv lock --check
@@ -60,14 +66,15 @@ jobs:
             - name: Install mypy From Locked Dependencies
               run: uv sync --no-group dev --group type-check
 
-            - name: Save Hashed Python Version
+            - name: Store Hashed Python Version
+              id: store-hashed-python-version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
                 path: ./.mypy_cache
-                key: mypy|${{steps.save_hashed_python_version.outputs.hashed_python_version}}
+                key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
 
             - name: Run mypy
               run: uv run -- mypy .  # TODO: Add GitHub workflows output format
@@ -95,14 +102,15 @@ jobs:
             - name: Install pre-commit From Locked Dependencies
               run: uv sync --only-group pre-commit
 
-            - name: Save Hashed Python Version
+            - name: Store Hashed Python Version
+              id: store-hashed-python-version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
                 path: ~/.cache/pre-commit
-                key: pre-commit|${{steps.save_hashed_python_version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
+                key: pre-commit|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
 
             - name: Setup pre-commit Environments
               run: uv run -- pre-commit install
@@ -142,14 +150,15 @@ jobs:
             - name: Install pytest From Locked Dependencies
               run: uv sync --only-group test
 
-            - name: Save Hashed Python Version
+            - name: Store Hashed Python Version
+              id: store-hashed-python-version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
                 path: ./.pytest_cache
-                key: pytest|${{steps.save_hashed_python_version.outputs.hashed_python_version}}
+                key: pytest|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
 
             - name: Run pytest
               run: uv run -- pytest  # TODO: Add GitHub workflows output format
@@ -177,8 +186,8 @@ jobs:
             - name: Install ruff From Locked Dependencies
               run: uv sync --only-group lint-format
 
-            - name: Save Hashed Python Version
-              id: save_hashed_python_version
+            - name: Store Hashed Python Version
+              id: store-hashed-python-version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
@@ -213,14 +222,9 @@ jobs:
               with:
                 enable-cache: true
 
-            - name: Install jq
-              if: github.ref_type != 'tag'
-              run: sudo apt-get install jq
-
             - name: Update local package only
               if: github.ref_type != 'tag'
-              run: uv lock --upgrade-package $(cat pyproject.toml | uvx --from yq tomlq .project.name
-                -M -r)
+              run: uv lock --upgrade-package ${{needs.uv-check.outputs.project_name}}
 
             - name: Build Package
               run: uv build --no-sources --build
