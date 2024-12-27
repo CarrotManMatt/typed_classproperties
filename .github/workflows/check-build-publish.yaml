@@ -191,7 +191,7 @@ jobs:
               run: uv run -- ruff check --no-fix --output-format=github
 
     build:
-        needs: [mypy, pre-commit, pytest, uv-check]
+        needs: [mypy, pre-commit, pytest, ruff-lint, uv-check]
         runs-on: ubuntu-latest
         env:
             UV_NO_SYNC: true
