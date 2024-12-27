@@ -213,6 +213,15 @@ jobs:
               with:
                 enable-cache: true
 
+            - name: Install jq
+              if: github.ref_type != 'tag'
+              run: sudo apt-get install jq
+
+            - name: Update local package only
+              if: github.ref_type != 'tag'
+              run: uv lock --upgrade-package $(cat pyproject.toml | uvx --from yq tomlq .project.name
+                -M -r)
+
             - name: Build Package
               run: uv build --no-sources --build
 
