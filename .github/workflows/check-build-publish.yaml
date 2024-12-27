@@ -113,7 +113,7 @@ jobs:
                 key: pre-commit|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
 
             - name: Setup pre-commit Environments
-              run: uv run -- pre-commit install
+              run: uv run -- pre-commit install-hooks
 
             - name: Store pre-commit Checks Which Require Skipping
               run: echo "SKIP=check-github-workflows,ruff,uv-lock" >> $GITHUB_ENV
