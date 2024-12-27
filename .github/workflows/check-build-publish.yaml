@@ -194,7 +194,7 @@ jobs:
             - uses: actions/cache@v4
               with:
                 path: ./.ruff_cache
-                key: ruff|${{steps.save_hashed_python_version.outputs.hashed_python_version}}
+                key: ruff|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
 
             - name: Run Ruff
               run: uv run -- ruff check --no-fix --output-format=github
