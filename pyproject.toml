@@ -173,3 +173,9 @@ no-binary-package = ["typed_classproperties"]
 no-build = true
 package = true
 trusted-publishing = "always"
+
+[[tool.uv.index]]
+explicit = true
+name = "Test-PyPI"
+publish-url = "https://test.pypi.org/legacy/"
+url = "https://test.pypi.org/simple/"
