@@ -1,5 +1,11 @@
 [general]
-ignore = B6,B5
+ignore = B5,B6
+regex-style-search = True
+fail-without-commits = True
 
 [title-must-not-contain-word]
 words = fuck,stupid,annoying,rubbish,shit,crap
+
+[ignore-by-author-name]
+regex = \A.*\[bot\].*\Z
+ignore = T1,B1,B5,B6
