@@ -282,9 +282,6 @@ jobs:
               with:
                 name: converted-readme
 
-            - name: Apply Converted README
-              run: uv run --no-project .github/scripts/apply_converted_readme.py
-
             - name: Update local package only
               if: github.ref_type != 'tag'
               run: uv lock --upgrade-package ${{needs.uv-check.outputs.project_name}}

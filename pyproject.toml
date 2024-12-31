@@ -12,7 +12,7 @@ dev = [
 lint-format = ["ruff>=0.4"]
 pre-commit = ["pre-commit"]
 test = ["pytest"]
-type-check = ["mypy>=1.12", "tomlkit"]
+type-check = ["mypy>=1.12"]
 
 [project]
 authors = [
@@ -40,7 +40,7 @@ license = "MIT"
 license-files = ["LICENSE"]
 maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
 name = "typed_classproperties"
-readme = { content-type = "text/markdown", text = "" }
+readme = "README.md"
 requires-python = ">=3.9"
 
 [project.urls]

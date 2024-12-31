@@ -133,6 +133,7 @@ local/
 *.sqlite3-journal
 *.db
 local_stubs/
+README.md
 
 # Unit test / coverage reports
 htmlcov/
