@@ -108,6 +108,7 @@ venv.bak
 [Ll]ib64
 [Ll]ocal
 [Ss]cripts
+!.github/[Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json
 .env.backup

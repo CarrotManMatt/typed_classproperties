@@ -10,8 +10,6 @@ on:
 jobs:
     convert-readme:
         runs-on: ubuntu-latest
-        outputs:
-            converted_readme: ${{steps.convert-project-readme.outputs.converted_readme}}
 
         steps:
             - uses: actions/checkout@v4
@@ -21,8 +19,13 @@ jobs:
                 node-version: 18
 
             - name: Convert Project README
-              id: convert-project-readme
-              run: echo "converted_readme=$(npx downdoc -o - README.adoc)" >> $GITHUB_OUTPUT
+              run: npx downdoc README.adoc
+
+            - name: Save Converted README
+              uses: actions/upload-artifact@v4
+              with:
+                name: converted-readme
+                path: README.md
 
     uv-check:
         runs-on: ubuntu-latest
@@ -53,7 +56,7 @@ jobs:
             - name: Check uv.lock (ensure all dependencies up to date)
               run: uv lock --check
 
-    mypy:
+    mypy-package:
         needs: [uv-check]
         runs-on: ubuntu-latest
         env:
@@ -94,6 +97,42 @@ jobs:
 
             - name: Run mypy
               run: uv run -- mypy .  # TODO: Add GitHub workflows output format
+
+    mypy-scripts:
+        runs-on: ubuntu-latest
+        env:
+            UV_NO_SYNC: true
+            UV_FROZEN: true
+            UV_PYTHON_DOWNLOADS: never
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set Up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version-file: .python-version
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v5
+              with:
+                enable-cache: true
+
+            - name: Install mypy From Locked Dependencies
+              run: uv sync --only-group type-check
+
+            - name: Store Hashed Python Version
+              id: store-hashed-python-version
+              run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
+                >> $GITHUB_OUTPUT
+
+            - uses: actions/cache@v4
+              with:
+                path: ./.mypy_cache
+                key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|scripts
+
+            - name: Run mypy
+              run: uv run -- mypy .github/scripts  # TODO: Add GitHub workflows output format
 
     pre-commit:
         runs-on: ubuntu-latest
@@ -216,7 +255,7 @@ jobs:
               run: uv run -- ruff check --no-fix --output-format=github
 
     build:
-        needs: [mypy, pre-commit, pytest, ruff-lint, uv-check, convert-readme]
+        needs: [mypy-package, mypy-scripts, pre-commit, pytest, ruff-lint, uv-check, convert-readme]
         runs-on: ubuntu-latest
         env:
             UV_NO_SYNC: true
@@ -238,9 +277,13 @@ jobs:
               with:
                 enable-cache: true
 
-            - name: Apply converted README
-              run: |
-                sed -i 's/{ content-type = "text\/markdown", text = "" }/{ content-type = "text\/markdown", text = "${{needs.convert-readme.outputs.converted_readme}}" }/' pyproject.toml
+            - name: Download Converted README
+              uses: actions/download-artifact@v4
+              with:
+                name: converted-readme
+
+            - name: Apply Converted README
+              run: uv run --no-project .github/scripts/apply_converted_readme.py
 
             - name: Update local package only
               if: github.ref_type != 'tag'

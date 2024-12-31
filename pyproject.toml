@@ -12,7 +12,7 @@ dev = [
 lint-format = ["ruff>=0.4"]
 pre-commit = ["pre-commit"]
 test = ["pytest"]
-type-check = ["mypy>=1.12"]
+type-check = ["mypy>=1.12", "tomlkit"]
 
 [project]
 authors = [
