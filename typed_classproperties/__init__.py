@@ -5,19 +5,17 @@ from functools import cached_property
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Final,
     Generic,
-    Optional,
     TypeVar,
-    Union,
     overload,
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
+    from typing import Final
 
     from typing_extensions import Self
+
 
 __all__: "Sequence[str]" = ("cached_classproperty", "classproperty")
 
@@ -32,11 +30,11 @@ class classproperty(property, Generic[T_class, T_value]):
     Credit to Denis Rhyzhkov on Stackoverflow: https://stackoverflow.com/a/13624858/1280629
     """
 
-    def __init__(self, func: Callable[..., T_value], /) -> None:
+    def __init__(self, func: "Callable[..., T_value]", /) -> None:
         """Initialise the classproperty object."""
         super().__init__(func)
 
-    def __get__(self, owner_self: object, owner_cls: Optional[type] = None, /) -> T_value:
+    def __get__(self, owner_self: object, owner_cls: "type | None" = None, /) -> T_value:
         """Retrieve the value of the property."""
         if self.fget is None:
             BROKEN_OBJECT_MESSAGE: Final[str] = "Broken object 'classproperty'."
@@ -77,7 +75,7 @@ class cached_classproperty(
 
         getattr(owner, "_original_cached_classproperties")[self.attrname] = self  # noqa: B009
 
-    def _get_cached_property(self, owner: Optional[type[Any]]) -> Any:  # noqa: ANN401
+    def _get_cached_property(self, owner: "type[Any] | None") -> Any:  # noqa: ANN401
         if self.attrname is None or owner is None:
             raise RuntimeError
 
@@ -97,14 +95,14 @@ class cached_classproperty(
         return val
 
     @overload
-    def __get__(self, instance: None, owner: Optional[type[Any]] = None, /) -> "Self": ...
+    def __get__(self, instance: None, owner: "type[Any] | None" = None, /) -> "Self": ...
 
     @overload
-    def __get__(self, instance: object, owner: Optional[type[Any]] = None, /) -> T_value: ...
+    def __get__(self, instance: object, owner: "type[Any] | None" = None, /) -> T_value: ...
 
     def __get__(
-        self, instance: object, owner: Optional[type[Any]] = None, /
-    ) -> Union["Self", T_value]:
+        self, instance: object, owner: "type[Any] | None" = None, /
+    ) -> "Self | T_value":
         """Retrieve the value of the property."""
         if self.attrname is None:
             NO_NAME_SET_MESSAGE: Final[str] = (
@@ -114,11 +112,11 @@ class cached_classproperty(
             raise TypeError(NO_NAME_SET_MESSAGE)
 
         if sys.version_info >= (3, 12):
-            unlocked_cached_property: Union[Self, T_value] = self._get_cached_property(owner)
+            unlocked_cached_property: "Self | T_value" = self._get_cached_property(owner)  # noqa: UP037
             return unlocked_cached_property
 
         with getattr(self, "lock"):  # type: ignore[unreachable, unused-ignore]  # noqa: B009
-            locked_cached_property: Union[Self, T_value] = self._get_cached_property(owner)
+            locked_cached_property: "Self | T_value" = self._get_cached_property(owner)  # noqa: UP037
 
         return locked_cached_property
 
