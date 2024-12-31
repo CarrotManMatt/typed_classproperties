@@ -268,7 +268,7 @@ jobs:
         permissions:
             id-token: write
 
-        if: github.ref_type != 'tag'
+        if: github.ref_type != 'tag' && github.event_name != 'pull_request'
 
         steps:
             - uses: actions/checkout@v4
