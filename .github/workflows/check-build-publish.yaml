@@ -8,6 +8,22 @@ on:
         tags: ["v*"]
 
 jobs:
+    convert-readme:
+        runs-on: ubuntu-latest
+        outputs:
+            converted_readme: ${{steps.convert-project-readme.outputs.converted_readme}}
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                node-version: 18
+
+            - name: Convert Project README
+              id: convert-project-readme
+              run: echo "converted_readme=$(npx downdoc -o - README.adoc)" >> $GITHUB_OUTPUT
+
     uv-check:
         runs-on: ubuntu-latest
         outputs:
@@ -200,7 +216,7 @@ jobs:
               run: uv run -- ruff check --no-fix --output-format=github
 
     build:
-        needs: [mypy, pre-commit, pytest, ruff-lint, uv-check]
+        needs: [mypy, pre-commit, pytest, ruff-lint, uv-check, convert-readme]
         runs-on: ubuntu-latest
         env:
             UV_NO_SYNC: true
@@ -221,6 +237,10 @@ jobs:
               uses: astral-sh/setup-uv@v5
               with:
                 enable-cache: true
+
+            - name: Apply converted README
+              run: |
+                sed -i 's/{ content-type = "text\/markdown", text = "" }/{ content-type = "text\/markdown", text = "${{needs.convert-readme.outputs.converted_readme}}" }/' pyproject.toml
 
             - name: Update local package only
               if: github.ref_type != 'tag'

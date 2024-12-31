@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "hatchling.build"
-requires = ["Pydowndoc", "hatch-docstring-description", "hatch-vcs", "hatchling"]
+requires = ["hatch-docstring-description", "hatch-vcs", "hatchling"]
 
 [dependency-groups]
 dev = [
@@ -34,12 +34,13 @@ classifiers = [
     "Topic :: Software Development",
     "Typing :: Typed",
 ]
-dynamic = ["description", "readme", "version"]
+dynamic = ["description", "version"]
 keywords = ["classmethod", "decorator", "property"]
 license = "MIT"
 license-files = ["LICENSE"]
 maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
 name = "typed_classproperties"
+readme = { content-type = "text/markdown", text = "" }
 requires-python = ">=3.9"
 
 [project.urls]
@@ -51,7 +52,6 @@ only-packages = true
 
 [tool.hatch.metadata.hooks]
 docstring-description = {}
-downdoc-readme = { path = "README.adoc" }
 
 [tool.hatch.version]
 raw-options = { local_scheme = "no-local-version", version_scheme = "python-simplified-semver" }
