@@ -74,6 +74,9 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - name: Create Blank README.md
+              run: touch README.md
+
             - name: Set Up Python
               uses: actions/setup-python@v5
               with:
@@ -158,6 +161,9 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - name: Create Blank README.md
+              run: touch README.md
+
             - name: Set Up Python
               uses: actions/setup-python@v5
               with:
@@ -170,7 +176,7 @@ jobs:
                 enable-cache: true
 
             - name: Install pytest From Locked Dependencies
-              run: uv sync --only-group test
+              run: uv sync --no-group dev --group test
 
             - name: Store Hashed Python Version
               id: store-hashed-python-version
@@ -234,6 +240,11 @@ jobs:
               with:
                 fetch-depth: 0
 
+            - name: Download Converted README
+              uses: actions/download-artifact@v4
+              with:
+                name: converted-readme
+
             - name: Set Up Python
               uses: actions/setup-python@v5
               with:
@@ -243,11 +254,6 @@ jobs:
               uses: astral-sh/setup-uv@v5
               with:
                 enable-cache: true
-
-            - name: Download Converted README
-              uses: actions/download-artifact@v4
-              with:
-                name: converted-readme
 
             - name: Update local package only
               if: github.ref_type != 'tag'
