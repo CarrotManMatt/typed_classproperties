@@ -40,7 +40,7 @@ license = "MIT"
 license-files = ["LICENSE"]
 maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
 name = "typed_classproperties"
-readme = "README.md"
+readme = "README.md" # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The README.adoc file for this project must be converted manually.
 requires-python = ">=3.9"
 
 [project.urls]
