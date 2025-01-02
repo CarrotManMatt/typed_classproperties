@@ -1,13 +1,5 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "assignAutomerge": true,
-    "configMigration": true,
-    "dependencyDashboard": true,
-    "dependencyDashboardAutoclose": true,
-    "dependencyDashboardLabels": [
-        "dependencies",
-        "tracker"
-    ],
     "enabled": true,
     "enabledManagers": [
         "github-actions",
@@ -16,56 +8,6 @@
         "pre-commit"
     ],
     "extends": [
-        "replacements:all",
-        "workarounds:all"
-    ],
-    "labels": [
-        "dependencies"
-    ],
-    "lockFileMaintenance": {
-        "enabled": true
-    },
-    "packageRules": [
-        {
-            "groupName": "pep621",
-            "matchManagers": [
-                "pep621"
-            ]
-        },
-        {
-            "groupName": "github-actions",
-            "matchDatasources": [
-                "github-tags"
-            ],
-            "matchManagers": [
-                "github-actions"
-            ]
-        },
-        {
-            "groupName": "github-runners",
-            "matchDatasources": [
-                "github-runners"
-            ],
-            "matchManagers": [
-                "github-actions"
-            ]
-        },
-        {
-            "description": "Update renovatebot's pre-commit hooks Tuesday mornings",
-            "matchManagers": [
-                "pre-commit"
-            ],
-            "matchPackageNames": [
-                "renovatebot/pre-commit-hooks"
-            ],
-            "schedule": [
-                "* 3-8 * * 2"
-            ]
-        }
-    ],
-    "prHourlyLimit": 5,
-    "pre-commit": {
-        "enabled": true
-    },
-    "timezone": "Europe/London"
+        "github>CarrotManMatt/renovate-config"
+    ]
 }
