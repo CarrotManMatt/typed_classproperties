@@ -1,0 +1,18 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+
+[project]
+authors = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
+classifiers = ["Development Status :: 7 - Inactive"]
+dependencies = ["typed_classproperties"]
+description = "You tried to install \"typed_classproperty\". The correct package name is \"typed_classproperties\"."
+name = "downdoc"
+readme = { content-type = "text/markdown", text = "You tried to install \"typed_classproperty\". The correct package name is \"typed_classproperties\"." }
+version = "1.0.0"
+
+[tool.uv]
+managed = false
+package = false
+trusted-publishing = "always"

@@ -1,0 +1,27 @@
+name: Publish PyPI Redirects
+
+on:
+    workflow_dispatch:
+
+jobs:
+    downdoc-redirect:
+        runs-on: ubuntu-latest
+        environment: redirect-publish-typed_classproperty
+        permissions:
+            id-token: write
+
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v5
+
+            - name: Build Package
+              working-directory: ./.pypi-redirects/typed_classproperty
+              run: uv build --sdist
+
+            - name: Publish to PyPI
+              working-directory: ./.pypi-redirects/typed_classproperty
+              run: uv publish
