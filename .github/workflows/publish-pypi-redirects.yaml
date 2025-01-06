@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    downdoc-redirect:
+    typed_classproperty-redirect:
         runs-on: ubuntu-latest
         environment: redirect-publish-typed_classproperty
         permissions:
