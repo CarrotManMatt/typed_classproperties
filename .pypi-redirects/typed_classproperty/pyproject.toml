@@ -8,9 +8,12 @@ authors = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
 classifiers = ["Development Status :: 7 - Inactive"]
 dependencies = ["typed_classproperties"]
 description = "You tried to install \"typed_classproperty\". The correct package name is \"typed_classproperties\"."
-name = "downdoc"
+name = "typed_classproperty"
 readme = { content-type = "text/markdown", text = "You tried to install \"typed_classproperty\". The correct package name is \"typed_classproperties\"." }
 version = "1.0.0"
+
+[project.urls]
+Repository = "https://github.com/CarrotManMatt/typed_classproperties"
 
 [tool.uv]
 managed = false
