@@ -15,6 +15,7 @@ version = "1.0.0"
 [project.urls]
 Repository = "https://github.com/CarrotManMatt/typed_classproperties"
 
+
 [tool.uv]
 managed = false
 package = false
