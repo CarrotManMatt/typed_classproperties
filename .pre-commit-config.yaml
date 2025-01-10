@@ -82,6 +82,6 @@ repos:
           always_run: true
 
     - repo: https://github.com/google/yamlfmt
-      rev: v0.14.0
+      rev: v0.15.0
       hooks:
         - id: yamlfmt
