@@ -6,13 +6,13 @@ default_language_version:
 
 repos:
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 39.92.0
+      rev: 39.100.1
       hooks:
         - id: renovate-config-validator
           args: [--strict]
 
     - repo: https://github.com/python-jsonschema/check-jsonschema
-      rev: 0.30.0
+      rev: 0.31.0
       hooks:
         - id: check-github-workflows
 
@@ -68,7 +68,7 @@ repos:
           stages: [manual]
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.8.6
+      rev: v0.9.0
       hooks:
         - id: ruff
           args: [--fix]
@@ -76,7 +76,7 @@ repos:
         - id: ruff-format
 
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.5.15
+      rev: 0.5.16
       hooks:
         - id: uv-lock
           always_run: true
