@@ -68,7 +68,7 @@ This package is hosted on {labelled-url-pypi} and can be installed using
 [source,bash]
 uv add typed_classproperties
 
-.Install using {labelled-url-pip}
+.Install using {labelled-url-pip} after {url-python-wiki-virtual-environments}[creating a virtual environment]
 [source,bash]
 path/to/venv/python -m pip install typed_classproperties
 
