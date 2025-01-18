@@ -172,6 +172,7 @@ default-groups = ["dev"]
 no-binary-package = ["typed_classproperties"]
 no-build = true
 package = true
+required-version = ">=0.5.21"
 trusted-publishing = "always"
 
 [[tool.uv.index]]
