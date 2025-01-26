@@ -29,8 +29,6 @@ jobs:
 
     uv-check:
         runs-on: ubuntu-latest
-        outputs:
-            project_name: ${{steps.store-project-name.outputs.project_name}}
 
         steps:
             - uses: actions/checkout@v4
@@ -44,17 +42,6 @@ jobs:
               uses: astral-sh/setup-uv@v5
               with:
                 enable-cache: true
-
-            - name: Install jq
-              run: sudo apt-get install jq
-
-            - name: Store Project Name
-              id: store-project-name
-              run: echo "project_name=$(cat pyproject.toml | uvx --from yq tomlq .project.name -M
-                -r)" >> $GITHUB_OUTPUT
-
-            - name: Update local package only
-              run: uv lock --upgrade-package ${{steps.store-project-name.outputs.project_name}}
 
             - name: Check uv.lock (ensure all dependencies up to date)
               run: uv lock --check
@@ -254,10 +241,6 @@ jobs:
               uses: astral-sh/setup-uv@v5
               with:
                 enable-cache: true
-
-            - name: Update local package only
-              if: github.ref_type != 'tag'
-              run: uv lock --upgrade-package ${{needs.uv-check.outputs.project_name}}
 
             - name: Build Package
               run: uv build --no-sources --build
