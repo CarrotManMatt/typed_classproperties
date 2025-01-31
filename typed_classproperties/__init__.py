@@ -10,6 +10,11 @@ from typing import (
     overload,
 )
 
+if sys.version_info >= (3, 12):
+    from typing import override
+else:
+    from typing_extensions import override
+
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
     from typing import Final
@@ -30,10 +35,12 @@ class classproperty(property, Generic[T_class, T_value]):
     Credit to Denis Rhyzhkov on Stackoverflow: https://stackoverflow.com/a/13624858/1280629
     """
 
+    @override
     def __init__(self, func: "Callable[..., T_value]", /) -> None:
         """Initialise the classproperty object."""
         super().__init__(func)
 
+    @override
     def __get__(self, owner_self: object, owner_cls: "type | None" = None, /) -> T_value:
         """Retrieve the value of the property."""
         if self.fget is None:
@@ -66,6 +73,7 @@ class cached_classproperty(
     as this will completely remove the cached value and the cached property setter.
     """
 
+    @override
     def __set_name__(self, owner: type, name: str, /) -> None:
         """Store the lookupkeyof the cached-classproperty."""
         super().__set_name__(owner, name)
@@ -95,11 +103,14 @@ class cached_classproperty(
         return val
 
     @overload
+    @override
     def __get__(self, instance: None, owner: "type[Any] | None" = None, /) -> "Self": ...
 
     @overload
+    @override
     def __get__(self, instance: object, owner: "type[Any] | None" = None, /) -> T_value: ...
 
+    @override
     def __get__(
         self, instance: object, owner: "type[Any] | None" = None, /
     ) -> "Self | T_value":

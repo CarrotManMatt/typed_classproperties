@@ -34,6 +34,7 @@ classifiers = [
     "Topic :: Software Development",
     "Typing :: Typed",
 ]
+dependencies = ["typing-extensions; python_version < '3.12'"]
 dynamic = ["description", "version"]
 keywords = ["classmethod", "decorator", "property"]
 license = "MIT"

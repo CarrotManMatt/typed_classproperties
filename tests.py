@@ -1,7 +1,13 @@
 """Full test suite for 'typed_classproperties' library."""
 
 import abc
+import sys
 from typing import TYPE_CHECKING, Any
+
+if sys.version_info >= (3, 12):
+    from typing import override
+else:
+    from typing_extensions import override
 
 from typed_classproperties import cached_classproperty, classproperty
 
@@ -53,6 +59,7 @@ class TestClassProperty(BaseTestClassProperty):
 
         class _SubClass(_BaseClass):
             @classproperty
+            @override
             def base_method(cls) -> str:
                 return ""
 
