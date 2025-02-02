@@ -45,7 +45,7 @@ v1.0, 27/12/2024
 :labelled-url-pypi: {url-pypi}[PyPI]
 :labelled-url-pip: {url-pip}[pip]
 :labelled-url-uv: {url-uv}[uv]
-:labelled-url-library-typing-extensions: {url-library-typing-extensions}[`+typing-extensions+`]
+:labelled-url-library-typing-extensions: {url-library-typing-extensions}[typing-extensions]
 
 image:https://img.shields.io/badge/%F0%9F%A5%95-typed__classproperties-blue[Pydowndoc,link={url-project-repository}]
 image:https://img.shields.io/pypi/v/typed_classproperties[PyPI Version,link={url-project-pypi}]
@@ -58,7 +58,7 @@ image:https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astr
 ****
 Typed decorators for `+classproperty+` and `+cached_classproperty+`.
 
-**Python 3 compatible only**. **No dependencies**footnote:[The library {labelled-url-library-typing-extensions} is required when running with {labelled-url-python} < 3.12].
+**Python 3 compatible only**. **No dependencies**footnote:[The library `{labelled-url-library-typing-extensions}` is required when running with {labelled-url-python} < 3.12].
 ****
 
 == Installation
