@@ -125,5 +125,5 @@ uv run --group test -- pytest
 
 == Credits
 
-Credits to Denis Ryzhkov on Stackoverflow for the implementation of classproperty:
+Credits to Denis Ryzhkov, on Stack Overflow, for the original implementation of the `+@classproperty+` decorator:
 https://stackoverflow.com/a/13624858/1280629
