@@ -117,7 +117,7 @@ assert CachedFoo(bar="bar").FOO == 1
 
 == Tests
 
-See link:tests.py[] for usage examples and expected behaviour.
+See link:tests.py[] for further usage examples and expected behaviour.
 
 .To run tests
 [source,bash]
