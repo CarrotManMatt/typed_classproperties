@@ -77,7 +77,7 @@ class cached_classproperty(
 
         getattr(owner, "_original_cached_classproperties")[self.attrname] = self  # noqa: B009
 
-    def _get_cached_property(self, owner: "type[Any] | None") -> Any:  # noqa: ANN401
+    def _get_cached_property(self, owner: "type[Any] | None") -> "Any":  # noqa: ANN401
         if self.attrname is None or owner is None:
             raise RuntimeError
 
