@@ -2,13 +2,7 @@
 
 import sys
 from functools import cached_property
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Generic,
-    TypeVar,
-    overload,
-)
+from typing import TYPE_CHECKING, Generic, TypeVar, overload
 
 if sys.version_info >= (3, 12):
     from typing import override
@@ -17,7 +11,7 @@ else:
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
-    from typing import Final
+    from typing import Any, Final
 
     from typing_extensions import Self
 
