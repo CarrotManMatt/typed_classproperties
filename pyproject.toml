@@ -145,6 +145,7 @@ parametrize-values-type = "tuple"
 extend-ignore-names = ["_original_cached_classproperties"]
 
 [tool.ruff.lint.flake8-type-checking]
+exempt-modules = []
 quote-annotations = true
 strict = true
 
