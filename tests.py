@@ -2,7 +2,7 @@
 
 import abc
 import sys
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if sys.version_info >= (3, 12):
     from typing import override
@@ -13,6 +13,7 @@ from typed_classproperties import cached_classproperty, classproperty
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+    from typing import Any
 
 __all__: "Sequence[str]" = ("TestCachedClassProperty", "TestClassProperty")
 
@@ -21,7 +22,7 @@ class BaseTestClassProperty(abc.ABC):  # noqa: B024
     """Abstract base class for all test classes."""
 
     @classmethod
-    def _get_cls_definition(cls, test_value: object) -> Any:  # noqa: ANN401
+    def _get_cls_definition(cls, test_value: object) -> "Any":  # noqa: ANN401
         class _HolderClass:
             cached_prop_exec_count = 0
 
