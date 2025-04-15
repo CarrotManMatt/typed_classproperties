@@ -258,7 +258,9 @@ jobs:
         permissions:
             id-token: write
 
-        if: github.ref_type == 'tag'
+        if: |
+            github.event_name != 'pull_request' &&
+            (github.event_name != 'push' || github.ref_type == 'tag')
 
         steps:
             - uses: actions/checkout@v4
@@ -284,7 +286,9 @@ jobs:
         permissions:
             id-token: write
 
-        if: github.ref_type != 'tag' && github.event_name != 'pull_request'
+        if: |
+            (github.event_name != 'push' || github.ref_type != 'tag') &&
+            (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'CarrotManMatt/typed_classproperties')
 
         steps:
             - uses: actions/checkout@v4
