@@ -6,7 +6,7 @@ default_language_version:
 
 repos:
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 40.21.0
+      rev: 40.32.7
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -68,7 +68,7 @@ repos:
           stages: [manual]
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.11.10
+      rev: v0.11.11
       hooks:
         - id: ruff
           args: [--fix]
@@ -76,12 +76,12 @@ repos:
         - id: ruff-format
 
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.7.6
+      rev: 0.7.8
       hooks:
         - id: uv-lock
           always_run: true
 
     - repo: https://github.com/google/yamlfmt
-      rev: v0.16.0
+      rev: v0.17.0
       hooks:
         - id: yamlfmt
