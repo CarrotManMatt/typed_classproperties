@@ -6,7 +6,7 @@ default_language_version:
 
 repos:
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 40.32.7
+      rev: 40.36.8
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -23,7 +23,7 @@ repos:
         - id: gitlint-ci
 
     - repo: https://github.com/gitleaks/gitleaks
-      rev: v8.26.0
+      rev: v8.27.0
       hooks:
         - id: gitleaks
 
@@ -68,7 +68,7 @@ repos:
           stages: [manual]
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.11.11
+      rev: v0.11.12
       hooks:
         - id: ruff
           args: [--fix]
@@ -76,7 +76,7 @@ repos:
         - id: ruff-format
 
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.7.8
+      rev: 0.7.9
       hooks:
         - id: uv-lock
           always_run: true
