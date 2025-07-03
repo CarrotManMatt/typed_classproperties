@@ -1,10 +1,15 @@
 default_install_hook_types: [pre-commit, commit-msg]
-default_stages: [pre-commit, pre-merge-commit, manual]
-
 default_language_version:
     python: python3.13
+default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
+    - repo: https://github.com/adrienverge/yamllint.git
+      rev: v1.37.1
+      hooks:
+        - id: yamllint
+          args: [--strict]
+
     - repo: https://github.com/renovatebot/pre-commit-hooks
       rev: 41.17.2
       hooks:
@@ -50,7 +55,7 @@ repos:
         - id: name-tests-test
           args: [--pytest-test-first]
         - id: pretty-format-json
-          args: [--autofix, --indent, '4']
+          args: [--autofix, --indent, "4"]
 
     - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
       rev: v2.15.0

@@ -1,14 +1,14 @@
 name: Publish PyPI Redirects
 
-on:
-    workflow_dispatch:
+"on":
+    workflow_dispatch: ~
 
 jobs:
     typed_classproperty-redirect:
-        runs-on: ubuntu-latest
         environment: redirect-publish-typed_classproperty
         permissions:
             id-token: write
+        runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v4
@@ -19,9 +19,9 @@ jobs:
               uses: astral-sh/setup-uv@v6
 
             - name: Build Package
-              working-directory: ./.pypi-redirects/typed_classproperty
               run: uv build --sdist
+              working-directory: ./.pypi-redirects/typed_classproperty
 
             - name: Publish to PyPI
-              working-directory: ./.pypi-redirects/typed_classproperty
               run: uv publish
+              working-directory: ./.pypi-redirects/typed_classproperty

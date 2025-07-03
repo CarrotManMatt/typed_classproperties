@@ -1,0 +1,40 @@
+extends: default
+
+locale: en_GB.UTF-8
+
+rules:
+    anchors:
+        forbid-duplicated-anchors: true
+        forbid-unused-anchors: true
+    braces:
+        forbid: true
+    brackets:
+        max-spaces-inside-empty: 0
+        min-spaces-inside-empty: 0
+    document-end:
+        level: warning
+        present: false
+    document-start:
+        present: false
+    empty-lines:
+        max: 2
+    empty-values: enable
+    float-values:
+        forbid-inf: true
+        forbid-nan: true
+        require-numeral-before-decimal: true
+    indentation: disable
+    key-ordering:
+        ignored-keys:
+            - always_run
+            - args
+            - hooks
+            - jobs
+            - steps
+    line-length: disable
+    new-lines: disable
+    octal-values: enable
+    quoted-strings:
+        allow-quoted-quotes: true
+        quote-type: double
+        required: only-when-needed

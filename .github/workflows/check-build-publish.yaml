@@ -1,11 +1,11 @@
 name: Lint, Type-Check, Test, Build and Publish Package
 
-on:
+"on":
     pull_request:
         branches: [main]
     push:
         branches: [main]
-        tags: ["v*"]
+        tags: [v*]
 
 jobs:
     convert-readme:
@@ -46,13 +46,14 @@ jobs:
             - name: Check uv.lock (ensure all dependencies up to date)
               run: uv lock --check
 
+    # yamllint disable-line rule:key-ordering
     mypy:
+        env:
+            UV_FROZEN: true
+            UV_NO_SYNC: true
+            UV_PYTHON_DOWNLOADS: never
         needs: [uv-check]
         runs-on: ubuntu-latest
-        env:
-            UV_NO_SYNC: true
-            UV_FROZEN: true
-            UV_PYTHON_DOWNLOADS: never
 
         strategy:
             matrix:
@@ -72,31 +73,32 @@ jobs:
             - name: Install uv
               uses: astral-sh/setup-uv@v6
               with:
-                python-version: ${{matrix.python-version}}
                 enable-cache: true
+                python-version: ${{matrix.python-version}}
 
             - name: Install mypy From Locked Dependencies
               run: uv sync --no-group dev --group type-check
 
-            - name: Store Hashed Python Version
-              id: store-hashed-python-version
+            - id: store-hashed-python-version
+              name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
-                path: ./.mypy_cache
                 key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
+                path: ./.mypy_cache
 
             - name: Run mypy
               run: uv run -- mypy .  # TODO: Add GitHub workflows output format
 
+    # yamllint disable-line rule:key-ordering
     pre-commit:
-        runs-on: ubuntu-latest
         env:
-            UV_NO_SYNC: true
             UV_FROZEN: true
+            UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v4
@@ -114,15 +116,15 @@ jobs:
             - name: Install pre-commit From Locked Dependencies
               run: uv sync --only-group pre-commit
 
-            - name: Store Hashed Python Version
-              id: store-hashed-python-version
+            - id: store-hashed-python-version
+              name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
-                path: ~/.cache/pre-commit
                 key: pre-commit|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
+                path: ~/.cache/pre-commit
 
             - name: Setup pre-commit Environments
               run: uv run -- pre-commit install-hooks
@@ -133,16 +135,17 @@ jobs:
             - name: Run pre-commit
               run: uv run -- pre-commit run --all-files --hook-stage manual  # TODO: Add GitHub workflows output format
 
-            - uses: pre-commit-ci/lite-action@v1.1.0
-              if: ${{!cancelled()}}
+            - if: ${{!cancelled()}}
+              uses: pre-commit-ci/lite-action@v1.1.0
 
+    # yamllint disable-line rule:key-ordering
     pytest:
+        env:
+            UV_FROZEN: true
+            UV_NO_SYNC: true
+            UV_PYTHON_DOWNLOADS: never
         needs: [uv-check]
         runs-on: ubuntu-latest
-        env:
-            UV_NO_SYNC: true
-            UV_FROZEN: true
-            UV_PYTHON_DOWNLOADS: never
 
         strategy:
             matrix:
@@ -162,31 +165,32 @@ jobs:
             - name: Install uv
               uses: astral-sh/setup-uv@v6
               with:
-                python-version: ${{matrix.python-version}}
                 enable-cache: true
+                python-version: ${{matrix.python-version}}
 
             - name: Install pytest From Locked Dependencies
               run: uv sync --no-group dev --group test
 
-            - name: Store Hashed Python Version
-              id: store-hashed-python-version
+            - id: store-hashed-python-version
+              name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
-                path: ./.pytest_cache
                 key: pytest|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
+                path: ./.pytest_cache
 
             - name: Run pytest
               run: uv run -- pytest  # TODO: Add GitHub workflows output format
 
+    # yamllint disable-line rule:key-ordering
     ruff-lint:
-        runs-on: ubuntu-latest
         env:
-            UV_NO_SYNC: true
             UV_FROZEN: true
+            UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v4
@@ -204,26 +208,27 @@ jobs:
             - name: Install ruff From Locked Dependencies
               run: uv sync --only-group lint-format
 
-            - name: Store Hashed Python Version
-              id: store-hashed-python-version
+            - id: store-hashed-python-version
+              name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               with:
-                path: ./.ruff_cache
                 key: ruff|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
+                path: ./.ruff_cache
 
             - name: Run Ruff
               run: uv run -- ruff check --no-fix --output-format=github
 
+    # yamllint disable-line rule:key-ordering
     build:
+        env:
+            UV_FROZEN: true
+            UV_NO_SYNC: truex
+            UV_PYTHON_DOWNLOADS: never
         needs: [mypy, pre-commit, pytest, ruff-lint, uv-check, convert-readme]
         runs-on: ubuntu-latest
-        env:
-            UV_NO_SYNC: true
-            UV_FROZEN: true
-            UV_PYTHON_DOWNLOADS: never
 
         steps:
             - uses: actions/checkout@v4
@@ -254,14 +259,16 @@ jobs:
                 name: built-typed_classproperties-package
                 path: dist/
 
+    # yamllint disable-line rule:key-ordering
     publish:
-        needs: [build]
-        runs-on: ubuntu-latest
         environment: publish
-        permissions:
-            id-token: write
 
         if: github.ref_type == 'tag'
+
+        needs: [build]
+        permissions:
+            id-token: write
+        runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v4
@@ -280,16 +287,18 @@ jobs:
             - name: Publish to PyPI
               run: uv publish
 
+    # yamllint disable-line rule:key-ordering
     test-publish:
-        needs: [build]
-        runs-on: ubuntu-latest
         environment: test-publish
-        permissions:
-            id-token: write
 
         if: |
             (github.event_name != 'push' || github.ref_type != 'tag') &&
             (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'CarrotManMatt/typed_classproperties')
+
+        needs: [build]
+        permissions:
+            id-token: write
+        runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v4
@@ -308,14 +317,15 @@ jobs:
             - name: Publish to Test-PyPI
               run: uv publish --index Test-PyPI
 
+    # yamllint disable-line rule:key-ordering
     release:
+        if: github.ref_type == 'tag'
+
         needs: [publish]
-        runs-on: ubuntu-latest
         permissions:
             contents: write
             id-token: write
-
-        if: github.ref_type == 'tag'
+        runs-on: ubuntu-latest
 
         steps:
             - name: Download Build Artifacts
@@ -330,6 +340,7 @@ jobs:
                 inputs: ./dist/typed_classproperties-*.tar.gz ./dist/typed_classproperties-*.whl
 
             - name: Create GitHub Release
+              # yamllint disable-line rule:key-ordering
               env:
                 GITHUB_TOKEN: ${{ github.token }}
               run: gh release create '${{ github.ref_name }}' dist/** --repo '${{github.repository}}'
