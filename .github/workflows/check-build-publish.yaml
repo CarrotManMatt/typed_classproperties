@@ -243,7 +243,7 @@ jobs:
                 fetch-depth: 0
 
             - name: Download Converted README
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v5
               with:
                 name: converted-readme
 
@@ -286,7 +286,7 @@ jobs:
                 enable-cache: true
 
             - name: Download Build Artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v5
               with:
                 name: built-typed_classproperties-package
                 path: dist/
@@ -316,7 +316,7 @@ jobs:
                 enable-cache: true
 
             - name: Download Build Artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v5
               with:
                 name: built-typed_classproperties-package
                 path: dist/
@@ -336,7 +336,7 @@ jobs:
 
         steps:
             - name: Download Build Artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v5
               with:
                 name: built-typed_classproperties-package
                 path: dist/
