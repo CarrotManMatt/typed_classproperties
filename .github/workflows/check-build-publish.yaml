@@ -12,7 +12,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - uses: actions/setup-node@v4
               with:
@@ -31,7 +31,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
                 fetch-depth: 0
 
@@ -60,7 +60,7 @@ jobs:
                 python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - name: Create Blank README.md
               run: touch README.md
@@ -101,7 +101,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - name: Add GB Locale
               run: |
@@ -159,7 +159,7 @@ jobs:
                 python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - name: Create Blank README.md
               run: touch README.md
@@ -200,7 +200,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - name: Set Up Python
               uses: actions/setup-python@v5
@@ -238,7 +238,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
                 fetch-depth: 0
 
@@ -278,7 +278,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - name: Install uv
               uses: astral-sh/setup-uv@v6
@@ -308,7 +308,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - name: Install uv
               uses: astral-sh/setup-uv@v6
