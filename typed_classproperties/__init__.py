@@ -40,11 +40,11 @@ class classproperty(property, Generic[T_class, T_value]):
     ) -> "classproperty[T_class, T_value]": ...
 
     @overload
-    def __get__(self, owner_self: object, owner_cls: type | None = ..., /) -> T_value: ...
+    def __get__(self, owner_self: object, owner_cls: "type | None" = ..., /) -> T_value: ...
 
     @override
     def __get__(
-        self, owner_self: "object | None", owner_cls: type | None = None, /
+        self, owner_self: "object | None", owner_cls: "type | None" = None, /
     ) -> "classproperty[T_class, T_value] | T_value":
         """Retrieve the value of the property."""
         if self.fget is None:
