@@ -38,7 +38,7 @@ class classproperty(property, Generic[T_class, T_value]):
     def __get__(self, owner_self: object, owner_cls: "type | None" = None, /) -> T_value:
         """Retrieve the value of the property."""
         if self.fget is None:
-            BROKEN_OBJECT_MESSAGE: Final[str] = "Broken object 'classproperty'."
+            BROKEN_OBJECT_MESSAGE: Final[str] = f"Broken object '{type(self).__name__}'."
             raise RuntimeError(BROKEN_OBJECT_MESSAGE)
 
         value: T_value = self.fget(owner_cls)
@@ -69,7 +69,7 @@ class cached_classproperty(
 
     @override
     def __set_name__(self, owner: type, name: str, /) -> None:
-        """Store the lookupkeyof the cached-classproperty."""
+        """Store the lookup key of the cached-classproperty."""
         super().__set_name__(owner, name)
 
         if not hasattr(owner, "_original_cached_classproperties"):
@@ -111,7 +111,7 @@ class cached_classproperty(
         """Retrieve the value of the property."""
         if self.attrname is None:
             NO_NAME_SET_MESSAGE: Final[str] = (
-                "Cannot use cached_classproperty instance "
+                f"Cannot use {type(self).__name__} instance "
                 "without calling `__set_name__()` on it."
             )
             raise TypeError(NO_NAME_SET_MESSAGE)
@@ -143,7 +143,7 @@ class cached_classproperty(
         """
         if not hasattr(cls_with_cache, "_original_cached_classproperties"):
             NO_CLASS_PROPERTY_MESSAGE: Final[str] = (
-                f"{cls_with_cache} has never had any `cached_classproperty` attributes "
+                f"{cls_with_cache} has never had any `{cls.__name__}` attributes "
                 "assigned to it."
             )
             raise TypeError(NO_CLASS_PROPERTY_MESSAGE)
