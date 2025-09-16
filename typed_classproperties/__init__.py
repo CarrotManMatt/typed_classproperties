@@ -34,8 +34,18 @@ class classproperty(property, Generic[T_class, T_value]):
         """Initialise the classproperty object."""
         super().__init__(func)
 
+    @overload
+    def __get__(
+        self, owner_self: None, owner_cls: type, /
+    ) -> "classproperty[T_class, T_value]": ...
+
+    @overload
+    def __get__(self, owner_self: object, owner_cls: "type | None" = ..., /) -> T_value: ...
+
     @override
-    def __get__(self, owner_self: object, owner_cls: "type | None" = None, /) -> T_value:
+    def __get__(
+        self, owner_self: "object | None", owner_cls: "type | None" = None, /
+    ) -> "classproperty[T_class, T_value] | T_value":
         """Retrieve the value of the property."""
         if self.fget is None:
             BROKEN_OBJECT_MESSAGE: Final[str] = f"Broken object '{type(self).__name__}'."
@@ -81,7 +91,7 @@ class cached_classproperty(
         if self.attrname is None or owner is None:
             raise RuntimeError
 
-        attrval = owner.__dict__[  # NOTE: We must check if another thread filled cache while we awaited lock
+        attrval = owner.__dict__[  # NOTE: We must check if another thread filled the cache while we awaited lock
             self.attrname
         ]
 
@@ -97,11 +107,9 @@ class cached_classproperty(
         return val
 
     @overload
-    @override
     def __get__(self, instance: None, owner: "type[Any] | None" = None, /) -> "Self": ...
 
     @overload
-    @override
     def __get__(self, instance: object, owner: "type[Any] | None" = None, /) -> T_value: ...
 
     @override
