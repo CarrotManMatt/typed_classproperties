@@ -91,7 +91,7 @@ class cached_classproperty(
         if self.attrname is None or owner is None:
             raise RuntimeError
 
-        attrval = owner.__dict__[  # NOTE: We must check if another thread filled cache while we awaited lock
+        attrval = owner.__dict__[  # NOTE: We must check if another thread filled the cache while we awaited lock
             self.attrname
         ]
 
@@ -107,11 +107,9 @@ class cached_classproperty(
         return val
 
     @overload
-    @override
     def __get__(self, instance: None, owner: "type[Any] | None" = None, /) -> "Self": ...
 
     @overload
-    @override
     def __get__(self, instance: object, owner: "type[Any] | None" = None, /) -> T_value: ...
 
     @override
