@@ -18,11 +18,10 @@ if TYPE_CHECKING:
 
 __all__: "Sequence[str]" = ("cached_classproperty", "classproperty")
 
-T_class = TypeVar("T_class")
 T_value = TypeVar("T_value")
 
 
-class classproperty(property, Generic[T_class, T_value]):
+class classproperty(property, Generic[T_value]):
     """
     Decorator for a Class-level property.
 
@@ -37,7 +36,7 @@ class classproperty(property, Generic[T_class, T_value]):
     @overload
     def __get__(
         self, owner_self: None, owner_cls: type, /
-    ) -> "classproperty[T_class, T_value]": ...
+    ) -> "T_value": ...
 
     @overload
     def __get__(self, owner_self: object, owner_cls: "type | None" = ..., /) -> T_value: ...
