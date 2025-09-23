@@ -34,7 +34,7 @@ class classproperty(property, Generic[T_value]):
         """Initialise the classproperty object."""
         super().__init__(func)
 
-    @overload
+    @overload  # type: ignore[override]
     def __get__(
         self, owner_self: None, owner_cls: type, /
     ) -> T_value: ...
@@ -45,14 +45,13 @@ class classproperty(property, Generic[T_value]):
     @override
     def __get__(
         self, owner_self: "object | None", owner_cls: "type | None" = None, /
-    ) -> "classproperty[T_class, T_value] | T_value":
+    ) -> T_value:
         """Retrieve the value of the property."""
         if self.fget is None:
             BROKEN_OBJECT_MESSAGE: Final[str] = f"Broken object '{type(self).__name__}'."
             raise RuntimeError(BROKEN_OBJECT_MESSAGE)
 
-        value: T_value = self.fget(owner_cls)
-        return value
+        return cast("T_value", self.fget(owner_cls))
 
 
 class cached_classproperty(
