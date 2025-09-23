@@ -35,9 +35,7 @@ class classproperty(property, Generic[T_value]):
         super().__init__(func)
 
     @overload  # type: ignore[override]
-    def __get__(
-        self, owner_self: None, owner_cls: type, /
-    ) -> T_value: ...
+    def __get__(self, owner_self: None, owner_cls: type, /) -> T_value: ...
 
     @overload
     def __get__(self, owner_self: object, owner_cls: "type | None" = ..., /) -> T_value: ...
