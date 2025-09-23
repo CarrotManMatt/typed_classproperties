@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
 __all__: "Sequence[str]" = ("cached_classproperty", "classproperty")
 
+T_class = TypeVar("T_class")
 T_value = TypeVar("T_value")
 
 
