@@ -2,7 +2,7 @@
 
 import sys
 from functools import cached_property
-from typing import TYPE_CHECKING, Generic, TypeVar, overload
+from typing import TYPE_CHECKING, Generic, TypeVar, cast, overload
 
 if sys.version_info >= (3, 12):
     from typing import override
