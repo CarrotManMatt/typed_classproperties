@@ -8,6 +8,7 @@ requires = [
 ]
 
 [dependency-groups]
+build-dev = ["hatchling"]
 dev = [
     { include-group = "lint-format" },
     { include-group = "pre-commit" },
