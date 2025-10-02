@@ -28,7 +28,7 @@ jobs:
               run: uv lock --check
 
     # yamllint disable-line rule:key-ordering
-    mypy:
+    mypy-package:
         env:
             SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
@@ -68,11 +68,48 @@ jobs:
 
             - uses: actions/cache@v4
               with:
-                key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
+                key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|package
                 path: ./.mypy_cache
 
             - name: Run mypy
-              run: uv run -- mypy .  # TODO: Add GitHub workflows output format
+              run: uv run -- mypy typed_classproperties/  # TODO: Add GitHub workflows output format
+
+    # yamllint disable-line rule:key-ordering
+    mypy-scripts:
+        env:
+            UV_FROZEN: true
+            UV_NO_SYNC: true
+            UV_PYTHON_DOWNLOADS: never
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v5
+
+            - name: Set Up Python
+              uses: actions/setup-python@v6
+              with:
+                python-version-file: .python-version
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v6
+              with:
+                enable-cache: true
+
+            - name: Install mypy From Locked Dependencies
+              run: uv sync --only-group type-check --only-group build-dev
+
+            - id: store-hashed-python-version
+              name: Store Hashed Python Version
+              run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
+                >> $GITHUB_OUTPUT
+
+            - uses: actions/cache@v4
+              with:
+                key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|scripts
+                path: ./.mypy_cache
+
+            - name: Run mypy
+              run: uv run -- mypy hatch_build.py  # TODO: Add GitHub workflows output format
 
     # yamllint disable-line rule:key-ordering
     pre-commit:
@@ -218,7 +255,7 @@ jobs:
             UV_FROZEN: true
             UV_NO_SYNC: truex
             UV_PYTHON_DOWNLOADS: never
-        needs: [mypy, pre-commit, pytest, ruff-lint, uv-check]
+        needs: [mypy-package, mypy-scripts, pre-commit, pytest, ruff-lint, uv-check]
         runs-on: ubuntu-latest
 
         steps:
