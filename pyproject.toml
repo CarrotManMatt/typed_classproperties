@@ -57,6 +57,9 @@ Repository = "https://github.com/CarrotManMatt/typed_classproperties"
 [tool.hatch.build]
 only-packages = true
 
+[tool.hatch.build.targets.sdist]
+artifacts = ["README.adoc"]
+
 [tool.hatch.metadata.hooks]
 custom = { readme-path = "README.adoc" } # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The README.adoc file for this project must be converted manually.
 docstring-description = {}
