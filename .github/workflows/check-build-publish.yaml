@@ -49,6 +49,7 @@ jobs:
     # yamllint disable-line rule:key-ordering
     mypy:
         env:
+            SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
@@ -148,6 +149,7 @@ jobs:
     # yamllint disable-line rule:key-ordering
     pytest:
         env:
+            SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
@@ -231,10 +233,11 @@ jobs:
     # yamllint disable-line rule:key-ordering
     build:
         env:
+            SKIP_MISSING_DOWNDOC: "False"
             UV_FROZEN: true
             UV_NO_SYNC: truex
             UV_PYTHON_DOWNLOADS: never
-        needs: [mypy, pre-commit, pytest, ruff-lint, uv-check, convert-readme]
+        needs: [mypy, pre-commit, pytest, ruff-lint, uv-check]
         runs-on: ubuntu-latest
 
         steps:
@@ -242,10 +245,12 @@ jobs:
               with:
                 fetch-depth: 0
 
-            - name: Download Converted README
-              uses: actions/download-artifact@v5
+            - uses: actions/setup-node@v4
               with:
-                name: converted-readme
+                node-version: 18
+
+            - name: Convert Project README
+              run: npm install -g downdoc
 
             - name: Set Up Python
               uses: actions/setup-python@v6

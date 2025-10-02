@@ -1,6 +1,11 @@
 [build-system]
 build-backend = "hatchling.build"
-requires = ["hatch-docstring-description", "hatch-vcs", "hatchling"]
+requires = [
+    "hatch-docstring-description",
+    "hatch-vcs",
+    "hatchling",
+    "typing-extensions; python_version < '3.12'",
+]
 
 [dependency-groups]
 dev = [
@@ -36,13 +41,12 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = ["typing-extensions; python_version < '3.12'"]
-dynamic = ["description", "version"]
+dynamic = ["description", "readme", "version"]
 keywords = ["classmethod", "decorator", "property"]
 license = "MIT"
 license-files = ["LICENSE"]
 maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
 name = "typed_classproperties"
-readme = "README.md" # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The README.adoc file for this project must be converted manually.
 requires-python = ">=3.9"
 
 [project.urls]
@@ -53,6 +57,7 @@ Repository = "https://github.com/CarrotManMatt/typed_classproperties"
 only-packages = true
 
 [tool.hatch.metadata.hooks]
+custom = { readme-path = "README.adoc" } # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The README.adoc file for this project must be converted manually.
 docstring-description = {}
 
 [tool.hatch.version]
