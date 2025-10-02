@@ -8,25 +8,6 @@ name: Lint, Type-Check, Test, Build and Publish Package
         tags: [v*]
 
 jobs:
-    convert-readme:
-        runs-on: ubuntu-latest
-
-        steps:
-            - uses: actions/checkout@v5
-
-            - uses: actions/setup-node@v5
-              with:
-                node-version: 22
-
-            - name: Convert Project README
-              run: npx downdoc README.adoc
-
-            - name: Save Converted README
-              uses: actions/upload-artifact@v4
-              with:
-                name: converted-readme
-                path: README.md
-
     uv-check:
         runs-on: ubuntu-latest
 
