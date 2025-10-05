@@ -68,7 +68,8 @@ class DowndocCustomReadmeMetadataHook(MetadataHookInterface):
         downdoc_executable: Union[str, None] = shutil.which("downdoc")
         if downdoc_executable is None:
             DOWNDOC_NOT_INSTALLED_MESSAGE: Final[str] = (
-                "The downdoc executable could not be found."
+                "The downdoc executable could not be found. "
+                "It can be installed with `uv tool install Pydowndoc-bin`)."
             )
             raise OSError(DOWNDOC_NOT_INSTALLED_MESSAGE)
 
