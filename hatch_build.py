@@ -73,10 +73,11 @@ class DowndocCustomReadmeMetadataHook(MetadataHookInterface):
             raise OSError(DOWNDOC_NOT_INSTALLED_MESSAGE)
 
         return subprocess.run(
-            (downdoc_executable, "--output", "-", str(readme_path)),
+            (downdoc_executable, "--output", "-", "--", str(readme_path)),
             capture_output=True,
             check=True,
-        ).stdout.decode()
+            text=True,
+        ).stdout
 
     @override
     def update(self, metadata: dict[str, object]) -> None:
@@ -122,7 +123,7 @@ class DowndocCustomReadmeMetadataHook(MetadataHookInterface):
                 "content-type": "text/plain",
                 "text": (
                     "Missing README content. "
-                    "DO NOT upload to any package distribution platform (E.g. PyPI)."
+                    "DO NOT UPLOAD this package to any distribution platform (E.g. PyPI)."
                 ),
             }
 

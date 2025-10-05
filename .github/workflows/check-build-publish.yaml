@@ -263,13 +263,6 @@ jobs:
               with:
                 fetch-depth: 0
 
-            - uses: actions/setup-node@v5
-              with:
-                node-version: 22
-
-            - name: Convert Project README
-              run: npm install -g downdoc
-
             - name: Set Up Python
               uses: actions/setup-python@v6
               with:
@@ -279,6 +272,9 @@ jobs:
               uses: astral-sh/setup-uv@v6
               with:
                 enable-cache: true
+
+            - name: Install downdoc
+              run: uv tool install Pydowndoc-bin
 
             - name: Build Package
               run: uv build --no-sources --build
