@@ -244,7 +244,7 @@ jobs:
         env:
             SKIP_MISSING_DOWNDOC: "False"
             UV_FROZEN: true
-            UV_NO_SYNC: truex
+            UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
         needs: [mypy-package, mypy-scripts, pre-commit, pytest, ruff-lint, uv-check]
         runs-on: ubuntu-latest
