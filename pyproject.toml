@@ -141,7 +141,7 @@ select = ["ALL", "D204", "D213", "D401"]
 task-tags = ["BUG", "DONE", "FIXME", "HACK", "IDEA", "ISSUE", "NOBUG", "NOTE", "REQ", "TODO"]
 
 [tool.ruff.lint.flake8-import-conventions]
-banned-from = ["abc"]
+banned-from = ["abc", "re"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true
