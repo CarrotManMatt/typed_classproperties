@@ -1,4 +1,4 @@
 [flake8]
-select = CAR,TXB
-extend_exclude = migrations,.venv,examples
+select = CAR
+extend_exclude = .venv
 require_plugins = flake8-carrot
