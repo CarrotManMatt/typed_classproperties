@@ -27,6 +27,7 @@ jobs:
     # yamllint disable-line rule:key-ordering
     flake8:
         env:
+            SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
