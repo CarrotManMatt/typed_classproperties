@@ -7,6 +7,7 @@ requires = [
     "typing-extensions; python_version < '3.12'",
 ]
 
+
 [dependency-groups]
 build-dev = ["hatchling"]
 dev = [
@@ -15,10 +16,11 @@ dev = [
     { include-group = "test" },
     { include-group = "type-check" },
 ]
-lint-format = ["ruff>=0.4"]
+lint-format = ["flake8-carrot>=0.1.2; python_version >= '3.14'", "ruff>=0.4"]
 pre-commit = ["pre-commit"]
 test = ["pytest"]
 type-check = ["mypy>=1.12"]
+
 
 [project]
 authors = [
@@ -55,6 +57,7 @@ requires-python = ">=3.9"
 Issues = "https://github.com/CarrotManMatt/typed_classproperties/issues"
 Repository = "https://github.com/CarrotManMatt/typed_classproperties"
 
+
 [tool.hatch.build]
 only-packages = true
 
@@ -68,6 +71,7 @@ docstring-description = {}
 [tool.hatch.version]
 raw-options = { local_scheme = "no-local-version", version_scheme = "python-simplified-semver" }
 source = "vcs"
+
 
 [tool.mypy]
 check_untyped_defs = true
@@ -99,8 +103,10 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
+
 [tool.pytest.ini_options]
 python_files = "tests.py"
+
 
 [tool.ruff]
 indent-width = 4
@@ -114,6 +120,7 @@ line-ending = "lf"
 quote-style = "double"
 
 [tool.ruff.lint]
+external = ["CAR"]
 ignore = [
     "C90",
     "COM812",
@@ -193,6 +200,7 @@ max-returns = 10
 
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
+
 
 [tool.uv]
 default-groups = ["dev"]

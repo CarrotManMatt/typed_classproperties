@@ -23,15 +23,15 @@ class BaseTestClassProperty(abc.ABC):  # noqa: B024
 
     @classmethod
     def _get_cls_definition(cls, test_value: object) -> "Any":  # noqa: ANN401
-        class _HolderClass:
+        class _HolderClass:  # noqa: CAR160
             cached_prop_exec_count = 0
 
             @classproperty
-            def held_value(cls) -> object:
+            def HELD_VALUE(cls) -> object:  # noqa: N802
                 return test_value
 
             @cached_classproperty
-            def cached_held_value(cls):  # noqa: ANN202
+            def CACHED_HELD_VALUE(cls) -> "Any":  # noqa: ANN401, N802
                 cls.cached_prop_exec_count += 1
                 return test_value
 
@@ -52,16 +52,16 @@ class TestClassProperty(BaseTestClassProperty):
     def test_typed_subclasses(self) -> None:
         """Test that subclasses can override classproperties."""
 
-        class _BaseClass(abc.ABC):
+        class _BaseClass(abc.ABC):  # noqa: CAR160
             @classproperty
             @abc.abstractmethod
-            def base_method(cls) -> str:
+            def MY_PROPERTY(cls) -> str:  # noqa: N802
                 pass
 
-        class _SubClass(_BaseClass):
+        class _SubClass(_BaseClass):  # noqa: CAR160
             @classproperty
             @override
-            def base_method(cls) -> str:
+            def MY_PROPERTY(cls) -> str:
                 return ""
 
 
