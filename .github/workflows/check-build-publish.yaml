@@ -47,7 +47,7 @@ jobs:
                 enable-cache: true
 
             - name: Install Flake8 From Locked Dependencies
-              run: uv sync --group lint-format
+              run: uv sync --no-group dev --group lint-format
 
             - name: Run Flake8
               run: uv run -- flake8
