@@ -11,7 +11,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 41.149.2
+      rev: 41.155.5
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -73,7 +73,7 @@ repos:
           stages: [manual]
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.14.0
+      rev: v0.14.1
       hooks:
         - id: ruff-check
           args: [--fix]
@@ -81,7 +81,7 @@ repos:
         - id: ruff-format
 
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.9.3
+      rev: 0.9.4
       hooks:
         - id: uv-lock
           always_run: true
@@ -93,7 +93,7 @@ repos:
           additional_dependencies: [flake8-carrot>=0.1.2]  # yamllint disable-line rule:key-ordering
 
     - repo: https://github.com/google/yamlfmt
-      rev: v0.18.0
+      rev: v0.19.0
       hooks:
         - id: yamlfmt
           types: [yaml]
