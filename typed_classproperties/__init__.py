@@ -39,12 +39,10 @@ class classproperty(property, Generic[T_value]):
     def __get__(self, owner_self: None, owner_cls: type, /) -> T_value: ...
 
     @overload
-    def __get__(self, owner_self: object, owner_cls: "type | None" = ..., /) -> T_value: ...
+    def __get__(self, owner_self: object, owner_cls: type | None = ..., /) -> T_value: ...
 
     @override
-    def __get__(
-        self, owner_self: "object | None", owner_cls: "type | None" = None, /
-    ) -> T_value:
+    def __get__(self, owner_self: object | None, owner_cls: type | None = None, /) -> T_value:
         """Retrieve the value of the property."""
         if self.fget is None:
             BROKEN_OBJECT_MESSAGE: Final[str] = f"Broken object '{type(self).__name__}'."
@@ -85,12 +83,12 @@ class cached_classproperty(
 
         getattr(owner, "_original_cached_classproperties")[self.attrname] = self  # noqa: B009
 
-    def _get_cached_property(self, owner: "type | None") -> "Self | T_value":
+    def _get_cached_property(self, owner: type | None) -> "Self | T_value":
         if self.attrname is None or owner is None:
             raise RuntimeError
 
         # NOTE: We must check if another thread filled the cache while we awaited lock
-        attrval: "Self | T_value" = owner.__dict__[self.attrname]  # noqa: UP037
+        attrval: Self | T_value = owner.__dict__[self.attrname]
 
         if attrval is not self:
             return attrval
@@ -102,13 +100,13 @@ class cached_classproperty(
         return val
 
     @overload
-    def __get__(self, instance: None, owner: "type | None" = None, /) -> "Self": ...
+    def __get__(self, instance: None, owner: type | None = None, /) -> "Self": ...
 
     @overload
-    def __get__(self, instance: object, owner: "type | None" = None, /) -> T_value: ...
+    def __get__(self, instance: object, owner: type | None = None, /) -> T_value: ...
 
     @override
-    def __get__(self, instance: object, owner: "type | None" = None, /) -> "Self | T_value":
+    def __get__(self, instance: object, owner: type | None = None, /) -> "Self | T_value":
         """Retrieve the value of the property."""
         if self.attrname is None:
             NO_NAME_SET_MESSAGE: Final[str] = (
@@ -118,11 +116,11 @@ class cached_classproperty(
             raise TypeError(NO_NAME_SET_MESSAGE)
 
         if sys.version_info >= (3, 12):
-            unlocked_cached_property: "Self | T_value" = self._get_cached_property(owner)  # noqa: UP037
+            unlocked_cached_property: Self | T_value = self._get_cached_property(owner)
             return unlocked_cached_property
 
         with getattr(self, "lock"):  # type: ignore[unreachable, unused-ignore]  # noqa: B009
-            locked_cached_property: "Self | T_value" = self._get_cached_property(owner)  # noqa: UP037
+            locked_cached_property: Self | T_value = self._get_cached_property(owner)
 
         return locked_cached_property
 
