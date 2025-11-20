@@ -1,6 +1,6 @@
 [project]
 name = "typed_classproperties"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
@@ -15,7 +15,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -43,7 +42,7 @@ dev = [
 build-dev = ["hatchling"]
 lint-format = ["flake8-carrot>=0.1.2; python_version >= '3.14'", "ruff>=0.4"]
 pre-commit = ["pre-commit", { include-group = "lint-format" }]
-test = ["pytest"]
+test = ["pytest>=9"]
 type-check = ["mypy>=1.18.1"]
 
 [build-system]
@@ -106,7 +105,7 @@ warn_unused_ignores = true
 warn_incomplete_stub = true
 
 [tool.pytest]
-filterwarnings = ["ignore:'audioop':DeprecationWarning"]
+python_files = ["tests.py"]
 strict = true
 
 [tool.ruff]
