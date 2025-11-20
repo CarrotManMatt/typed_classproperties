@@ -90,7 +90,7 @@ class cached_classproperty(
             raise RuntimeError
 
         # NOTE: We must check if another thread filled the cache while we awaited lock
-        attrval: Self | T_value = owner.__dict__[self.attrname]
+        attrval: "Self | T_value" = owner.__dict__[self.attrname]  # noqa: UP037
 
         if attrval is not self:
             return attrval
