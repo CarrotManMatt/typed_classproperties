@@ -13,25 +13,36 @@ from typed_classproperties import cached_classproperty, classproperty
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
-    from typing import Any
+    from typing import Protocol, TypeVar
 
 __all__: "Sequence[str]" = ("TestCachedClassProperty", "TestClassProperty")
+
+
+if TYPE_CHECKING:
+    T = TypeVar("T")
+
+    class Holder(Protocol[T]):
+        cached_prop_exec_count: int
+        HELD_VALUE: T
+        CACHED_HELD_VALUE: T
 
 
 class BaseTestClassProperty(abc.ABC):  # noqa: B024
     """Abstract base class for all test classes."""
 
     @classmethod
-    def _get_cls_definition(cls, test_value: object) -> "Any":  # noqa: ANN401
-        class _HolderClass:  # noqa: CAR160
+    def _get_cls_definition(cls, test_value: "T") -> "type[Holder[T]]":
+        class _HolderClass(Holder[T]):  # noqa: CAR160
             cached_prop_exec_count = 0
 
             @classproperty
-            def HELD_VALUE(cls) -> object:  # noqa: N802
+            @override
+            def HELD_VALUE(cls) -> "T":
                 return test_value
 
             @cached_classproperty
-            def CACHED_HELD_VALUE(cls) -> "Any":  # noqa: ANN401, N802
+            @override
+            def CACHED_HELD_VALUE(cls) -> "T":
                 cls.cached_prop_exec_count += 1
                 return test_value
 
@@ -70,14 +81,14 @@ class TestCachedClassProperty(BaseTestClassProperty):
 
     def test_cached_classproperty_class(self) -> None:
         """Test that a `cached_classproperty` correctly returns its value from a class."""
-        created_class: Any = self._get_cls_definition(3000)
+        created_class: type[Holder[int]] = self._get_cls_definition(3000)
         assert created_class.cached_prop_exec_count == 0
         assert created_class.CACHED_HELD_VALUE == 3000
         assert created_class.cached_prop_exec_count == 1
 
     def test_cached_classproperty_executed_once(self) -> None:
         """Test that a `cached_classproperty` correctly returns the cached value."""
-        created_class: Any = self._get_cls_definition(4000)
+        created_class: type[Holder[int]] = self._get_cls_definition(4000)
         assert created_class.cached_prop_exec_count == 0
         assert created_class.CACHED_HELD_VALUE == 4000
         assert created_class.cached_prop_exec_count == 1
@@ -86,7 +97,7 @@ class TestCachedClassProperty(BaseTestClassProperty):
 
     def test_cached_classproperty_delete_cache(self) -> None:
         """Test that removing a `cached_classproperty`'s cached value functions correctly."""
-        created_class: Any = self._get_cls_definition(5000)
+        created_class: type[Holder[int]] = self._get_cls_definition(5000)
         assert created_class.cached_prop_exec_count == 0
         assert created_class.CACHED_HELD_VALUE == 5000
         assert created_class.cached_prop_exec_count == 1
@@ -96,15 +107,15 @@ class TestCachedClassProperty(BaseTestClassProperty):
 
     def test_cached_classproperty_instance(self) -> None:
         """Test that a `cached_classproperty` returns the correct value from an instance."""
-        created_instance: Any = self._get_cls_definition(6000)()
+        created_instance: Holder[int] = self._get_cls_definition(6000)()
         assert created_instance.cached_prop_exec_count == 0
         assert created_instance.CACHED_HELD_VALUE == 6000
         assert created_instance.cached_prop_exec_count == 1
 
     def test_cached_classproperty_instance_with_deletion(self) -> None:
         """Test that a `cached_classproperty` can delete its cached value from an instance."""
-        created_class: Any = self._get_cls_definition(7000)
-        created_instance: Any = created_class()
+        created_class: type[Holder[int]] = self._get_cls_definition(7000)
+        created_instance: Holder[int] = created_class()
         assert created_instance.cached_prop_exec_count == 0
         assert created_instance.CACHED_HELD_VALUE == 7000
 
@@ -118,7 +129,7 @@ class TestCachedClassProperty(BaseTestClassProperty):
 
     def test_cached_classproperty_executed_once_instance(self) -> None:
         """Test that a `cached_classproperty` returns its value from an instance only once."""
-        created_instance: Any = self._get_cls_definition(8000)()
+        created_instance: Holder[int] = self._get_cls_definition(8000)()
         assert created_instance.cached_prop_exec_count == 0
         assert created_instance.CACHED_HELD_VALUE == 8000
         assert created_instance.cached_prop_exec_count == 1
@@ -129,8 +140,8 @@ class TestCachedClassProperty(BaseTestClassProperty):
         self,
     ) -> None:
         """Test that a `cached_classproperty` returns its value from a shared class once."""
-        created_class: Any = self._get_cls_definition(9000)
-        created_instance: Any = created_class()
+        created_class: type[Holder[int]] = self._get_cls_definition(9000)
+        created_instance: Holder[int] = created_class()
         assert created_instance.cached_prop_exec_count == 0
         assert created_instance.CACHED_HELD_VALUE == 9000
         assert created_instance.cached_prop_exec_count == 1

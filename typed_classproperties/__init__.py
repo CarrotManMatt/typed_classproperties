@@ -11,7 +11,7 @@ else:
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
-    from typing import Any, Final
+    from typing import Final
 
     from typing_extensions import Self
 
@@ -31,7 +31,7 @@ class classproperty(property, Generic[T_value]):
     """
 
     @override
-    def __init__(self, func: "Callable[..., T_value]", /) -> None:
+    def __init__(self, func: "Callable[..., T_value]", /) -> None:  # type: ignore[explicit-any]
         """Initialise the classproperty object."""
         super().__init__(func)
 
@@ -85,35 +85,30 @@ class cached_classproperty(
 
         getattr(owner, "_original_cached_classproperties")[self.attrname] = self  # noqa: B009
 
-    def _get_cached_property(self, owner: "type[Any] | None") -> "Any":  # noqa: ANN401
+    def _get_cached_property(self, owner: "type | None") -> "Self | T_value":
         if self.attrname is None or owner is None:
             raise RuntimeError
 
-        attrval = owner.__dict__[  # NOTE: We must check if another thread filled the cache while we awaited lock
-            self.attrname
-        ]
+        # NOTE: We must check if another thread filled the cache while we awaited lock
+        attrval: Self | T_value = owner.__dict__[self.attrname]
 
         if attrval is not self:
             return attrval
 
         val = self.func(owner)
-        setattr(  # NOTE: This overwrites this property on the class
-            owner, self.attrname, val
-        )
-        owner._original_cached_classproperties[self.attrname] = self
+        setattr(owner, self.attrname, val)  # NOTE: This overwrites this property on the class
+        getattr(owner, "_original_cached_classproperties")[self.attrname] = self  # noqa: B009
 
         return val
 
     @overload
-    def __get__(self, instance: None, owner: "type[Any] | None" = None, /) -> "Self": ...
+    def __get__(self, instance: None, owner: "type | None" = None, /) -> "Self": ...
 
     @overload
-    def __get__(self, instance: object, owner: "type[Any] | None" = None, /) -> T_value: ...
+    def __get__(self, instance: object, owner: "type | None" = None, /) -> T_value: ...
 
     @override
-    def __get__(
-        self, instance: object, owner: "type[Any] | None" = None, /
-    ) -> "Self | T_value":
+    def __get__(self, instance: object, owner: "type | None" = None, /) -> "Self | T_value":
         """Retrieve the value of the property."""
         if self.attrname is None:
             NO_NAME_SET_MESSAGE: Final[str] = (
