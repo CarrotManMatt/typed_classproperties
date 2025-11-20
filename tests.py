@@ -2,7 +2,7 @@
 
 import abc
 import sys
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol, TypeVar
 
 if sys.version_info >= (3, 12):
     from typing import override
@@ -13,18 +13,17 @@ from typed_classproperties import cached_classproperty, classproperty
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
-    from typing import Protocol, TypeVar
 
 __all__: "Sequence[str]" = ("TestCachedClassProperty", "TestClassProperty")
 
 
-if TYPE_CHECKING:
-    T = TypeVar("T")
+T = TypeVar("T")
 
-    class Holder(Protocol[T]):
-        cached_prop_exec_count: int
-        HELD_VALUE: T
-        CACHED_HELD_VALUE: T
+
+class Holder(Protocol[T]):
+    cached_prop_exec_count: int
+    HELD_VALUE: T
+    CACHED_HELD_VALUE: T
 
 
 class BaseTestClassProperty(abc.ABC):  # noqa: B024
@@ -32,7 +31,7 @@ class BaseTestClassProperty(abc.ABC):  # noqa: B024
 
     @classmethod
     def _get_cls_definition(cls, test_value: "T") -> "type[Holder[T]]":
-        class _HolderClass(Holder[T]):  # noqa: CAR160
+        class _HolderClass(Holder["T"]):  # noqa: CAR160
             cached_prop_exec_count = 0
 
             @classproperty
