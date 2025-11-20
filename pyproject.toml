@@ -43,7 +43,7 @@ build-dev = ["hatchling"]
 lint-format = ["flake8-carrot>=0.1.2; python_version >= '3.14'", "ruff>=0.4"]
 pre-commit = ["pre-commit", { include-group = "lint-format" }]
 test = ["pytest>=9"]
-type-check = ["mypy>=1.18.1"]
+type-check = ["mypy>=1.18.1", { include-group = "test" }]
 
 [build-system]
 requires = [
