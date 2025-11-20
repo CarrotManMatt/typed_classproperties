@@ -1,62 +1,59 @@
-[build-system]
-build-backend = "hatchling.build"
-requires = [
-    "hatch-docstring-description",
-    "hatch-vcs",
-    "hatchling",
-    "typing-extensions; python_version < '3.12'",
-]
-
-
-[dependency-groups]
-build-dev = ["hatchling"]
-dev = [
-    { include-group = "lint-format" },
-    { include-group = "pre-commit" },
-    { include-group = "test" },
-    { include-group = "type-check" },
-]
-lint-format = ["flake8-carrot>=0.1.2; python_version >= '3.14'", "ruff>=0.4"]
-pre-commit = ["pre-commit"]
-test = ["pytest"]
-type-check = ["mypy>=1.12"]
-
-
 [project]
+name = "typed_classproperties"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     { name = "Jonathan Clarke", email = "jonathan.a.clarke@gmail.com" },
     { name = "Matt Norton", email = "matt@carrotmanmatt.com" },
 ]
+maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
+keywords = ["classmethod", "decorator", "property"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3.15",
-    "Programming Language :: Python :: 3.9",
     "Topic :: Software Development",
     "Topic :: Utilities",
     "Typing :: Typed",
 ]
 dependencies = ["typing-extensions; python_version < '3.12'"]
 dynamic = ["description", "readme", "version"]
-keywords = ["classmethod", "decorator", "property"]
-license = "MIT"
-license-files = ["LICENSE"]
-maintainers = [{ name = "Matt Norton", email = "matt@carrotmanmatt.com" }]
-name = "typed_classproperties"
-requires-python = ">=3.9"
 
 [project.urls]
 Issues = "https://github.com/CarrotManMatt/typed_classproperties/issues"
 Repository = "https://github.com/CarrotManMatt/typed_classproperties"
 
+[dependency-groups]
+dev = [
+    { include-group = "lint-format" },
+    { include-group = "pre-commit" },
+    { include-group = "test" },
+    { include-group = "type-check" },
+]
+build-dev = ["hatchling"]
+lint-format = ["flake8-carrot>=0.1.2; python_version >= '3.14'", "ruff>=0.4"]
+pre-commit = ["pre-commit"]
+test = ["pytest"]
+type-check = ["mypy>=1.18.1"]
+
+[build-system]
+requires = [
+    "hatch-docstring-description",
+    "hatch-vcs",
+    "hatchling",
+    "typing-extensions; python_version < '3.12'",
+]
+build-backend = "hatchling.build"
 
 [tool.hatch.build]
 only-packages = true
@@ -65,22 +62,24 @@ only-packages = true
 artifacts = ["README.adoc"]
 
 [tool.hatch.metadata.hooks]
-custom = { readme-path = "README.adoc" } # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The downdoc binary must be installed in order to convert the README.adoc file for this project.
-docstring-description = {}
+custom = { readme-path = "README.adoc" }  # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The downdoc binary must be installed to be able to convert the README.adoc file for this project.
+docstring-description = {  }
 
 [tool.hatch.version]
 raw-options = { local_scheme = "no-local-version", version_scheme = "python-simplified-semver" }
 source = "vcs"
 
-
 [tool.mypy]
 check_untyped_defs = true
+disallow_any_decorated = true
+disallow_any_explicit = true
 disallow_any_generics = true
 disallow_any_unimported = true
 disallow_incomplete_defs = true
 disallow_subclassing_any = true
 disallow_untyped_calls = true
 disallow_untyped_decorators = true
+disallow_untyped_defs = true
 enable_error_code = [
     "deprecated",
     "explicit-override",
@@ -96,17 +95,19 @@ enable_error_code = [
 ]
 extra_checks = true
 no_implicit_reexport = true
+strict_bytes = true
 strict_equality = true
+strict_equality_for_none = true  # tombi: lint.rules.key-not-allowed.disabled = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+warn_incomplete_stub = true
 
-
-[tool.pytest.ini_options]
-python_files = "tests.py"
-
+[tool.pytest]
+filterwarnings = ["ignore:'audioop':DeprecationWarning"]
+strict = true
 
 [tool.ruff]
 indent-width = 4
@@ -201,6 +202,14 @@ max-returns = 10
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
 
+[tool.tombi.format.rules]
+indent-width = 4
+line-width = 95
+
+[[tool.tombi.schemas]]
+root = "tool.pytest"
+path = "https://raw.githubusercontent.com/CarrotManMatt/schemastore/refs/heads/fix-tombi-implementation/src/schemas/json/partial-pytest.json"
+include = ["pyproject.toml"]
 
 [tool.uv]
 default-groups = ["dev"]
