@@ -75,25 +75,42 @@ repos:
         - id: tombi-format
         - id: tombi-lint
 
-    - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.14.5
-      hooks:
-        - id: ruff-check
-          args: [--fix]
-
-        - id: ruff-format
-
     - repo: https://github.com/astral-sh/uv-pre-commit
       rev: 0.9.10
       hooks:
         - id: uv-lock
           always_run: true
 
-    - repo: https://github.com/PyCQA/flake8
-      rev: 7.3.0
+    - repo: local
       hooks:
         - id: flake8
-          additional_dependencies: [flake8-carrot>=0.1.2]  # yamllint disable-line rule:key-ordering
+          # yamllint disable-line rule:key-ordering
+          description: "`flake8` is a command-line utility for enforcing style consistency across
+            Python projects."
+          entry: flake8  # yamllint disable-line rule:key-ordering
+          language: python
+          name: flake8
+          require_serial: true
+          types: [python]
+
+        - id: ruff-check
+          args: [--fix]
+          description: Run 'ruff check' for extremely fast Python linting  # yamllint disable-line rule:key-ordering
+          entry: ruff check --force-exclude  # yamllint disable-line rule:key-ordering
+          language: python
+          minimum_pre_commit_version: 2.9.2
+          name: ruff check
+          require_serial: true
+          types_or: [python, pyi]
+
+        - id: ruff-format
+          description: Run 'ruff format' for extremely fast Python formatting  # yamllint disable-line rule:key-ordering
+          entry: ruff format --force-exclude  # yamllint disable-line rule:key-ordering
+          language: python
+          minimum_pre_commit_version: 2.9.2
+          name: ruff format
+          require_serial: true
+          types_or: [python, pyi]
 
     - repo: https://github.com/google/yamlfmt
       rev: v0.20.0
