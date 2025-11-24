@@ -39,6 +39,7 @@ dev = [
     { include-group = "test" },
     { include-group = "type-check" },
 ]
+alternative-type-checkers = ["pyrefly", "ty", { include-group = "test" }]
 build-dev = ["hatchling"]
 lint-format = ["flake8-carrot>=0.1.2; python_version >= '3.14'", "ruff>=0.4"]
 pre-commit = ["pre-commit", { include-group = "lint-format" }]
