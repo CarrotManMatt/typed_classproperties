@@ -43,6 +43,7 @@
 :labelled-url-pypi: {url-pypi}[PyPI]
 :labelled-url-pip: {url-pip}[pip]
 :labelled-url-uv: {url-uv}[uv]
+:labelled-url-mypy: {url-mypy}[mypy]
 :labelled-url-library-typing-extensions: {url-library-typing-extensions}[typing_extensions]
 
 image:https://img.shields.io/badge/%F0%9F%A5%95-typed__classproperties-blue[Pydowndoc,link={url-project-repository}]
@@ -57,7 +58,7 @@ image:https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astr
 ****
 Typed decorators for `+classproperty+` and `+cached_classproperty+`.
 
-**Python 3 compatible only**. **No dependencies**footnote:[The library `{labelled-url-library-typing-extensions}` is required when running with {labelled-url-python} < 3.12].
+**Python 3 compatible only**. **No dependencies**footnote:[The library `{labelled-url-library-typing-extensions}` is required when running with a {labelled-url-python} version less than `3.12`].
 ****
 
 == Installation
@@ -110,6 +111,15 @@ class CachedFoo:
 assert CachedFoo.BAR == 1
 assert CachedFoo(bar="bar").FOO == 1
 ----
+
+== Supported Type-Checkers
+
+This package makes use of some reasonably advanced Python functionality, not supported by all static type checkers.
+While we will attempt to fix type bugs in this project for alternative type-checkers, our focus is on the following officially supported type checkersfootnote:[The list of officially supported type checkers is subject to change between any minor version release]:
+
+* {labelled-url-mypy}
+
+IMPORTANT: Patches to fix bugs in this project for alternative type-checkers are welcome and much appreciated!
 
 == Tests
 
