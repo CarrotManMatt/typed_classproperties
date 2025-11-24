@@ -68,7 +68,7 @@ jobs:
                   ARGS="hatch_build.py"
                 fi
 
-                uv run -- pyrefly check $ARGS --output-format=github
+                uv run -- pyrefly check $ARGS
 
     pyright:
         runs-on: ubuntu-latest
