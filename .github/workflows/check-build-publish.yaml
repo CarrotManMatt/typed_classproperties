@@ -54,7 +54,7 @@ jobs:
               run: uv run -- flake8
 
     # yamllint disable-line rule:key-ordering
-    mypy-package:
+    mypy:
         env:
             SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
@@ -65,61 +65,51 @@ jobs:
 
         strategy:
             matrix:
-                python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+                component: [scripts, package]
+                python-version: [3.10, 3.11, 3.12, 3.13, 3.14]
+                exclude:  # yamllint disable-line rule:key-ordering
+                    - component: scripts
+                include:  # yamllint disable-line rule:key-ordering
+                    - component: scripts
+                      python-version: ""
 
         steps:
             - uses: actions/checkout@v6
 
-            - name: Set Up Python
+            - if: ${{ matrix.component == 'package' }}
+              name: Set Up Python (Using Matrix Version)
               uses: actions/setup-python@v6
               with:
-                python-version: ${{matrix.python-version}}
+                python-version: ${{ matrix.python-version }}
 
-            - name: Install uv
-              uses: astral-sh/setup-uv@v7
-              with:
-                enable-cache: true
-                python-version: ${{matrix.python-version}}
-
-            - name: Install mypy From Locked Dependencies
-              run: uv sync --no-group dev --group type-check
-
-            - id: store-hashed-python-version
-              name: Store Hashed Python Version
-              run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
-
-            - uses: actions/cache@v4
-              with:
-                key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|package
-                path: ./.mypy_cache
-
-            - name: Run mypy
-              run: uv run -- mypy typed_classproperties/  # TODO: Add GitHub workflows output format
-
-    # yamllint disable-line rule:key-ordering
-    mypy-scripts:
-        env:
-            UV_FROZEN: true
-            UV_NO_SYNC: true
-            UV_PYTHON_DOWNLOADS: never
-        runs-on: ubuntu-latest
-
-        steps:
-            - uses: actions/checkout@v6
-
-            - name: Set Up Python
+            - if: ${{ matrix.component == 'scripts' }}
+              name: Set Up Python (Using .python-version File)
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
 
-            - name: Install uv
+            - if: ${{ matrix.component == 'package' }}
+              name: Install uv (With Matrix Python Version)
+              uses: astral-sh/setup-uv@v7
+              with:
+                enable-cache: true
+                python-version: ${{matrix.python-version}}
+
+            - if: ${{ matrix.component == 'scripts' }}
+              name: Install uv (With .python-version File)
               uses: astral-sh/setup-uv@v7
               with:
                 enable-cache: true
 
             - name: Install mypy From Locked Dependencies
-              run: uv sync --only-group type-check --only-group build-dev
+              run: |
+                if [ "${{ matrix.component }}" == "package" ]; then
+                  ARGS="--no-group dev --group type-check"
+                elif [ "${{ matrix.component }}" == "scripts" ]; then
+                  ARGS="--only-group type-check --only-group build-dev"
+                fi
+
+                uv sync $ARGS
 
             - id: store-hashed-python-version
               name: Store Hashed Python Version
@@ -128,11 +118,18 @@ jobs:
 
             - uses: actions/cache@v4
               with:
-                key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|scripts
+                key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{matrix.component}}
                 path: ./.mypy_cache
 
-            - name: Run mypy
-              run: uv run -- mypy hatch_build.py  # TODO: Add GitHub workflows output format
+            - name: Run mypy  # TODO: Add GitHub workflows output format
+              run: |
+                if [ "${{ matrix.component }}" == "package" ]; then
+                  ARGS="typed_classproperties/"
+                elif [ "${{ matrix.component }}" == "scripts" ]; then
+                  ARGS="hatch_build.py"
+                fi
+
+                uv run -- mypy $ARGS
 
     # yamllint disable-line rule:key-ordering
     pre-commit:
@@ -275,7 +272,7 @@ jobs:
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
-        needs: [flake8, mypy-package, mypy-scripts, pre-commit, pytest, ruff-lint, uv-check]
+        needs: [flake8, mypy, pre-commit, pytest, ruff-lint, uv-check]
         runs-on: ubuntu-latest
 
         steps:
