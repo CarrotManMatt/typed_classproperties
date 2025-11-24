@@ -98,6 +98,15 @@ jobs:
               run: uv run -- mypy typed_classproperties/  # TODO: Add GitHub workflows output format
 
     # yamllint disable-line rule:key-ordering
+    pyright:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: jakebailey/pyright-action@v2
+
+    # yamllint disable-line rule:key-ordering
     mypy-scripts:
         env:
             UV_FROZEN: true
