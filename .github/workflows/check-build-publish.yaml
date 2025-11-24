@@ -54,6 +54,15 @@ jobs:
               run: uv run -- flake8
 
     # yamllint disable-line rule:key-ordering
+    pyright:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: jakebailey/pyright-action@v2
+
+    # yamllint disable-line rule:key-ordering
     mypy-package:
         env:
             SKIP_MISSING_DOWNDOC: "True"
@@ -96,15 +105,6 @@ jobs:
 
             - name: Run mypy
               run: uv run -- mypy typed_classproperties/  # TODO: Add GitHub workflows output format
-
-    # yamllint disable-line rule:key-ordering
-    pyright:
-        runs-on: ubuntu-latest
-
-        steps:
-            - uses: actions/checkout@v6
-
-            - uses: jakebailey/pyright-action@v2
 
     # yamllint disable-line rule:key-ordering
     mypy-scripts:
