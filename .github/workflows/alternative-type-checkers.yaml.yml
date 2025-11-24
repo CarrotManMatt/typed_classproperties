@@ -1,0 +1,13 @@
+name: Type-Check All Code Using Alternative Type-Checkers
+
+"on":
+    workflow_dispatch: ~
+
+jobs:
+    pyright:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: jakebailey/pyright-action@v2
