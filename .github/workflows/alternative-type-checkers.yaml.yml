@@ -14,27 +14,61 @@ jobs:
 
         strategy:
             matrix:
+                component: [scripts, package]
                 python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+                exclude:  # yamllint disable-line rule:key-ordering
+                    - component: scripts
+                include:  # yamllint disable-line rule:key-ordering
+                    - component: scripts
+                      python-version: ""
 
         steps:
             - uses: actions/checkout@v6
 
-            - name: Set Up Python
+            - if: ${{ matrix.component == 'package' }}
+              name: Set Up Python (Using Matrix Version)
               uses: actions/setup-python@v6
               with:
-                python-version: ${{matrix.python-version}}
+                python-version: ${{ matrix.python-version }}
 
-            - name: Install uv
+            - if: ${{ matrix.component == 'scripts' }}
+              name: Set Up Python (Using .python-version File)
+              uses: actions/setup-python@v6
+              with:
+                python-version-file: .python-version
+
+            - if: ${{ matrix.component == 'package' }}
+              name: Install uv (With Matrix Python Version)
               uses: astral-sh/setup-uv@v7
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
+            - if: ${{ matrix.component == 'scripts' }}
+              name: Install uv (With .python-version File)
+              uses: astral-sh/setup-uv@v7
+              with:
+                enable-cache: true
+
             - name: Install Pyrefly From Locked Dependencies
-              run: uv sync --no-group dev --group alternative-type-checkers
+              run: |
+                if [ "${{ matrix.component }}" == "package" ]; then
+                  ARGS="--no-group dev --group alternative-type-checkers"
+                elif [ "${{ matrix.component }}" == "scripts" ]; then
+                  ARGS="--only-group alternative-type-checkers --only-group build-dev"
+                fi
+
+                uv sync $ARGS
 
             - name: Run Pyrefly
-              run: uv run -- pyrefly check --output-format=github
+              run: |
+                if [ "${{ matrix.component }}" == "package" ]; then
+                  ARGS="typed_classproperties/"
+                elif [ "${{ matrix.component }}" == "scripts" ]; then
+                  ARGS="hatch_build.py"
+                fi
+
+                uv run -- pyrefly check $ARGS --output-format=github
 
     pyright:
         runs-on: ubuntu-latest
@@ -54,24 +88,61 @@ jobs:
 
         strategy:
             matrix:
+                component: [scripts, package]
                 python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+                exclude:  # yamllint disable-line rule:key-ordering
+                    - component: scripts
+                include:  # yamllint disable-line rule:key-ordering
+                    - component: scripts
+                      python-version: ""
 
         steps:
             - uses: actions/checkout@v6
 
-            - name: Set Up Python
+            - if: ${{ matrix.component == 'package' }}
+              name: Set Up Python (Using Matrix Version)
               uses: actions/setup-python@v6
               with:
-                python-version: ${{matrix.python-version}}
+                python-version: ${{ matrix.python-version }}
 
-            - name: Install uv
+            - if: ${{ matrix.component == 'scripts' }}
+              name: Set Up Python (Using .python-version File)
+              uses: actions/setup-python@v6
+              with:
+                python-version-file: .python-version
+
+            - if: ${{ matrix.component == 'package' }}
+              name: Install uv (With Matrix Python Version)
               uses: astral-sh/setup-uv@v7
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
+            - if: ${{ matrix.component == 'scripts' }}
+              name: Install uv (With .python-version File)
+              uses: astral-sh/setup-uv@v7
+              with:
+                enable-cache: true
+
             - name: Install ty From Locked Dependencies
               run: uv sync --no-group dev --group alternative-type-checkers
 
+            - name: Install ty From Locked Dependencies
+              run: |
+                if [ "${{ matrix.component }}" == "package" ]; then
+                  ARGS="--no-group dev --group alternative-type-checkers"
+                elif [ "${{ matrix.component }}" == "scripts" ]; then
+                  ARGS="--only-group alternative-type-checkers --only-group build-dev"
+                fi
+
+                uv sync $ARGS
+
             - name: Run ty
-              run: uv run -- ty check --output-format=github
+              run: |-
+                if [ "${{ matrix.component }}" == "package" ]; then
+                  ARGS="typed_classproperties/"
+                elif [ "${{ matrix.component }}" == "scripts" ]; then
+                  ARGS="hatch_build.py"
+                fi
+
+                uv run -- ty check $ARGS --output-format=github
