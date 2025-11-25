@@ -19,7 +19,12 @@ from hatchling.metadata.plugin.interface import MetadataHookInterface
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
-    from typing import Final, LiteralString
+    from typing import Final
+
+    if sys.version_info >= (3, 11):
+        from typing import LiteralString
+    else:
+        from typing_extensions import LiteralString
 
 __all__: "Sequence[str]" = ("DowndocCustomReadmeMetadataHook",)
 
