@@ -39,12 +39,12 @@ dev = [
     { include-group = "test" },
     { include-group = "type-check" },
 ]
-alternative-type-checkers = ["pyrefly", "ty", { include-group = "test" }]
+alternative-type-checkers = ["pyrefly", "ty"]
 build-dev = ["hatchling"]
 lint-format = ["flake8-carrot>=0.1.2; python_version >= '3.14'", "ruff>=0.4"]
 pre-commit = ["pre-commit", { include-group = "lint-format" }]
 test = ["pytest>=9"]
-type-check = ["mypy>=1.18.1", { include-group = "test" }]
+type-check = ["mypy>=1.18.1"]
 
 [build-system]
 requires = [

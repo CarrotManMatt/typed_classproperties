@@ -66,7 +66,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                component: [scripts, package]
+                component: [package, scripts, tests]
                 python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
                 exclude:  # yamllint disable-line rule:key-ordering
                     - component: scripts
@@ -77,7 +77,7 @@ jobs:
         steps:
             - uses: actions/checkout@v6
 
-            - if: ${{ matrix.component == 'package' }}
+            - if: ${{ matrix.component == 'package' || matrix.component == 'tests' }}
               name: Set Up Python (Using Matrix Version)
               uses: actions/setup-python@v6
               with:
@@ -89,7 +89,7 @@ jobs:
               with:
                 python-version-file: .python-version
 
-            - if: ${{ matrix.component == 'package' }}
+            - if: ${{ matrix.component == 'package' || matrix.component == 'tests' }}
               name: Install uv (With Matrix Python Version)
               uses: astral-sh/setup-uv@v7
               with:
@@ -108,6 +108,8 @@ jobs:
                   ARGS="--no-group dev --group type-check"
                 elif [ "${{ matrix.component }}" == "scripts" ]; then
                   ARGS="--only-group type-check --only-group build-dev"
+                elif [ "${{ matrix.component }}" == "tests" ]; then
+                  ARGS="--no-group dev --group type-check --group test"
                 fi
 
                 uv sync $ARGS
@@ -128,6 +130,8 @@ jobs:
                   ARGS="typed_classproperties/"
                 elif [ "${{ matrix.component }}" == "scripts" ]; then
                   ARGS="hatch_build.py"
+                elif [ "${{ matrix.component }}" == "tests" ]; then
+                  ARGS="tests.py"
                 fi
 
                 uv run -- mypy $ARGS
