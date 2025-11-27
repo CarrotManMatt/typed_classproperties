@@ -206,11 +206,6 @@ keep-runtime-typing = true
 indent-width = 4
 line-width = 95
 
-[[tool.tombi.schemas]]
-root = "tool.pytest"
-path = "https://raw.githubusercontent.com/CarrotManMatt/schemastore/refs/heads/fix-tombi-implementation/src/schemas/json/partial-pytest.json"
-include = ["pyproject.toml"]
-
 [tool.uv]
 default-groups = ["dev"]
 no-binary-package = ["typed_classproperties"]
