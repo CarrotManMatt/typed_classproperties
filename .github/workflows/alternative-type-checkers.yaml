@@ -59,6 +59,9 @@ jobs:
                   ARGS="--only-group alternative-type-checkers --only-group build-dev"
                 elif [ "${{matrix.component}}" == "tests" ]; then
                   ARGS="--no-group dev --group alternative-type-checkers --group test"
+                else
+                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                  exit 1
                 fi
 
                 uv sync $ARGS
@@ -71,6 +74,9 @@ jobs:
                   ARGS="hatch_build.py"
                 elif [ "${{matrix.component}}" == "tests" ]; then
                   ARGS="tests.py"
+                else
+                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                  exit 1
                 fi
 
                 uv run -- pyrefly check $ARGS
@@ -141,6 +147,9 @@ jobs:
                   ARGS="--only-group alternative-type-checkers --only-group build-dev"
                 elif [ "${{matrix.component}}" == "tests" ]; then
                   ARGS="--no-group dev --group alternative-type-checkers --group test"
+                else
+                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                  exit 1
                 fi
 
                 uv sync $ARGS
@@ -153,6 +162,9 @@ jobs:
                   ARGS="hatch_build.py"
                 elif [ "${{matrix.component}}" == "tests" ]; then
                   ARGS="tests.py"
+                else
+                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                  exit 1
                 fi
 
                 uv run -- ty check $ARGS --output-format=github
