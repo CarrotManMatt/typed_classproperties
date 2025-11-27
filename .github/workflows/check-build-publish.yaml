@@ -77,26 +77,26 @@ jobs:
         steps:
             - uses: actions/checkout@v6
 
-            - if: ${{ matrix.component == 'package' || matrix.component == 'tests' }}
+            - if: ${{matrix.component=='package'||matrix.component=='tests'}}
               name: Set Up Python (Using Matrix Version)
               uses: actions/setup-python@v6
               with:
-                python-version: ${{ matrix.python-version }}
+                python-version: ${{matrix.python-version}}
 
-            - if: ${{ matrix.component == 'scripts' }}
+            - if: ${{matrix.component=='scripts'}}
               name: Set Up Python (Using .python-version File)
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
 
-            - if: ${{ matrix.component == 'package' || matrix.component == 'tests' }}
+            - if: ${{matrix.component=='package'||matrix.component=='tests'}}
               name: Install uv (With Matrix Python Version)
               uses: astral-sh/setup-uv@v7
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
-            - if: ${{ matrix.component == 'scripts' }}
+            - if: ${{matrix.component=='scripts'}}
               name: Install uv (With .python-version File)
               uses: astral-sh/setup-uv@v7
               with:
@@ -104,11 +104,11 @@ jobs:
 
             - name: Install mypy From Locked Dependencies
               run: |
-                if [ "${{ matrix.component }}" == "package" ]; then
+                if [ "${{matrix.component}}" == "package" ]; then
                   ARGS="--no-group dev --group type-check"
-                elif [ "${{ matrix.component }}" == "scripts" ]; then
+                elif [ "${{matrix.component}}" == "scripts" ]; then
                   ARGS="--only-group type-check --only-group build-dev"
-                elif [ "${{ matrix.component }}" == "tests" ]; then
+                elif [ "${{matrix.component}}" == "tests" ]; then
                   ARGS="--no-group dev --group type-check --group test"
                 fi
 
@@ -126,11 +126,11 @@ jobs:
 
             - name: Run mypy  # TODO: Add GitHub workflows output format
               run: |
-                if [ "${{ matrix.component }}" == "package" ]; then
+                if [ "${{matrix.component}}" == "package" ]; then
                   ARGS="typed_classproperties/"
-                elif [ "${{ matrix.component }}" == "scripts" ]; then
+                elif [ "${{matrix.component}}" == "scripts" ]; then
                   ARGS="hatch_build.py"
-                elif [ "${{ matrix.component }}" == "tests" ]; then
+                elif [ "${{matrix.component}}" == "tests" ]; then
                   ARGS="tests.py"
                 fi
 
@@ -209,7 +209,7 @@ jobs:
             - name: Set Up Python
               uses: actions/setup-python@v6
               with:
-                python-version: ${{ matrix.python-version }}
+                python-version: ${{matrix.python-version}}
 
             - name: Install uv
               uses: astral-sh/setup-uv@v7
@@ -390,6 +390,6 @@ jobs:
             - name: Create GitHub Release
               # yamllint disable-line rule:key-ordering
               env:
-                GITHUB_TOKEN: ${{ github.token }}
-              run: gh release create '${{ github.ref_name }}' dist/** --repo '${{github.repository}}'
+                GITHUB_TOKEN: ${{github.token}}
+              run: gh release create '${{github.ref_name}}' dist/** --repo '${{github.repository}}'
                 --verify-tag --generate-notes
