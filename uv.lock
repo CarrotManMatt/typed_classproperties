@@ -70,15 +70,26 @@ wheels = [
 
 [[package]]
 name = "flake8-carrot"
-version = "0.1.5"
+version = "0.1.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "flake8", marker = "python_full_version >= '3.14'" },
     { name = "typed-classproperties", marker = "python_full_version >= '3.14'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/28/be/51a2ba471534331edda7395cf4fea2aeab7488e456bb4dfcf8744f23f5c9/flake8_carrot-0.1.5.tar.gz", hash = "sha256:41035d5f4b998d5de2c566bcd01965feca213424bdb74c3cff5d8d1dbd05f4f7", size = 30838, upload-time = "2025-11-27T12:28:00.685Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/40/ff/68af451bbd916070910f586f0e0a8ba559a16c556fe2624d1644d87e6c23/flake8_carrot-0.1.6.tar.gz", hash = "sha256:1578ce726c0d591379b66085aea64446b7fdd5927c3cb01a768f8c453877d0b0", size = 30896, upload-time = "2025-12-01T12:28:37.244Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/03/31/1e8ae92f591edf027e79956298dd3a9c0c0559afb4c3cc53d70ccbc3419f/flake8_carrot-0.1.5-py3-none-any.whl", hash = "sha256:74efc07a805badc0cdbf20ac552c0e58e6cd966fff97540584396801fc17abf1", size = 52387, upload-time = "2025-11-27T12:27:59.198Z" },
+    { url = "https://files.pythonhosted.org/packages/1f/63/f0238cb8b64d2ba379b9a8caccbea356944112a7d7bc0f69eb64af54f2f2/flake8_carrot-0.1.6-py3-none-any.whl", hash = "sha256:6b9a599f57c6a9d70d89fd1aa451af617e62dca7d2ca324a0611542db1b17dc0", size = 52396, upload-time = "2025-12-01T12:28:35.681Z" },
+]
+
+[[package]]
+name = "flake8-pyproject"
+version = "1.2.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "flake8", marker = "python_full_version >= '3.14'" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/85/6a/cdee9ff7f2b7c6ddc219fd95b7c70c0a3d9f0367a506e9793eedfc72e337/flake8_pyproject-1.2.4-py3-none-any.whl", hash = "sha256:ea34c057f9a9329c76d98723bb2bb498cc6ba8ff9872c4d19932d48c91249a77", size = 5694, upload-time = "2025-11-28T21:40:01.309Z" },
 ]
 
 [[package]]
@@ -564,6 +575,7 @@ build-dev = [
 ]
 dev = [
     { name = "flake8-carrot", marker = "python_full_version >= '3.14'" },
+    { name = "flake8-pyproject", marker = "python_full_version >= '3.14'" },
     { name = "mypy" },
     { name = "pre-commit" },
     { name = "pytest" },
@@ -571,10 +583,12 @@ dev = [
 ]
 lint-format = [
     { name = "flake8-carrot", marker = "python_full_version >= '3.14'" },
+    { name = "flake8-pyproject", marker = "python_full_version >= '3.14'" },
     { name = "ruff" },
 ]
 pre-commit = [
     { name = "flake8-carrot", marker = "python_full_version >= '3.14'" },
+    { name = "flake8-pyproject", marker = "python_full_version >= '3.14'" },
     { name = "pre-commit" },
     { name = "ruff" },
 ]
@@ -596,6 +610,7 @@ alternative-type-checkers = [
 build-dev = [{ name = "hatchling" }]
 dev = [
     { name = "flake8-carrot", marker = "python_full_version >= '3.14'", specifier = ">=0.1.2" },
+    { name = "flake8-pyproject", marker = "python_full_version >= '3.14'", specifier = ">=1.2" },
     { name = "mypy", specifier = ">=1.18.1" },
     { name = "pre-commit" },
     { name = "pytest", specifier = ">=9" },
@@ -603,10 +618,12 @@ dev = [
 ]
 lint-format = [
     { name = "flake8-carrot", marker = "python_full_version >= '3.14'", specifier = ">=0.1.2" },
+    { name = "flake8-pyproject", marker = "python_full_version >= '3.14'", specifier = ">=1.2" },
     { name = "ruff", specifier = ">=0.4" },
 ]
 pre-commit = [
     { name = "flake8-carrot", marker = "python_full_version >= '3.14'", specifier = ">=0.1.2" },
+    { name = "flake8-pyproject", marker = "python_full_version >= '3.14'", specifier = ">=1.2" },
     { name = "pre-commit" },
     { name = "ruff", specifier = ">=0.4" },
 ]
