@@ -62,7 +62,7 @@ build-backend = "hatchling.build"
 
 [tool.flake8]
 select = ["CAR"]
-extend_exclude = [".venv/"]
+extend_exclude = [".venv/", "local/"]
 require_plugins = ["flake8-carrot"]
 
 [tool.hatch.build]
