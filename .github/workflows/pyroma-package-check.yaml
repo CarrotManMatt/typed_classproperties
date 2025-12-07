@@ -13,7 +13,6 @@ jobs:
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
-        if: github.event_name == 'workflow_dispatch' ||d
         runs-on: ubuntu-latest
 
         steps:
