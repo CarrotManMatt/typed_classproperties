@@ -1,4 +1,4 @@
-name: Check how well this package conforms to best practices.
+name: Check Conformance to Packaging Best Practises
 
 "on":
     schedule:
