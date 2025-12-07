@@ -93,6 +93,16 @@ repos:
           require_serial: true
           types: [python]
 
+        - id: pyroma
+          args: [--min=10]
+          description: Check how well a Python package conforms to best practices.  # yamllint disable-line rule:key-ordering
+          entry: pyroma -d .  # yamllint disable-line rule:key-ordering
+          language: python
+          always_run: true
+          name: Check package with Pyroma
+          pass_filenames: false
+          require_serial: true
+
         - id: ruff-check
           args: [--fix]
           description: Run 'ruff check' for extremely fast Python linting  # yamllint disable-line rule:key-ordering
