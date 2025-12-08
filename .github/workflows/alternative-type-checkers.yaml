@@ -26,26 +26,26 @@ jobs:
         steps:
             - uses: actions/checkout@v6
 
-            - if: ${{matrix.component=='package'||matrix.component=='tests'}}
+            - if: matrix.component == 'package' || matrix.component == 'tests'
               name: Set Up Python (Using Matrix Version)
               uses: actions/setup-python@v6
               with:
                 python-version: ${{matrix.python-version}}
 
-            - if: ${{matrix.component=='scripts'}}
+            - if: matrix.component == 'scripts'
               name: Set Up Python (Using .python-version File)
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
 
-            - if: ${{matrix.component=='package'||matrix.component=='tests'}}
+            - if: matrix.component == 'package' || matrix.component == 'tests'
               name: Install uv (With Matrix Python Version)
               uses: astral-sh/setup-uv@v7
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
-            - if: ${{matrix.component=='scripts'}}
+            - if: matrix.component == 'scripts'
               name: Install uv (With .python-version File)
               uses: astral-sh/setup-uv@v7
               with:
@@ -111,26 +111,26 @@ jobs:
         steps:
             - uses: actions/checkout@v6
 
-            - if: ${{matrix.component=='package'||matrix.component=='tests'}}
+            - if: matrix.component == 'package' || matrix.component == 'tests'
               name: Set Up Python (Using Matrix Version)
               uses: actions/setup-python@v6
               with:
                 python-version: ${{matrix.python-version}}
 
-            - if: ${{matrix.component=='scripts'}}
+            - if: matrix.component == 'scripts'
               name: Set Up Python (Using .python-version File)
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
 
-            - if: ${{matrix.component=='package'||matrix.component=='tests'}}
+            - if: matrix.component == 'package' || matrix.component == 'tests'
               name: Install uv (With Matrix Python Version)
               uses: astral-sh/setup-uv@v7
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
-            - if: ${{matrix.component=='scripts'}}
+            - if: matrix.component == 'scripts'
               name: Install uv (With .python-version File)
               uses: astral-sh/setup-uv@v7
               with:
