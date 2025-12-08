@@ -96,7 +96,7 @@ repos:
         - id: pyroma
           args: [--min=10]
           description: Check how well a Python package conforms to best practices.  # yamllint disable-line rule:key-ordering
-          entry: pyroma -d .  # yamllint disable-line rule:key-ordering
+          entry: env SKIP_MISSING_DOWNDOC=True pyroma -d .  # yamllint disable-line rule:key-ordering
           language: python
           always_run: true
           name: Check package with Pyroma
