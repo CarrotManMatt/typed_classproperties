@@ -129,7 +129,9 @@ class DowndocCustomReadmeMetadataHook(MetadataHookInterface):
                 "content-type": "text/plain",
                 "text": (
                     "Missing README content. "
-                    "DO NOT UPLOAD this package to any distribution platform (E.g. PyPI)."
+                    "DO NOT UPLOAD this package to any distribution platform (E.g. PyPI).\n\n"
+                    "If you are seeing this message on a package distribution platform, "
+                    "please contact the project's maintainer."
                 ),
             }
 

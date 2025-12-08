@@ -12,7 +12,6 @@ keywords = ["classmethod", "decorator", "property"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10",
@@ -47,7 +46,12 @@ lint-format = [
     "flake8-pyproject>=1.2; python_version >= '3.14'",
     "ruff>=0.4"
 ]
-pre-commit = ["pre-commit", { include-group = "lint-format" }]
+package-analysis = ["pyroma>=5.0"]
+pre-commit = [
+    "pre-commit",
+    { include-group = "lint-format" },
+    { include-group = "package-analysis" }
+]
 test = ["pytest>=9"]
 type-check = ["mypy>=1.18.1"]
 
