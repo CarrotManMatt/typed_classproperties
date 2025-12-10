@@ -54,32 +54,32 @@ jobs:
             - name: Install Pyrefly From Locked Dependencies
               run: |
                 if [ "${{matrix.component}}" == "package" ]; then
-                  ARGS="--no-group dev --group alternative-type-checkers"
+                    ARGS=("--no-group" "dev" "--group" "alternative-type-checkers")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                  ARGS="--only-group alternative-type-checkers --only-group build-dev"
+                    ARGS=("--only-group" "alternative-type-checkers" "--only-group" "build-dev")
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                  ARGS="--no-group dev --group alternative-type-checkers --group test"
+                    ARGS=("--no-group" "dev" "--group" "alternative-type-checkers" "--group" "test")
                 else
-                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
-                  exit 1
+                    echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                    exit 1
                 fi
 
-                uv sync $ARGS
+                uv sync "${ARGS[@]}"
 
             - name: Run Pyrefly
               run: |
                 if [ "${{matrix.component}}" == "package" ]; then
-                  ARGS="typed_classproperties/"
+                    ARGS=("typed_classproperties/")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                  ARGS="hatch_build.py"
+                    ARGS=("hatch_build.py")
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                  ARGS="tests.py"
+                    ARGS=("tests.py")
                 else
-                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
-                  exit 1
+                    echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                    exit 1
                 fi
 
-                uv run -- pyrefly check $ARGS
+                uv run -- pyrefly check "${ARGS[@]}"
 
     pyright:
         runs-on: ubuntu-latest
@@ -142,29 +142,29 @@ jobs:
             - name: Install ty From Locked Dependencies
               run: |
                 if [ "${{matrix.component}}" == "package" ]; then
-                  ARGS="--no-group dev --group alternative-type-checkers"
+                    ARGS=("--no-group" "dev" "--group" "alternative-type-checkers")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                  ARGS="--only-group alternative-type-checkers --only-group build-dev"
+                    ARGS=("--only-group" "alternative-type-checkers" "--only-group" "build-dev")
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                  ARGS="--no-group dev --group alternative-type-checkers --group test"
+                    ARGS=("--no-group dev" "--group" "alternative-type-checkers" "--group test")
                 else
-                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
-                  exit 1
+                    echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                    exit 1
                 fi
 
-                uv sync $ARGS
+                uv sync "${ARGS[@]}"
 
             - name: Run ty
               run: |-
                 if [ "${{matrix.component}}" == "package" ]; then
-                  ARGS="typed_classproperties/"
+                    ARGS="typed_classproperties/"
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                  ARGS="hatch_build.py"
+                    ARGS="hatch_build.py"
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                  ARGS="tests.py"
+                    ARGS="tests.py"
                 else
-                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
-                  exit 1
+                    echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                    exit 1
                 fi
 
                 uv run -- ty check $ARGS --output-format=github

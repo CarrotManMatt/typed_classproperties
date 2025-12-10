@@ -105,22 +105,22 @@ jobs:
             - name: Install mypy From Locked Dependencies
               run: |
                 if [ "${{matrix.component}}" == "package" ]; then
-                  ARGS="--no-group dev --group type-check"
+                    ARGS=("--no-group" "dev" "--group" "type-check")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                  ARGS="--only-group type-check --only-group build-dev"
+                    ARGS=("--only-group" "type-check" "--only-group" "build-dev")
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                  ARGS="--no-group dev --group type-check --group test"
+                    ARGS=("--no-group" "dev" "--group" "type-check" "--group" "test")
                 else
-                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
-                  exit 1
+                    echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                    exit 1
                 fi
 
-                uv sync $ARGS
+                uv sync "${ARGS[@]}"
 
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
             - uses: actions/cache@v4
               with:
@@ -130,17 +130,17 @@ jobs:
             - name: Run mypy  # TODO: Add GitHub workflows output format
               run: |
                 if [ "${{matrix.component}}" == "package" ]; then
-                  ARGS="typed_classproperties/"
+                    ARGS=("typed_classproperties/")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                  ARGS="hatch_build.py"
+                    ARGS=("hatch_build.py")
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                  ARGS="tests.py"
+                    ARGS=("tests.py")
                 else
-                  echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
-                  exit 1
+                    echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                    exit 1
                 fi
 
-                uv run -- mypy $ARGS
+                uv run -- mypy "${ARGS[@]}"
 
     # yamllint disable-line rule:key-ordering
     pre-commit:
@@ -176,7 +176,7 @@ jobs:
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
             - uses: actions/cache@v4
               with:
@@ -187,10 +187,15 @@ jobs:
               run: uv run -- pre-commit install-hooks
 
             - name: Store pre-commit Checks Which Require Skipping
-              run: echo "SKIP=check-github-workflows,flake8,ruff-check,uv-lock" >> $GITHUB_ENV
+              run: echo "SKIP=check-github-workflows,flake8,ruff-check,uv-lock" >> "$GITHUB_ENV"
 
             - name: Run pre-commit
-              run: uv run -- pre-commit run --all-files --hook-stage manual  # TODO: Add GitHub workflows output format
+              run: |
+                set -o pipefail
+                uv run -- pre-commit run --all-files --hook-stage manual | tee /tmp/pre-commit.log
+
+            - name: Ensure No Warnings
+              run: if grep -q "\[WARNING\]" /tmp/pre-commit.log; then exit 1; fi
 
             - if: "!cancelled()"
               uses: pre-commit-ci/lite-action@v1.1.0
@@ -229,15 +234,15 @@ jobs:
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
             - uses: actions/cache@v4
               with:
                 key: pytest|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
                 path: ./.pytest_cache
 
-            - name: Run pytest
-              run: uv run -- pytest  # TODO: Add GitHub workflows output format
+            - name: Run pytest  # TODO: Add GitHub workflows output format
+              run: uv run -- pytest
 
     # yamllint disable-line rule:key-ordering
     ruff-lint:
@@ -266,7 +271,7 @@ jobs:
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
             - uses: actions/cache@v4
               with:

@@ -4,6 +4,13 @@ default_language_version:
 default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
+    - repo: https://github.com/rhysd/actionlint
+      rev: v1.7.9
+      hooks:
+        - id: actionlint
+          additional_dependencies: [github.com/wasilibs/go-shellcheck/cmd/shellcheck@latest]  # yamllint disable-line rule:key-ordering
+          args: [-pyflakes=]
+
     - repo: https://github.com/adrienverge/yamllint.git
       rev: v1.37.1
       hooks:
@@ -19,8 +26,6 @@ repos:
     - repo: https://github.com/python-jsonschema/check-jsonschema
       rev: 0.35.0
       hooks:
-        - id: check-github-workflows
-
         - id: check-jsonschema
           args: [--schemafile, 'https://json.schemastore.org/yamllint.json']  # yamllint disable-line rule:quoted-strings
           files: ^\.yamllint\.yaml$  # yamllint disable-line rule:key-ordering
