@@ -146,7 +146,7 @@ jobs:
                 elif [ "${{matrix.component}}" == "scripts" ]; then
                     ARGS=("--only-group" "alternative-type-checkers" "--only-group" "build-dev")
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                    ARGS=("--no-group dev" "--group" "alternative-type-checkers" "--group test")
+                    ARGS=("--no-group" "dev" "--group" "alternative-type-checkers" "--group test")
                 else
                     echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
                     exit 1
