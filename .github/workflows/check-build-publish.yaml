@@ -186,7 +186,7 @@ jobs:
             - name: Setup pre-commit Environments
               run: uv run -- prek install-hooks
 
-            - name: Run pre-commit
+            - name: Run prek
               run: |
                 set -o pipefail
                 uv run -- prek run --all-files --hook-stage manual --color never --skip ruff-check --skip uv-lock --skip flake8 | tee /tmp/prek.log
