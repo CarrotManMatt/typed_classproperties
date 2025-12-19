@@ -47,11 +47,7 @@ lint-format = [
     "ruff>=0.4"
 ]
 package-analysis = ["pyroma>=5.0"]
-pre-commit = [
-    "pre-commit",
-    { include-group = "lint-format" },
-    { include-group = "package-analysis" }
-]
+pre-commit = ["prek>=0.2"]
 test = ["pytest>=9"]
 type-check = ["mypy>=1.18.1"]
 

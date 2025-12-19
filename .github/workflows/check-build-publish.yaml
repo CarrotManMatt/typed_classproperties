@@ -170,7 +170,7 @@ jobs:
               with:
                 enable-cache: true
 
-            - name: Install pre-commit From Locked Dependencies
+            - name: Install prek From Locked Dependencies
               run: uv sync --only-group pre-commit
 
             - id: store-hashed-python-version
@@ -180,22 +180,19 @@ jobs:
 
             - uses: actions/cache@v5
               with:
-                key: pre-commit|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
-                path: ~/.cache/pre-commit
+                key: prek|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
+                path: ~/.cache/prek
 
             - name: Setup pre-commit Environments
-              run: uv run -- pre-commit install-hooks
-
-            - name: Store pre-commit Checks Which Require Skipping
-              run: echo "SKIP=check-github-workflows,flake8,ruff-check,uv-lock" >> "$GITHUB_ENV"
+              run: uv run -- prek install-hooks
 
             - name: Run pre-commit
               run: |
                 set -o pipefail
-                uv run -- pre-commit run --all-files --hook-stage manual | tee /tmp/pre-commit.log
+                uv run -- prek run --all-files --hook-stage manual --color never --skip ruff-check --skip uv-lock --skip flake8 | tee /tmp/prek.log
 
             - name: Ensure No Warnings
-              run: if grep -q "\[WARNING\]" /tmp/pre-commit.log; then exit 1; fi
+              run: "if grep -q '^warning: ' /tmp/prek.log; then exit 1; fi"
 
             - if: "!cancelled()"
               uses: pre-commit-ci/lite-action@v1.1.0

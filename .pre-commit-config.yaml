@@ -4,6 +4,16 @@ default_language_version:
 default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
+    - repo: https://github.com/tsvikas/sync-with-uv
+      rev: v0.5.0
+      hooks:
+        - id: sync-with-uv
+
+    - repo: https://github.com/codespell-project/codespell
+      rev: v2.4.1
+      hooks:
+        - id: codespell
+
     - repo: https://github.com/rhysd/actionlint
       rev: v1.7.9
       hooks:
@@ -18,7 +28,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 42.59.1
+      rev: 42.64.1
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -46,27 +56,34 @@ repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v6.0.0
       hooks:
+        - id: check-illegal-windows-names
+        - id: check-shebang-scripts-are-executable
+        - id: check-vcs-permalinks
+        - id: destroyed-symlinks
+        - id: check-case-conflict
+        - id: name-tests-test
+          args: [--pytest-test-first]
+          files: (?:^|\/)tests\/(?:[^\/]+\/)*(?!_)[^\/]+\.py$  # yamllint disable-line rule:key-ordering
+        - id: pretty-format-json
+          args: [--autofix, --indent, "4"]
+
+    - repo: builtin
+      hooks:
         - id: check-added-large-files
         - id: trailing-whitespace
         - id: check-executables-have-shebangs
-        - id: check-illegal-windows-names
-        - id: check-shebang-scripts-are-executable
         - id: check-json
+        - id: check-toml
+        - id: check-yaml
+        - id: end-of-file-fixer
         - id: check-xml
         - id: check-symlinks
         - id: check-merge-conflict
-        - id: check-vcs-permalinks
-        - id: destroyed-symlinks
         - id: mixed-line-ending
           args: [--fix=lf]
-        - id: check-case-conflict
         - id: detect-private-key
         - id: fix-byte-order-marker
           args: [-h]
-        - id: name-tests-test
-          args: [--pytest-test-first]
-        - id: pretty-format-json
-          args: [--autofix, --indent, "4"]
 
     - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
       rev: v2.15.0
@@ -75,7 +92,7 @@ repos:
           args: [--autofix]
 
     - repo: https://github.com/tombi-toml/tombi-pre-commit
-      rev: v0.7.7
+      rev: v0.7.8
       hooks:
         - id: tombi-format
         - id: tombi-lint
@@ -86,46 +103,24 @@ repos:
         - id: uv-lock
           always_run: true
 
-    - repo: local
+    - repo: https://github.com/regebro/pyroma
+      rev: 5.0.1
       hooks:
-        - id: flake8
-          # yamllint disable-line rule:key-ordering
-          description: "`flake8` is a command-line utility for enforcing style consistency across
-            Python projects."
-          entry: flake8  # yamllint disable-line rule:key-ordering
-          language: python
-          name: flake8
-          require_serial: true
-          types: [python]
-
         - id: pyroma
-          args: [--min=10]
-          description: Check how well a Python package conforms to best practices.  # yamllint disable-line rule:key-ordering
-          entry: env SKIP_MISSING_DOWNDOC=True pyroma -d .  # yamllint disable-line rule:key-ordering
-          language: python
-          always_run: true
-          name: Check package with Pyroma
-          pass_filenames: false
-          require_serial: true
+          entry: env SKIP_MISSING_DOWNDOC=True pyroma  # yamllint disable-line rule:key-ordering
 
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.14.10
+      hooks:
         - id: ruff-check
           args: [--fix]
-          description: Run 'ruff check' for extremely fast Python linting  # yamllint disable-line rule:key-ordering
-          entry: ruff check --force-exclude  # yamllint disable-line rule:key-ordering
-          language: python
-          minimum_pre_commit_version: 2.9.2
-          name: ruff check
-          require_serial: true
-          types_or: [python, pyi]
-
         - id: ruff-format
-          description: Run 'ruff format' for extremely fast Python formatting  # yamllint disable-line rule:key-ordering
-          entry: ruff format --force-exclude  # yamllint disable-line rule:key-ordering
-          language: python
-          minimum_pre_commit_version: 2.9.2
-          name: ruff format
-          require_serial: true
-          types_or: [python, pyi]
+
+    - repo: https://github.com/pycqa/flake8
+      rev: 7.3.0
+      hooks:
+        - id: flake8
+          additional_dependencies: [flake8-pyproject, flake8-carrot]  # yamllint disable-line rule:key-ordering
 
     - repo: https://github.com/google/yamlfmt
       rev: v0.20.0
