@@ -28,7 +28,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 42.66.0
+      rev: 42.66.14
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -93,13 +93,13 @@ repos:
           args: [--autofix]
 
     - repo: https://github.com/tombi-toml/tombi-pre-commit
-      rev: v0.7.10
+      rev: v0.7.14
       hooks:
         - id: tombi-format
         - id: tombi-lint
 
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.9.18
+      rev: 0.9.20
       hooks:
         - id: uv-lock
           always_run: true
