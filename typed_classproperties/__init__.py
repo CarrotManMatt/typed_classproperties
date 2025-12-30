@@ -9,21 +9,31 @@ if sys.version_info >= (3, 12):
 else:
     from typing_extensions import override
 
+T_value = TypeVar("T_value")
+T_class = TypeVar("T_class")
+
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
     from typing import Final
 
     from typing_extensions import Self
 
+    class _PropertyBase(Generic[T_value]):
+        fget: "Callable[..., T_value] | None"
+
+        def __init__(
+            self, fget: "Callable[..., T_value] | None" = None, doc: str | None = None
+        ) -> None: ...
+
+        """Initialise the classproperty object."""
+else:
+    _PropertyBase = property
+
 
 __all__: "Sequence[str]" = ("cached_classproperty", "classproperty")
 
 
-T_class = TypeVar("T_class")
-T_value = TypeVar("T_value")
-
-
-class classproperty(property, Generic[T_value]):
+class classproperty(_PropertyBase, Generic[T_value]):
     """
     Decorator for a Class-level property.
 
