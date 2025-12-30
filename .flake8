@@ -1,4 +1,0 @@
-[flake8]
-select = CAR
-extend_exclude = .venv
-require_plugins = flake8-carrot

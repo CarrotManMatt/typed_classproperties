@@ -77,26 +77,26 @@ jobs:
         steps:
             - uses: actions/checkout@v6
 
-            - if: ${{ matrix.component == 'package' || matrix.component == 'tests' }}
+            - if: matrix.component == 'package' || matrix.component == 'tests'
               name: Set Up Python (Using Matrix Version)
               uses: actions/setup-python@v6
               with:
-                python-version: ${{ matrix.python-version }}
+                python-version: ${{matrix.python-version}}
 
-            - if: ${{ matrix.component == 'scripts' }}
+            - if: matrix.component == 'scripts'
               name: Set Up Python (Using .python-version File)
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
 
-            - if: ${{ matrix.component == 'package' || matrix.component == 'tests' }}
+            - if: matrix.component == 'package' || matrix.component == 'tests'
               name: Install uv (With Matrix Python Version)
               uses: astral-sh/setup-uv@v7
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
-            - if: ${{ matrix.component == 'scripts' }}
+            - if: matrix.component == 'scripts'
               name: Install uv (With .python-version File)
               uses: astral-sh/setup-uv@v7
               with:
@@ -104,37 +104,43 @@ jobs:
 
             - name: Install mypy From Locked Dependencies
               run: |
-                if [ "${{ matrix.component }}" == "package" ]; then
-                  ARGS="--no-group dev --group type-check"
-                elif [ "${{ matrix.component }}" == "scripts" ]; then
-                  ARGS="--only-group type-check --only-group build-dev"
-                elif [ "${{ matrix.component }}" == "tests" ]; then
-                  ARGS="--no-group dev --group type-check --group test"
+                if [ "${{matrix.component}}" == "package" ]; then
+                    ARGS=("--no-group" "dev" "--group" "type-check")
+                elif [ "${{matrix.component}}" == "scripts" ]; then
+                    ARGS=("--only-group" "type-check" "--only-group" "build-dev")
+                elif [ "${{matrix.component}}" == "tests" ]; then
+                    ARGS=("--no-group" "dev" "--group" "type-check" "--group" "test")
+                else
+                    echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                    exit 1
                 fi
 
-                uv sync $ARGS
+                uv sync "${ARGS[@]}"
 
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
-            - uses: actions/cache@v4
+            - uses: actions/cache@v5
               with:
                 key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{matrix.component}}
                 path: ./.mypy_cache
 
             - name: Run mypy  # TODO: Add GitHub workflows output format
               run: |
-                if [ "${{ matrix.component }}" == "package" ]; then
-                  ARGS="typed_classproperties/"
-                elif [ "${{ matrix.component }}" == "scripts" ]; then
-                  ARGS="hatch_build.py"
-                elif [ "${{ matrix.component }}" == "tests" ]; then
-                  ARGS="tests.py"
+                if [ "${{matrix.component}}" == "package" ]; then
+                    ARGS=("typed_classproperties/")
+                elif [ "${{matrix.component}}" == "scripts" ]; then
+                    ARGS=("hatch_build.py")
+                elif [ "${{matrix.component}}" == "tests" ]; then
+                    ARGS=("tests.py")
+                else
+                    echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
+                    exit 1
                 fi
 
-                uv run -- mypy $ARGS
+                uv run -- mypy "${ARGS[@]}"
 
     # yamllint disable-line rule:key-ordering
     pre-commit:
@@ -164,29 +170,31 @@ jobs:
               with:
                 enable-cache: true
 
-            - name: Install pre-commit From Locked Dependencies
+            - name: Install prek From Locked Dependencies
               run: uv sync --only-group pre-commit
 
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
-            - uses: actions/cache@v4
+            - uses: actions/cache@v5
               with:
-                key: pre-commit|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
-                path: ~/.cache/pre-commit
+                key: prek|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
+                path: ~/.cache/prek
 
             - name: Setup pre-commit Environments
-              run: uv run -- pre-commit install-hooks
+              run: uv run -- prek install-hooks
 
-            - name: Store pre-commit Checks Which Require Skipping
-              run: echo "SKIP=check-github-workflows,flake8,ruff-check,uv-lock" >> $GITHUB_ENV
+            - name: Run prek
+              run: |
+                set -o pipefail
+                uv run -- prek run --all-files --hook-stage manual --color never --skip ruff-check --skip uv-lock --skip flake8 | tee /tmp/prek.log
 
-            - name: Run pre-commit
-              run: uv run -- pre-commit run --all-files --hook-stage manual  # TODO: Add GitHub workflows output format
+            - name: Ensure No Warnings
+              run: "if grep -q '^warning: ' /tmp/prek.log; then exit 1; fi"
 
-            - if: ${{!cancelled()}}
+            - if: "!cancelled()"
               uses: pre-commit-ci/lite-action@v1.1.0
 
     # yamllint disable-line rule:key-ordering
@@ -209,7 +217,7 @@ jobs:
             - name: Set Up Python
               uses: actions/setup-python@v6
               with:
-                python-version: ${{ matrix.python-version }}
+                python-version: ${{matrix.python-version}}
 
             - name: Install uv
               uses: astral-sh/setup-uv@v7
@@ -223,15 +231,15 @@ jobs:
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
-            - uses: actions/cache@v4
+            - uses: actions/cache@v5
               with:
                 key: pytest|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
                 path: ./.pytest_cache
 
-            - name: Run pytest
-              run: uv run -- pytest  # TODO: Add GitHub workflows output format
+            - name: Run pytest  # TODO: Add GitHub workflows output format
+              run: uv run -- pytest
 
     # yamllint disable-line rule:key-ordering
     ruff-lint:
@@ -260,9 +268,9 @@ jobs:
             - id: store-hashed-python-version
               name: Store Hashed Python Version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
-                >> $GITHUB_OUTPUT
+                >> "$GITHUB_OUTPUT"
 
-            - uses: actions/cache@v4
+            - uses: actions/cache@v5
               with:
                 key: ruff|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
                 path: ./.ruff_cache
@@ -302,7 +310,7 @@ jobs:
               run: uv build --no-sources --build
 
             - name: Save Build Artifacts
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v6
               with:
                 name: built-typed_classproperties-package
                 path: dist/
@@ -327,7 +335,7 @@ jobs:
                 enable-cache: true
 
             - name: Download Build Artifacts
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                 name: built-typed_classproperties-package
                 path: dist/
@@ -339,9 +347,8 @@ jobs:
     test-publish:
         environment: test-publish
 
-        if: |
-            (github.event_name != 'push' || github.ref_type != 'tag') &&
-            (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'CarrotManMatt/typed_classproperties')
+        if: (github.event_name != 'push' || github.ref_type != 'tag') && (github.event_name != 'pull_request'
+            || github.event.pull_request.head.repo.full_name == 'CarrotManMatt/typed_classproperties')
 
         needs: [build]
         permissions:
@@ -357,7 +364,7 @@ jobs:
                 enable-cache: true
 
             - name: Download Build Artifacts
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                 name: built-typed_classproperties-package
                 path: dist/
@@ -377,19 +384,19 @@ jobs:
 
         steps:
             - name: Download Build Artifacts
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                 name: built-typed_classproperties-package
                 path: dist/
 
             - name: Sign Build Artifacts
-              uses: sigstore/gh-action-sigstore-python@v3.1.0
+              uses: sigstore/gh-action-sigstore-python@v3.2.0
               with:
                 inputs: ./dist/typed_classproperties-*.tar.gz ./dist/typed_classproperties-*.whl
 
             - name: Create GitHub Release
               # yamllint disable-line rule:key-ordering
               env:
-                GITHUB_TOKEN: ${{ github.token }}
-              run: gh release create '${{ github.ref_name }}' dist/** --repo '${{github.repository}}'
+                GITHUB_TOKEN: ${{github.token}}
+              run: gh release create '${{github.ref_name}}' dist/** --repo '${{github.repository}}'
                 --verify-tag --generate-notes

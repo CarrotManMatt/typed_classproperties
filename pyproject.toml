@@ -12,7 +12,6 @@ keywords = ["classmethod", "decorator", "property"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10",
@@ -30,6 +29,7 @@ dynamic = ["description", "readme", "version"]
 
 [project.urls]
 Issues = "https://github.com/CarrotManMatt/typed_classproperties/issues"
+Releases = "https://github.com/CarrotManMatt/typed_classproperties/releases"
 Repository = "https://github.com/CarrotManMatt/typed_classproperties"
 
 [dependency-groups]
@@ -41,8 +41,13 @@ dev = [
 ]
 alternative-type-checkers = ["pyrefly", "ty"]
 build-dev = ["hatchling"]
-lint-format = ["flake8-carrot>=0.1.2; python_version >= '3.14'", "ruff>=0.4"]
-pre-commit = ["pre-commit", { include-group = "lint-format" }]
+lint-format = [
+    "flake8-carrot>=0.1.2; python_version >= '3.14'",
+    "flake8-pyproject>=1.2; python_version >= '3.14'",
+    "ruff>=0.4"
+]
+package-analysis = ["pyroma>=5.0"]
+pre-commit = ["prek>=0.2,!=0.2.23"]
 test = ["pytest>=9"]
 type-check = ["mypy>=1.18.1"]
 
@@ -54,6 +59,11 @@ requires = [
     "typing-extensions; python_version < '3.12'",
 ]
 build-backend = "hatchling.build"
+
+[tool.flake8]
+select = ["CAR"]
+extend_exclude = [".venv/", "local/"]
+require_plugins = ["flake8-carrot"]
 
 [tool.hatch.build]
 only-packages = true
