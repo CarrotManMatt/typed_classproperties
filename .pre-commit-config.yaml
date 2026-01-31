@@ -4,6 +4,34 @@ default_language_version:
 default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
+    - repo: https://github.com/astral-sh/uv-pre-commit
+      rev: 0.9.28
+      hooks:
+        - id: uv-lock
+          always_run: true
+
+    - repo: https://github.com/gitleaks/gitleaks
+      rev: v8.30.0
+      hooks:
+        - id: gitleaks
+
+    - repo: https://github.com/codespell-project/codespell
+      rev: v2.4.1
+      hooks:
+        - id: codespell
+
+    - repo: https://github.com/tombi-toml/tombi-pre-commit
+      rev: v0.7.25
+      hooks:
+        - id: tombi-format
+        - id: tombi-lint
+          stages: [manual]
+
+    - repo: https://github.com/tsvikas/sync-with-uv
+      rev: v0.5.0
+      hooks:
+        - id: sync-with-uv
+
     - repo: builtin
       hooks:
         - id: check-added-large-files
@@ -22,28 +50,6 @@ repos:
         - id: fix-byte-order-marker
           args: [-h]
 
-    - repo: https://github.com/tombi-toml/tombi-pre-commit
-      rev: v0.7.25
-      hooks:
-        - id: tombi-format
-        - id: tombi-lint
-
-    - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.9.27
-      hooks:
-        - id: uv-lock
-          always_run: true
-
-    - repo: https://github.com/tsvikas/sync-with-uv
-      rev: v0.5.0
-      hooks:
-        - id: sync-with-uv
-
-    - repo: https://github.com/codespell-project/codespell
-      rev: v2.4.1
-      hooks:
-        - id: codespell
-
     - repo: https://github.com/rhysd/actionlint
       rev: v1.7.10
       hooks:
@@ -58,7 +64,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 42.92.14
+      rev: 43.0.6
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -77,12 +83,6 @@ repos:
       hooks:
         - id: gitlint
         - id: gitlint-ci
-
-    - repo: https://github.com/gitleaks/gitleaks
-      rev: v8.30.0
-      hooks:
-        - id: gitleaks
-          language_version: ">=1.25.4"
 
     - repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v6.0.0
