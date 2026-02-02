@@ -1,7 +1,7 @@
 """Typed decorators for classproperty and cached_classproperty."""
 
+import functools
 import sys
-from functools import cached_property
 from typing import TYPE_CHECKING, Generic, TypeVar, cast, overload
 
 if sys.version_info >= (3, 12):
@@ -52,7 +52,7 @@ class classproperty(property, Generic[T_value]):
 
 
 class cached_classproperty(
-    cached_property[T_value], Generic[T_class, T_value]
+    functools.cached_property[T_value], Generic[T_class, T_value]
 ):  # NOTE: inherits lock and __set_name__ logic from functools.cached_property
     """
     Decorator for a Class-level property whose results are cached.
