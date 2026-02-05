@@ -149,6 +149,7 @@ jobs:
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        needs: [uv-check]
         runs-on: ubuntu-latest
 
         strategy:

@@ -119,7 +119,7 @@ class cached_classproperty(
             unlocked_cached_property: Self | T_value = self._get_cached_property(owner)
             return unlocked_cached_property
 
-        with getattr(self, "lock"):  # type: ignore[unreachable] # ty: ignore[unused-ignore] # noqa: B009, CAR123
+        with getattr(self, "lock"):  # type: ignore[unreachable, unused-ignore] # ty: ignore[unused-ignore] # noqa: B009, CAR123
             locked_cached_property: Self | T_value = self._get_cached_property(owner)
 
         return locked_cached_property
