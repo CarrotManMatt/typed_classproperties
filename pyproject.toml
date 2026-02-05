@@ -73,7 +73,7 @@ artifacts = ["README.adoc"]
 
 [tool.hatch.metadata.hooks]
 custom = { readme-path = "README.adoc" }  # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The downdoc binary must be installed to be able to convert the README.adoc file for this project.
-docstring-description = {  }
+docstring-description = {}
 
 [tool.hatch.version]
 raw-options = { local_scheme = "no-local-version", version_scheme = "python-simplified-semver" }
