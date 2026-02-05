@@ -31,11 +31,11 @@ class classproperty(property, Generic[T_value]):
     """
 
     @override
-    def __init__(self, func: "Callable[..., T_value]", /) -> None:  # type: ignore[explicit-any]
+    def __init__(self, func: "Callable[..., T_value]", /) -> None:  # type: ignore[explicit-any] # ty: ignore[unused-ignore]  # noqa: CAR123
         """Initialise the classproperty object."""
         super().__init__(func)
 
-    @overload  # type: ignore[override]
+    @overload  # type: ignore[override] # ty: ignore[unused-ignore]  # noqa: CAR123
     def __get__(self, owner_self: None, owner_cls: type, /) -> T_value: ...
 
     @overload
@@ -74,7 +74,7 @@ class cached_classproperty(
     """
 
     @override
-    def __set_name__(self, owner: type, name: str, /) -> None:
+    def __set_name__(self, owner: type, name: str, /) -> None:  # ty: ignore[invalid-method-override]
         """Store the lookup key of the cached-classproperty."""
         super().__set_name__(owner, name)
 
@@ -106,7 +106,7 @@ class cached_classproperty(
     def __get__(self, instance: object, owner: type | None = None, /) -> T_value: ...
 
     @override
-    def __get__(self, instance: object, owner: type | None = None, /) -> "Self | T_value":
+    def __get__(self, instance: object, owner: type | None = None, /) -> "Self | T_value":  # ty: ignore[invalid-method-override]
         """Retrieve the value of the property."""
         if self.attrname is None:
             NO_NAME_SET_MESSAGE: Final[str] = (
@@ -119,7 +119,7 @@ class cached_classproperty(
             unlocked_cached_property: Self | T_value = self._get_cached_property(owner)
             return unlocked_cached_property
 
-        with getattr(self, "lock"):  # type: ignore[unreachable, unused-ignore]  # noqa: B009
+        with getattr(self, "lock"):  # type: ignore[unreachable] # ty: ignore[unused-ignore] # noqa: B009, CAR123
             locked_cached_property: Self | T_value = self._get_cached_property(owner)
 
         return locked_cached_property
@@ -147,4 +147,8 @@ class cached_classproperty(
             )
             raise TypeError(NO_CLASS_PROPERTY_MESSAGE)
 
-        setattr(cls_with_cache, name, cls_with_cache._original_cached_classproperties[name])
+        setattr(
+            cls_with_cache,
+            name,
+            cast("dict[str, object]", cls_with_cache._original_cached_classproperties)[name],
+        )

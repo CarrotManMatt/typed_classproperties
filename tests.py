@@ -31,7 +31,7 @@ class BaseTestClassProperty(abc.ABC):  # noqa: B024
 
     @classmethod
     def _get_cls_definition(cls, test_value: "T") -> "type[Holder[T]]":
-        class _HolderClass(Holder["T"]):  # noqa: CAR160
+        class _HolderClass(Holder["T"]):  # ty: ignore[invalid-generic-class] # noqa: CAR160
             cached_prop_exec_count = 0
 
             @classproperty

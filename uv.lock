@@ -668,6 +668,7 @@ dev = [
     { name = "prek" },
     { name = "pytest" },
     { name = "ruff" },
+    { name = "ty" },
 ]
 lint-format = [
     { name = "flake8-carrot", marker = "python_full_version >= '3.14'" },
@@ -685,6 +686,7 @@ test = [
 ]
 type-check = [
     { name = "mypy" },
+    { name = "ty" },
 ]
 
 [package.metadata]
@@ -703,6 +705,7 @@ dev = [
     { name = "prek", specifier = ">=0.3.1" },
     { name = "pytest", specifier = ">=9" },
     { name = "ruff", specifier = ">=0.4" },
+    { name = "ty" },
 ]
 lint-format = [
     { name = "flake8-carrot", marker = "python_full_version >= '3.14'", specifier = ">=0.1.2" },
@@ -712,7 +715,10 @@ lint-format = [
 package-analysis = [{ name = "pyroma", specifier = ">=5.0" }]
 pre-commit = [{ name = "prek", specifier = ">=0.3.1" }]
 test = [{ name = "pytest", specifier = ">=9" }]
-type-check = [{ name = "mypy", specifier = ">=1.18.1" }]
+type-check = [
+    { name = "mypy", specifier = ">=1.18.1" },
+    { name = "ty" },
+]
 
 [[package]]
 name = "typing-extensions"
