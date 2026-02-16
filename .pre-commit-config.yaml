@@ -5,7 +5,7 @@ default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.10.1
+      rev: 0.10.3
       hooks:
         - id: uv-lock
           always_run: true
@@ -21,7 +21,7 @@ repos:
         - id: codespell
 
     - repo: https://github.com/tombi-toml/tombi-pre-commit
-      rev: v0.7.28
+      rev: v0.7.29
       hooks:
         - id: tombi-format
         - id: tombi-lint
@@ -51,7 +51,7 @@ repos:
           args: [-h]
 
     - repo: https://github.com/rhysd/actionlint
-      rev: v1.7.10
+      rev: v1.7.11
       hooks:
         - id: actionlint
           additional_dependencies: [github.com/wasilibs/go-shellcheck/cmd/shellcheck@latest]  # yamllint disable-line rule:key-ordering
@@ -64,13 +64,13 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 43.5.6
+      rev: 43.17.1
       hooks:
         - id: renovate-config-validator
           args: [--strict]
 
     - repo: https://github.com/python-jsonschema/check-jsonschema
-      rev: 0.36.1
+      rev: 0.36.2
       hooks:
         - id: check-jsonschema
           args: [--schemafile, 'https://json.schemastore.org/yamllint.json']  # yamllint disable-line rule:quoted-strings
@@ -111,7 +111,7 @@ repos:
           entry: env SKIP_MISSING_DOWNDOC=True pyroma  # yamllint disable-line rule:key-ordering
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.15.0
+      rev: v0.15.1
       hooks:
         - id: ruff-check
           args: [--fix]
