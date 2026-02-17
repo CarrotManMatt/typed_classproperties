@@ -64,7 +64,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 43.17.1
+      rev: 43.19.2
       hooks:
         - id: renovate-config-validator
           args: [--strict]
