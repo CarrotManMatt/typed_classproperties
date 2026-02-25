@@ -69,17 +69,19 @@ jobs:
             - name: Run Pyrefly
               run: |
                 if [ "${{matrix.component}}" == "package" ]; then
-                    ARGS=("typed_classproperties/")
+                    FILES=("typed_classproperties/")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                    ARGS=("hatch_build.py")
+                    FILES=("hatch_build.py")
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                    ARGS=("tests.py")
+                    FILES=("tests.py")
                 else
                     echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
                     exit 1
                 fi
 
-                uv run -- pyrefly check "${ARGS[@]}"
+                for FILE in "${FILES[@]}"; do
+                  uv run -- pyrefly check "$FILE"
+                done
 
     pyright:
         runs-on: ubuntu-latest

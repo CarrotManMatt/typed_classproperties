@@ -130,17 +130,19 @@ jobs:
             - name: Run mypy  # TODO: Add GitHub workflows output format
               run: |
                 if [ "${{matrix.component}}" == "package" ]; then
-                    ARGS=("typed_classproperties/")
+                    FILES=("typed_classproperties/")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                    ARGS=("hatch_build.py")
+                    FILES=("hatch_build.py")
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                    ARGS=("tests.py")
+                    FILES=("tests.py")
                 else
                     echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
                     exit 1
                 fi
 
-                uv run -- mypy "${ARGS[@]}"
+                for FILE in "${FILES[@]}"; do
+                  uv run -- mypy "$FILE"
+                done
 
     # yamllint disable-line rule:key-ordering
     ty:
@@ -209,17 +211,19 @@ jobs:
             - name: Run ty
               run: |-
                 if [ "${{matrix.component}}" == "package" ]; then
-                    ARGS=("typed_classproperties/")
+                    FILES=("typed_classproperties/")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                    ARGS=("hatch_build.py")
+                    FILES=("hatch_build.py")
                 elif [ "${{matrix.component}}" == "tests" ]; then
-                    ARGS=("tests.py")
+                    FILES=("tests.py")
                 else
                     echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
                     exit 1
                 fi
 
-                uv run -- ty check "${ARGS[@]}" --output-format=github
+                for FILE in "${FILES[@]}"; do
+                  uv run -- ty check "$FILE" --output-format=github
+                done
 
     # yamllint disable-line rule:key-ordering
     pre-commit:
