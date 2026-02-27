@@ -393,7 +393,7 @@ jobs:
               run: uv build --no-sources --build
 
             - name: Save Build Artifacts
-              uses: actions/upload-artifact@v6
+              uses: actions/upload-artifact@v7
               with:
                 name: built-typed_classproperties-package
                 path: dist/
@@ -418,7 +418,7 @@ jobs:
                 enable-cache: true
 
             - name: Download Build Artifacts
-              uses: actions/download-artifact@v7
+              uses: actions/download-artifact@v8
               with:
                 name: built-typed_classproperties-package
                 path: dist/
@@ -447,7 +447,7 @@ jobs:
                 enable-cache: true
 
             - name: Download Build Artifacts
-              uses: actions/download-artifact@v7
+              uses: actions/download-artifact@v8
               with:
                 name: built-typed_classproperties-package
                 path: dist/
@@ -467,7 +467,7 @@ jobs:
 
         steps:
             - name: Download Build Artifacts
-              uses: actions/download-artifact@v7
+              uses: actions/download-artifact@v8
               with:
                 name: built-typed_classproperties-package
                 path: dist/
