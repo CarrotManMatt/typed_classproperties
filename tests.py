@@ -17,31 +17,32 @@ if TYPE_CHECKING:
 __all__: "Sequence[str]" = ("TestCachedClassProperty", "TestClassProperty")
 
 
-T = TypeVar("T")
+T_class = TypeVar("T_class")
+T_func = TypeVar("T_func")
 
 
-class Holder(Protocol[T]):
+class Holder(Protocol[T_class]):
     cached_prop_exec_count: int
-    HELD_VALUE: T
-    CACHED_HELD_VALUE: T
+    HELD_VALUE: T_class
+    CACHED_HELD_VALUE: T_class
 
 
 class BaseTestClassProperty(abc.ABC):  # noqa: B024
     """Abstract base class for all test classes."""
 
     @classmethod
-    def _get_cls_definition(cls, test_value: "T") -> "type[Holder[T]]":
-        class _HolderClass(Holder["T"]):  # noqa: CAR160
+    def _get_cls_definition(cls, test_value: "T_func") -> "type[Holder[T_func]]":
+        class _HolderClass(Holder["T_func"]):  # ty: ignore[shadowed-type-variable] # noqa: CAR160
             cached_prop_exec_count = 0
 
             @classproperty
             @override
-            def HELD_VALUE(cls) -> "T":
+            def HELD_VALUE(cls) -> "T_func":
                 return test_value
 
             @cached_classproperty
             @override
-            def CACHED_HELD_VALUE(cls) -> "T":
+            def CACHED_HELD_VALUE(cls) -> "T_func":
                 cls.cached_prop_exec_count += 1
                 return test_value
 

@@ -4,69 +4,33 @@ default_language_version:
 default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
-    - repo: https://github.com/tsvikas/sync-with-uv
-      rev: v0.5.0
+    - repo: https://github.com/astral-sh/uv-pre-commit
+      rev: 0.10.7
       hooks:
-        - id: sync-with-uv
+        - id: uv-lock
+          always_run: true
+
+    - repo: https://github.com/gitleaks/gitleaks
+      rev: v8.30.0
+      hooks:
+        - id: gitleaks
 
     - repo: https://github.com/codespell-project/codespell
       rev: v2.4.1
       hooks:
         - id: codespell
 
-    - repo: https://github.com/rhysd/actionlint
-      rev: v1.7.9
+    - repo: https://github.com/tombi-toml/tombi-pre-commit
+      rev: v0.9.0
       hooks:
-        - id: actionlint
-          additional_dependencies: [github.com/wasilibs/go-shellcheck/cmd/shellcheck@latest]  # yamllint disable-line rule:key-ordering
-          args: [-pyflakes=]
+        - id: tombi-format
+        - id: tombi-lint
+          stages: [manual]
 
-    - repo: https://github.com/adrienverge/yamllint.git
-      rev: v1.37.1
+    - repo: https://github.com/tsvikas/sync-with-uv
+      rev: v0.5.0
       hooks:
-        - id: yamllint
-          args: [--strict]
-
-    - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 42.66.0
-      hooks:
-        - id: renovate-config-validator
-          args: [--strict]
-
-    - repo: https://github.com/python-jsonschema/check-jsonschema
-      rev: 0.36.0
-      hooks:
-        - id: check-jsonschema
-          args: [--schemafile, 'https://json.schemastore.org/yamllint.json']  # yamllint disable-line rule:quoted-strings
-          files: ^\.yamllint\.yaml$  # yamllint disable-line rule:key-ordering
-          name: Check yamllint configuration file
-          types: [yaml]
-
-    - repo: https://github.com/jorisroovers/gitlint
-      rev: v0.19.1
-      hooks:
-        - id: gitlint
-        - id: gitlint-ci
-
-    - repo: https://github.com/gitleaks/gitleaks
-      rev: v8.30.0
-      hooks:
-        - id: gitleaks
-          language_version: ">=1.25.4"
-
-    - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v6.0.0
-      hooks:
-        - id: check-illegal-windows-names
-        - id: check-shebang-scripts-are-executable
-        - id: check-vcs-permalinks
-        - id: destroyed-symlinks
-        - id: check-case-conflict
-        - id: name-tests-test
-          args: [--pytest-test-first]
-          files: (?:^|\/)tests\/(?:[^\/]+\/)*(?!_)[^\/]+\.py$  # yamllint disable-line rule:key-ordering
-        - id: pretty-format-json
-          args: [--autofix, --indent, "4"]
+        - id: sync-with-uv
 
     - repo: builtin
       hooks:
@@ -86,23 +50,59 @@ repos:
         - id: fix-byte-order-marker
           args: [-h]
 
+    - repo: https://github.com/rhysd/actionlint
+      rev: v1.7.11
+      hooks:
+        - id: actionlint
+          additional_dependencies: [github.com/wasilibs/go-shellcheck/cmd/shellcheck@latest]  # yamllint disable-line rule:key-ordering
+          args: [-pyflakes=]
+
+    - repo: https://github.com/adrienverge/yamllint.git
+      rev: v1.38.0
+      hooks:
+        - id: yamllint
+          args: [--strict]
+
+    - repo: https://github.com/renovatebot/pre-commit-hooks
+      rev: 43.50.0
+      hooks:
+        - id: renovate-config-validator
+          args: [--strict]
+
+    - repo: https://github.com/python-jsonschema/check-jsonschema
+      rev: 0.37.0
+      hooks:
+        - id: check-jsonschema
+          args: [--schemafile, 'https://json.schemastore.org/yamllint.json']  # yamllint disable-line rule:quoted-strings
+          files: ^\.yamllint\.yaml$  # yamllint disable-line rule:key-ordering
+          name: Check yamllint configuration file
+          types: [yaml]
+
+    - repo: https://github.com/jorisroovers/gitlint
+      rev: v0.19.1
+      hooks:
+        - id: gitlint
+        - id: gitlint-ci
+
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v6.0.0
+      hooks:
+        - id: check-illegal-windows-names
+        - id: check-shebang-scripts-are-executable
+        - id: check-vcs-permalinks
+        - id: destroyed-symlinks
+        - id: check-case-conflict
+        - id: name-tests-test
+          args: [--pytest-test-first]
+          files: (?:^|\/)tests\/(?:[^\/]+\/)*(?!_)[^\/]+\.py$  # yamllint disable-line rule:key-ordering
+        - id: pretty-format-json
+          args: [--autofix, --indent, "4"]
+
     - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-      rev: v2.15.0
+      rev: v2.16.0
       hooks:
         - id: pretty-format-ini
           args: [--autofix]
-
-    - repo: https://github.com/tombi-toml/tombi-pre-commit
-      rev: v0.7.10
-      hooks:
-        - id: tombi-format
-        - id: tombi-lint
-
-    - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.9.18
-      hooks:
-        - id: uv-lock
-          always_run: true
 
     - repo: https://github.com/regebro/pyroma
       rev: 5.0.1
@@ -111,7 +111,7 @@ repos:
           entry: env SKIP_MISSING_DOWNDOC=True pyroma  # yamllint disable-line rule:key-ordering
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.14.10
+      rev: v0.15.4
       hooks:
         - id: ruff-check
           args: [--fix]
@@ -124,7 +124,7 @@ repos:
           additional_dependencies: [flake8-pyproject, flake8-carrot]  # yamllint disable-line rule:key-ordering
 
     - repo: https://github.com/google/yamlfmt
-      rev: v0.20.0
+      rev: v0.21.0
       hooks:
         - id: yamlfmt
           types: [yaml]

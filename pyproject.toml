@@ -47,9 +47,9 @@ lint-format = [
     "ruff>=0.4"
 ]
 package-analysis = ["pyroma>=5.0"]
-pre-commit = ["prek>=0.2,!=0.2.23"]
+pre-commit = ["prek>=0.3.1"]
 test = ["pytest>=9"]
-type-check = ["mypy>=1.18.1"]
+type-check = ["mypy>=1.18.1", "ty"]
 
 [build-system]
 requires = [
@@ -73,7 +73,7 @@ artifacts = ["README.adoc"]
 
 [tool.hatch.metadata.hooks]
 custom = { readme-path = "README.adoc" }  # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The downdoc binary must be installed to be able to convert the README.adoc file for this project.
-docstring-description = {  }
+docstring-description = {}
 
 [tool.hatch.version]
 raw-options = { local_scheme = "no-local-version", version_scheme = "python-simplified-semver" }
@@ -160,7 +160,7 @@ select = ["ALL", "D204", "D213", "D401"]
 task-tags = ["BUG", "DONE", "FIXME", "HACK", "IDEA", "ISSUE", "NOBUG", "NOTE", "REQ", "TODO"]
 
 [tool.ruff.lint.flake8-import-conventions]
-banned-from = ["abc", "date", "datetime", "re", "regex"]
+banned-from = ["abc", "date", "datetime", "functools", "itertools", "re", "regex"]
 
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = true

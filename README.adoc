@@ -28,6 +28,8 @@
 :url-mypy: {url-mypy-home}
 :url-pypi-home: {_url-pypi}
 :url-pypi: https://pypi.org
+:url-ty-home: https://astral.sh/ty
+:url-ty: {url-ty-home}
 :url-uv-home: https://astral.sh/uv
 :url-uv: {url-uv-home}
 :url-uv-wiki: https://docs.astral.sh/uv
@@ -42,6 +44,7 @@
 :labelled-url-python: {url-python}[Python]
 :labelled-url-pypi: {url-pypi}[PyPI]
 :labelled-url-pip: {url-pip}[pip]
+:labelled-url-ty: {url-ty}[ty]
 :labelled-url-uv: {url-uv}[uv]
 :labelled-url-mypy: {url-mypy}[mypy]
 :labelled-url-library-typing-extensions: {url-library-typing-extensions}[typing_extensions]
@@ -118,6 +121,7 @@ This package makes use of some reasonably advanced Python functionality, not sup
 While we will attempt to fix type bugs in this project for alternative type-checkers, our focus is on the following officially supported type checkersfootnote:[The list of officially supported type checkers is subject to change between any minor version release]:
 
 * {labelled-url-mypy}
+* {labelled-url-ty}footnote:[Support for {labelled-url-ty} is provided for preview only until {labelled-url-ty} provides its first non-beta full release. Our support for {labelled-url-ty} may be revoked at any time, while it is still in preview.]
 
 IMPORTANT: Patches to fix bugs in this project for alternative type-checkers are welcome and much appreciated!
 
