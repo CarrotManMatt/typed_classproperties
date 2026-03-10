@@ -1,0 +1,69 @@
+name: autofix.ci
+
+"on":
+    pull_request:
+        branches: [main]
+    workflow_call:
+        inputs:
+            skip-autofix:
+                default: false
+                required: false
+                type: boolean
+
+permissions:
+    contents: read
+
+jobs:
+    autofix-pre-commit:
+        env:
+            UV_FROZEN: true
+            UV_NO_SYNC: true
+            UV_PYTHON_DOWNLOADS: never
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Add GB Locale
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y locales
+                sudo locale-gen en_GB.UTF-8
+              shell: bash
+
+            - name: Set Up Python
+              uses: actions/setup-python@v6
+              with:
+                python-version-file: .python-version
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+              with:
+                enable-cache: true
+
+            - name: Install prek From Locked Dependencies
+              run: uv sync --only-group pre-commit
+
+            - id: store-hashed-python-version
+              name: Store Hashed Python Version
+              run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
+                >> "$GITHUB_OUTPUT"
+
+            - uses: actions/cache@v5
+              with:
+                key: prek|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{hashFiles('.pre-commit-config.yaml')}}
+                path: ~/.cache/prek
+
+            - name: Setup pre-commit Environments
+              run: uv run -- prek install-hooks
+
+            - name: Run prek
+              run: |
+                set -o pipefail
+                uv run -- prek run --all-files --hook-stage manual --color never --skip ruff-check --skip uv-lock --skip flake8 | tee /tmp/prek.log
+
+            - name: Ensure No Warnings
+              run: "if grep -q '^warning: ' /tmp/prek.log; then exit 1; fi"
+
+            - if: "!cancelled() && inputs.skip-autofix != true"
+              uses: autofix-ci/action@v1.3.3

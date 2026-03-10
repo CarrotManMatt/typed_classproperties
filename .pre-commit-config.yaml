@@ -5,7 +5,7 @@ default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.10.7
+      rev: 0.10.9
       hooks:
         - id: uv-lock
           always_run: true
@@ -16,12 +16,12 @@ repos:
         - id: gitleaks
 
     - repo: https://github.com/codespell-project/codespell
-      rev: v2.4.1
+      rev: v2.4.2
       hooks:
         - id: codespell
 
     - repo: https://github.com/tombi-toml/tombi-pre-commit
-      rev: v0.9.0
+      rev: v0.9.4
       hooks:
         - id: tombi-format
         - id: tombi-lint
@@ -64,7 +64,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 43.50.0
+      rev: 43.60.5
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -111,7 +111,7 @@ repos:
           entry: env SKIP_MISSING_DOWNDOC=True pyroma  # yamllint disable-line rule:key-ordering
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.15.4
+      rev: v0.15.5
       hooks:
         - id: ruff-check
           args: [--fix]
