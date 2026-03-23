@@ -35,20 +35,27 @@ repos:
     - repo: builtin
       hooks:
         - id: check-added-large-files
-        - id: trailing-whitespace
+        - id: check-case-conflict
         - id: check-executables-have-shebangs
+        - id: check-illegal-windows-names
         - id: check-json
-        - id: check-toml
-        - id: check-yaml
-        - id: end-of-file-fixer
-        - id: check-xml
-        - id: check-symlinks
         - id: check-merge-conflict
-        - id: mixed-line-ending
-          args: [--fix=lf]
+        - id: check-shebang-scripts-are-executable
+        - id: check-symlinks
+        - id: check-toml
+        - id: check-vcs-permalinks
+        - id: check-xml
+        - id: check-yaml
+        - id: destroyed-symlinks
         - id: detect-private-key
+        - id: end-of-file-fixer
         - id: fix-byte-order-marker
           args: [-h]
+        - id: mixed-line-ending
+          args: [--fix=lf]
+        - id: pretty-format-json
+          args: [--autofix, --indent, "4"]
+        - id: trailing-whitespace
 
     - repo: https://github.com/rhysd/actionlint
       rev: v1.7.11
@@ -87,16 +94,9 @@ repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v6.0.0
       hooks:
-        - id: check-illegal-windows-names
-        - id: check-shebang-scripts-are-executable
-        - id: check-vcs-permalinks
-        - id: destroyed-symlinks
-        - id: check-case-conflict
         - id: name-tests-test
           args: [--pytest-test-first]
           files: (?:^|\/)tests\/(?:[^\/]+\/)*(?!_)[^\/]+\.py$  # yamllint disable-line rule:key-ordering
-        - id: pretty-format-json
-          args: [--autofix, --indent, "4"]
 
     - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
       rev: v2.16.0
