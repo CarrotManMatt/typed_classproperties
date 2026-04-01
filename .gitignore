@@ -134,6 +134,12 @@ local/
 *.db
 local_stubs/
 README.md
+*.adoc.new
+*.adoc.old
+*.md.new
+*.md.old
+.pypi-redirects/*/.venv/
+.pypi-redirects/*/uv.lock
 
 # Unit test / coverage reports
 htmlcov/

@@ -86,6 +86,9 @@ class DowndocCustomReadmeMetadataHook(MetadataHookInterface):
             ),
             readme_content,
         )
+        readme_content = re.sub(
+            r"(\*{2})([^*\n]+)\1(?=[A-Za-z0-9])", r"***\2***", readme_content
+        )
         return readme_content  # noqa: RET504
 
     @classmethod
@@ -116,7 +119,7 @@ class DowndocCustomReadmeMetadataHook(MetadataHookInterface):
             post_processed_readme,
         )
         post_processed_readme = re.sub(
-            r"(?<=[A-Za-z\s])(\*{2,})([^*\n]+)\1\*", r"**\2**", post_processed_readme
+            r"(\*{4})([^*\n]+)\1(?=[A-Za-z0-9])", r"**\2**", post_processed_readme
         )
         return post_processed_readme  # noqa: RET504
 
