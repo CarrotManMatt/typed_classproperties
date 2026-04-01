@@ -225,7 +225,7 @@ jobs:
                 fi
 
                 for FILE in "${FILES[@]}"; do
-                  uv run -- ty check "$FILE" --output-format=github
+                  uv run -- ty check "$FILE" --output-format=github --error-on-warning
                 done
 
     # yamllint disable-line rule:key-ordering

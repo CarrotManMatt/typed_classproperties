@@ -31,11 +31,11 @@ class classproperty(property, Generic[T_value]):
     """
 
     @override
-    def __init__(self, func: "Callable[..., T_value]", /) -> None:  # type: ignore[explicit-any] # ty: ignore[unused-ignore]  # noqa: CAR123
+    def __init__(self, func: "Callable[..., T_value]", /) -> None:  # type: ignore[explicit-any]  # noqa: CAR123
         """Initialise the classproperty object."""
         super().__init__(func)
 
-    @overload  # type: ignore[override] # ty: ignore[unused-ignore]  # noqa: CAR123
+    @overload  # type: ignore[override]  # noqa: CAR123
     def __get__(self, owner_self: None, owner_cls: type, /) -> T_value: ...
 
     @overload
@@ -119,7 +119,7 @@ class cached_classproperty(
             unlocked_cached_property: Self | T_value = self._get_cached_property(owner)
             return unlocked_cached_property
 
-        with getattr(self, "lock"):  # type: ignore[unreachable, unused-ignore] # ty: ignore[unused-ignore] # noqa: B009, CAR123
+        with getattr(self, "lock"):  # type: ignore[unreachable, unused-ignore] # noqa: B009, CAR123
             locked_cached_property: Self | T_value = self._get_cached_property(owner)
 
         return locked_cached_property
