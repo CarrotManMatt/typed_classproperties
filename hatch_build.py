@@ -2,6 +2,7 @@
 
 import inspect
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -69,6 +70,54 @@ class DowndocCustomReadmeMetadataHook(MetadataHookInterface):
         return "readme" not in dynamic
 
     @classmethod
+    def _pre_process(cls, readme_content: str) -> str:
+        readme_content = readme_content.replace("\n****\n", "\n____\n")
+        readme_content = re.sub(
+            r"(?<=\n\[source)([^]\n]*]\n)(.+)(?=\n)",
+            (
+                lambda match: (
+                    match.group()
+                    if (
+                        re.search(r"\A(?:-{2,}|_{2,}|={2,}|\.{3,})(?=\n|\Z)", match.group(2))
+                        is not None
+                    )
+                    else f"{match.group(1)}----\n{match.group(2)}\n----"
+                )
+            ),
+            readme_content,
+        )
+        return readme_content  # noqa: RET504
+
+    @classmethod
+    def _replace_summary_title(cls, match: re.Match[str]) -> str:
+        replaced_summary_title: str = re.sub(
+            r"`(\+?)(.*?)\1`", r"<code>\2</code>", match.group()
+        )
+        replaced_summary_title = re.sub(r"_(.*?)_", r"<em>\1</em>", replaced_summary_title)
+        replaced_summary_title = re.sub(
+            r"\*(.*?)\*", r"<strong>\1</strong>", replaced_summary_title
+        )
+        return replaced_summary_title  # noqa: RET504
+
+    @classmethod
+    def _post_process(cls, converted_readme: str) -> str:
+        post_processed_readme: str = re.sub(
+            r"(?<=<summary>).*?(?=</summary>)", cls._replace_summary_title, converted_readme
+        )
+        post_processed_readme = re.sub(
+            r"([^>]\s+|\A)(\*\*)(?=[^\w\s!\"^*()_+='@#~;:.><,`-]\s*(?:TIP|NOTE|HINT|WARNING|INFO|INFORMATION|HAZARD|CAUTION|IMPORTANT)\s*:?\s*\*\*\\\n)",
+            r"\1> \2",
+            post_processed_readme,
+        )
+        post_processed_readme = post_processed_readme.replace("**\n\n```", "**\n```")
+        post_processed_readme = re.sub(
+            r"\[([^[]+)]\(\s*pass\s*:\s*[a-z]+\)\s*\[([^[]+)]",
+            r"[\2](\1)",
+            post_processed_readme,
+        )
+        return post_processed_readme  # noqa: RET504
+
+    @classmethod
     def _perform_conversion(cls, readme_path: "Path") -> str:
         downdoc_executable: str | None = shutil.which("downdoc")
         if downdoc_executable is None:
@@ -78,12 +127,15 @@ class DowndocCustomReadmeMetadataHook(MetadataHookInterface):
             )
             raise OSError(DOWNDOC_NOT_INSTALLED_MESSAGE)
 
-        return subprocess.run(
-            (downdoc_executable, "--output", "-", "--", str(readme_path)),
-            capture_output=True,
-            check=True,
-            text=True,
-        ).stdout
+        return cls._post_process(
+            subprocess.run(
+                (downdoc_executable, "--output", "-", "--", "-"),
+                capture_output=True,
+                check=True,
+                text=True,
+                input=cls._pre_process(readme_path.read_text()),
+            ).stdout
+        )
 
     @override
     def update(self, metadata: dict[str, object]) -> None:
