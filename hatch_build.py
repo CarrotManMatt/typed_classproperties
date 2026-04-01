@@ -115,6 +115,9 @@ class DowndocCustomReadmeMetadataHook(MetadataHookInterface):
             r"[\2](\1)",
             post_processed_readme,
         )
+        post_processed_readme = re.sub(
+            r"(?<=[A-Za-z\s])(\*{2,})([^*\n]+)\1\*", r"**\2**", post_processed_readme
+        )
         return post_processed_readme  # noqa: RET504
 
     @classmethod

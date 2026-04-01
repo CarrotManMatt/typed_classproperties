@@ -61,7 +61,7 @@ image:https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astr
 ****
 Typed decorators for `+classproperty+` and `+cached_classproperty+`.
 
-**Python 3 compatible only**. **No dependencies**footnote:[The library `{labelled-url-library-typing-extensions}` is required when running with a {labelled-url-python} version less than `3.12`].
+*Python 3 compatible only*. **No dependencies**footnote:[The library `{labelled-url-library-typing-extensions}` is required when running with a {labelled-url-python} version less than `3.12`].
 ****
 
 == Installation
