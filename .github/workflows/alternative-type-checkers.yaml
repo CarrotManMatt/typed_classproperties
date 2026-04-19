@@ -40,14 +40,14 @@ jobs:
 
             - if: matrix.component == 'package' || matrix.component == 'tests'
               name: Install uv (With Matrix Python Version)
-              uses: astral-sh/setup-uv@v7
+              uses: astral-sh/setup-uv@v8.1.0
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
             - if: matrix.component == 'scripts'
               name: Install uv (With .python-version File)
-              uses: astral-sh/setup-uv@v7
+              uses: astral-sh/setup-uv@v8.1.0
               with:
                 enable-cache: true
 

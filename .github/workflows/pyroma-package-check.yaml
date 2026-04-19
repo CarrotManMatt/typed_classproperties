@@ -34,7 +34,7 @@ jobs:
             - if: github.event_name == 'workflow_dispatch' || steps.store-current-week-number-is-even.outputs.current-week-number-is-even
                 == '1'
               name: Install uv
-              uses: astral-sh/setup-uv@v7
+              uses: astral-sh/setup-uv@v8.1.0
               with:
                 enable-cache: true
 
