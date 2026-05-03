@@ -21,7 +21,7 @@ repos:
         - id: codespell
 
     - repo: https://github.com/tombi-toml/tombi-pre-commit
-      rev: v0.10.1
+      rev: v0.10.2
       hooks:
         - id: tombi-format
         - id: tombi-lint
@@ -77,7 +77,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/python-jsonschema/check-jsonschema
-      rev: 0.37.1
+      rev: 0.37.2
       hooks:
         - id: check-jsonschema
           args: [--schemafile, 'https://json.schemastore.org/yamllint.json']  # yamllint disable-line rule:quoted-strings
