@@ -230,6 +230,7 @@ jobs:
 
     # yamllint disable-line rule:key-ordering
     pre-commit:
+        if: github.event_name != 'pull_request'
         uses: ./.github/workflows/autofix-pre-commit.yaml
         with:
             skip-autofix: true

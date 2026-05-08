@@ -8,7 +8,7 @@ repos:
       rev: 0.11.9
       hooks:
         - id: uv-lock
-          always_run: true
+        - id: uv-audit
 
     - repo: https://github.com/gitleaks/gitleaks
       rev: v8.30.1
