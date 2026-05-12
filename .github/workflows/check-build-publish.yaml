@@ -229,11 +229,31 @@ jobs:
                 done
 
     # yamllint disable-line rule:key-ordering
-    pre-commit:
-        if: github.event_name != 'pull_request'
+    pre-commit-PUSH:
+        if: github.event_name == 'push'
+        name: pre-commit (push)
         uses: ./.github/workflows/autofix-pre-commit.yaml
         with:
             skip-autofix: true
+
+    # yamllint disable-line rule:key-ordering
+    pre-commit-PULL_REQUEST:
+        if: github.event_name == 'pull_request'
+        name: pre-commit (pull_request)
+        runs-on: ubuntu-latest
+
+        steps:
+            - timeout-minutes: 15
+              uses: kachick/wait-other-jobs@v4.0.0
+              with:
+                skip-same-workflow: true
+                wait-list: |
+                    [
+                        {
+                            "workflowFile": "autofix-pre-commit.yaml",
+                            "jobName": "autofix-pre-commit"
+                        }
+                    ]
 
     # yamllint disable-line rule:key-ordering
     pytest:
@@ -323,7 +343,18 @@ jobs:
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
-        needs: [flake8, mypy, pre-commit, pytest, ruff-lint, uv-check]
+        if: |
+            always()
+            && needs.flake8.result == 'success'
+            && needs.mypy.result =='success'
+            && (
+                needs.pre-commit-PUSH.result == 'success'
+                || needs.pre-commit-PULL_REQUEST.result == 'success'
+            )
+            && needs.pytest.result == 'success'
+            && needs.ruff-lint.result == 'success'
+            && needs.uv-check.result == 'success'
+        needs: [flake8, mypy, pre-commit-PUSH, pre-commit-PULL_REQUEST, pytest, ruff-lint, uv-check]
         runs-on: ubuntu-latest
 
         steps:
@@ -357,7 +388,7 @@ jobs:
     publish:
         environment: publish
 
-        if: github.ref_type == 'tag'
+        if: always() && github.ref_type == 'tag' && needs.build.result == 'success'
 
         needs: [build]
         permissions:
@@ -385,8 +416,14 @@ jobs:
     test-publish:
         environment: test-publish
 
-        if: (github.event_name != 'push' || github.ref_type != 'tag') && (github.event_name != 'pull_request'
-            || github.event.pull_request.head.repo.full_name == 'CarrotManMatt/typed_classproperties')
+        if: |
+            always()
+            && (github.event_name != 'push' || github.ref_type != 'tag')
+            && (
+                github.event_name != 'pull_request'
+                || github.event.pull_request.head.repo.full_name == 'CarrotManMatt/typed_classproperties'
+            )
+            && needs.build.result == 'success'
 
         needs: [build]
         permissions:
@@ -412,7 +449,7 @@ jobs:
 
     # yamllint disable-line rule:key-ordering
     release:
-        if: github.ref_type == 'tag'
+        if: always() && github.ref_type == 'tag' && needs.publish.result == 'success'
 
         needs: [publish]
         permissions:
