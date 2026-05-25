@@ -373,6 +373,9 @@ jobs:
                 fetch-depth: 0
                 submodules: true
 
+            - name: List files
+              run: cat hatch_build.py
+
             - name: Set Up Python
               uses: actions/setup-python@v6
               with:
