@@ -1,5 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "cloneSubmodules": true,
     "enabled": true,
     "enabledManagers": [
         "github-actions",
