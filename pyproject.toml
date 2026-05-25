@@ -67,12 +67,14 @@ require_plugins = ["flake8-carrot"]
 
 [tool.hatch.build]
 only-packages = true
+exclude = [".vendor"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["README.adoc"]
+artifacts = ["/README.adoc"]
+force-include = { ".vendor/Pydowndoc/hatch_build.py" = "/hatch_build.custom.py" }
 
 [tool.hatch.metadata.hooks]
-custom = { readme-path = "README.adoc" }  # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The downdoc binary must be installed to be able to convert the README.adoc file for this project.
+custom = { path = "hatch_build.custom.py", readme-path = "README.adoc" }  # NOTE: The hatch dynamic readme plugin cannot be installed in this project because it is a dependency of Pydowndoc. The downdoc binary must be installed to be able to convert the README.adoc file for this project.
 docstring-description = {}
 
 [tool.hatch.version]
