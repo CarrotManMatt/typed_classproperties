@@ -9,5 +9,8 @@
     ],
     "extends": [
         "github>CarrotManMatt/renovate-config"
-    ]
+    ],
+    "git-submodules": {
+        "enabled": true
+    }
 }

@@ -1,0 +1,3 @@
+[submodule ".vendor/Pydowndoc"]
+	path = .vendor/Pydowndoc
+	url = ../Pydowndoc.git
