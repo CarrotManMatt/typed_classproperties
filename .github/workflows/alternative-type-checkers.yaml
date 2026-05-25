@@ -25,6 +25,8 @@ jobs:
 
         steps:
             - uses: actions/checkout@v6
+              with:
+                submodules: true
 
             - if: matrix.component == 'package' || matrix.component == 'tests'
               name: Set Up Python (Using Matrix Version)
@@ -88,5 +90,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v6
+              with:
+                submodules: true
 
             - uses: jakebailey/pyright-action@v3
