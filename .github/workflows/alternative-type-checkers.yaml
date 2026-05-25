@@ -73,7 +73,7 @@ jobs:
                 if [ "${{matrix.component}}" == "package" ]; then
                     FILES=("typed_classproperties/")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
-                    FILES=("hatch_build.py")
+                    FILES=("hatch_build.custom.py")
                 elif [ "${{matrix.component}}" == "tests" ]; then
                     FILES=("tests.py")
                 else
