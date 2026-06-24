@@ -129,7 +129,7 @@ jobs:
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> "$GITHUB_OUTPUT"
 
-            - uses: actions/cache@v5
+            - uses: actions/cache@v6
               with:
                 key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{matrix.component}}
                 path: ./.mypy_cache
@@ -299,7 +299,7 @@ jobs:
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> "$GITHUB_OUTPUT"
 
-            - uses: actions/cache@v5
+            - uses: actions/cache@v6
               with:
                 key: pytest|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
                 path: ./.pytest_cache
@@ -338,7 +338,7 @@ jobs:
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> "$GITHUB_OUTPUT"
 
-            - uses: actions/cache@v5
+            - uses: actions/cache@v6
               with:
                 key: ruff|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
                 path: ./.ruff_cache
