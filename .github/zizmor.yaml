@@ -1,0 +1,8 @@
+rules:
+    cache-poisoning:
+        ignore:
+            - check-build-publish.yaml
+    unpinned-uses:
+        config:
+            policies:
+                "*": ref-pin

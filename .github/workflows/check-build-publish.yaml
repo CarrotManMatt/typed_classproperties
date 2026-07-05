@@ -1,4 +1,4 @@
-name: Lint, Type-Check, Test, Build and Publish Package
+name: Lint, type-check, test, build and publish package
 
 "on":
     pull_request:
@@ -7,17 +7,24 @@ name: Lint, Type-Check, Test, Build and Publish Package
         branches: [main]
         tags: [v*]
 
+concurrency:  # yamllint disable-line rule:key-ordering
+    cancel-in-progress: true
+    group: ${{github.workflow}}-${{github.event.pull_request.number || github.ref}}
+
 permissions:
     contents: read
 
 jobs:
     uv-check:
+        name: Validate uv lockfile
         runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v7
               with:
                 fetch-depth: 0
+                persist-credentials: false
+                submodules: false
 
             - name: Install uv
               uses: astral-sh/setup-uv@v8.2.0
@@ -27,22 +34,23 @@ jobs:
             - name: Check uv.lock (ensure all dependencies up to date)
               run: uv lock --check
 
-    # yamllint disable-line rule:key-ordering
-    flake8:
+    flake8:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        name: Lint code with Flake8
         needs: [uv-check]
         runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
-            - name: Set Up Python
+            - name: Set up Python
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
@@ -52,19 +60,19 @@ jobs:
               with:
                 enable-cache: true
 
-            - name: Install Flake8 From Locked Dependencies
+            - name: Install Flake8 from locked dependencies
               run: uv sync --no-group dev --group lint-format
 
             - name: Run Flake8
               run: uv run -- flake8
 
-    # yamllint disable-line rule:key-ordering
-    mypy:
+    mypy:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        name: Type-check code with mypy
         needs: [uv-check]
         runs-on: ubuntu-latest
 
@@ -82,35 +90,36 @@ jobs:
         steps:
             - uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
             - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Set Up Python (Using Matrix Version)
+              name: Set up Python (using matrix version)
               uses: actions/setup-python@v6
               with:
                 python-version: ${{matrix.python-version}}
 
             - if: matrix.component == 'scripts'
-              name: Set Up Python (Using .python-version File)
+              name: Set up Python (using `.python-version` file)
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
 
             - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Install uv (With Matrix Python Version)
+              name: Install uv (with matrix Python version)
               uses: astral-sh/setup-uv@v8.2.0
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
             - if: matrix.component == 'scripts'
-              name: Install uv (With .python-version File)
+              name: Install uv (with `.python-version` file)
               uses: astral-sh/setup-uv@v8.2.0
               with:
                 enable-cache: true
 
-            - name: Install mypy From Locked Dependencies
-              run: |
+            - name: Install mypy from locked dependencies
+              run: |  # zizmor: ignore[template-injection]
                 if [ "${{matrix.component}}" == "package" ]; then
                     ARGS=("--no-group" "dev" "--group" "type-check")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
@@ -125,7 +134,7 @@ jobs:
                 uv sync "${ARGS[@]}"
 
             - id: store-hashed-python-version
-              name: Store Hashed Python Version
+              name: Store hashed Python version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> "$GITHUB_OUTPUT"
 
@@ -134,8 +143,8 @@ jobs:
                 key: mypy|${{steps.store-hashed-python-version.outputs.hashed_python_version}}|${{matrix.component}}
                 path: ./.mypy_cache
 
-            - name: Run mypy  # TODO: Add GitHub workflows output format
-              run: |
+            - name: Run mypy
+              run: |  # zizmor: ignore[template-injection]
                 if [ "${{matrix.component}}" == "package" ]; then
                     FILES=("typed_classproperties/")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
@@ -151,13 +160,13 @@ jobs:
                   uv run -- mypy "$FILE"
                 done
 
-    # yamllint disable-line rule:key-ordering
-    ty:
+    ty:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        name: Type-check code with ty
         needs: [uv-check]
         runs-on: ubuntu-latest
 
@@ -175,35 +184,36 @@ jobs:
         steps:
             - uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
             - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Set Up Python (Using Matrix Version)
+              name: Set up Python (using matrix version)
               uses: actions/setup-python@v6
               with:
                 python-version: ${{matrix.python-version}}
 
             - if: matrix.component == 'scripts'
-              name: Set Up Python (Using .python-version File)
+              name: Set up Python (using `.python-version` file)
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
 
             - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Install uv (With Matrix Python Version)
+              name: Install uv (with matrix Python version)
               uses: astral-sh/setup-uv@v8.2.0
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
             - if: matrix.component == 'scripts'
-              name: Install uv (With .python-version File)
+              name: Install uv (with `.python-version` file)
               uses: astral-sh/setup-uv@v8.2.0
               with:
                 enable-cache: true
 
-            - name: Install ty From Locked Dependencies
-              run: |
+            - name: Install ty from locked dependencies
+              run: |  # zizmor: ignore[template-injection]
                 if [ "${{matrix.component}}" == "package" ]; then
                     ARGS=("--no-group" "dev" "--group" "type-check")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
@@ -217,8 +227,8 @@ jobs:
 
                 uv sync "${ARGS[@]}"
 
-            - name: Run ty
-              run: |-
+            - name: Run ty check
+              run: |  # zizmor: ignore[template-injection]
                 if [ "${{matrix.component}}" == "package" ]; then
                     FILES=("typed_classproperties/")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
@@ -234,18 +244,18 @@ jobs:
                   uv run -- ty check "$FILE" --output-format=github --error-on-warning
                 done
 
-    # yamllint disable-line rule:key-ordering
-    pre-commit-PUSH:
+    pre-commit-PUSH:  # yamllint disable-line rule:key-ordering
         if: github.event_name == 'push'
-        name: pre-commit (push)
+
+        name: Verify pre-commit hooks (push)
         uses: ./.github/workflows/autofix-pre-commit.yaml
         with:
             skip-autofix: true
 
-    # yamllint disable-line rule:key-ordering
-    pre-commit-PULL_REQUEST:
+    pre-commit-PULL_REQUEST:  # yamllint disable-line rule:key-ordering
         if: github.event_name == 'pull_request'
-        name: pre-commit (pull_request)
+
+        name: Verify pre-commit hooks and commit auto-fixes (pull_request)
         runs-on: ubuntu-latest
 
         steps:
@@ -257,17 +267,18 @@ jobs:
                     [
                         {
                             "workflowFile": "autofix-pre-commit.yaml",
-                            "jobName": "autofix-pre-commit"
+                            "jobMatchMode": "prefix",
+                            "jobName": "Run pre-commit hooks"
                         }
                     ]
 
-    # yamllint disable-line rule:key-ordering
-    pytest:
+    pytest:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        name: Run test suite with pytest
         needs: [uv-check]
         runs-on: ubuntu-latest
 
@@ -278,9 +289,10 @@ jobs:
         steps:
             - uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
-            - name: Set Up Python
+            - name: Set up Python
               uses: actions/setup-python@v6
               with:
                 python-version: ${{matrix.python-version}}
@@ -291,11 +303,11 @@ jobs:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
-            - name: Install pytest From Locked Dependencies
+            - name: Install pytest from locked dependencies
               run: uv sync --no-group dev --group test
 
             - id: store-hashed-python-version
-              name: Store Hashed Python Version
+              name: Store hashed Python version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> "$GITHUB_OUTPUT"
 
@@ -304,23 +316,24 @@ jobs:
                 key: pytest|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
                 path: ./.pytest_cache
 
-            - name: Run pytest  # TODO: Add GitHub workflows output format
+            - name: Run pytest
               run: uv run -- pytest
 
-    # yamllint disable-line rule:key-ordering
-    ruff-lint:
+    ruff-lint:  # yamllint disable-line rule:key-ordering
         env:
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        name: Lint code with ruff
         runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
-            - name: Set Up Python
+            - name: Set up Python
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
@@ -330,11 +343,11 @@ jobs:
               with:
                 enable-cache: true
 
-            - name: Install ruff From Locked Dependencies
+            - name: Install ruff from locked dependencies
               run: uv sync --only-group lint-format
 
             - id: store-hashed-python-version
-              name: Store Hashed Python Version
+              name: Store hashed Python version
               run: echo "hashed_python_version=$(uv run -- python -VV | sha256sum | cut -d' ' -f1)"
                 >> "$GITHUB_OUTPUT"
 
@@ -343,16 +356,16 @@ jobs:
                 key: ruff|${{steps.store-hashed-python-version.outputs.hashed_python_version}}
                 path: ./.ruff_cache
 
-            - name: Run Ruff
+            - name: Run ruff check
               run: uv run -- ruff check --no-fix --output-format=github
 
-    # yamllint disable-line rule:key-ordering
-    build:
+    build:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "False"
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+
         if: |
             always()
             && needs.flake8.result == 'success'
@@ -364,6 +377,8 @@ jobs:
             && needs.pytest.result == 'success'
             && needs.ruff-lint.result == 'success'
             && needs.uv-check.result == 'success'
+
+        name: Build `typed_classproperties` package
         needs: [flake8, mypy, pre-commit-PUSH, pre-commit-PULL_REQUEST, pytest, ruff-lint, uv-check]
         runs-on: ubuntu-latest
 
@@ -371,9 +386,10 @@ jobs:
             - uses: actions/checkout@v7
               with:
                 fetch-depth: 0
+                persist-credentials: false
                 submodules: true
 
-            - name: Set Up Python
+            - name: Set up Python
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
@@ -386,29 +402,30 @@ jobs:
             - name: Install downdoc
               run: uv tool install Pydowndoc-bin
 
-            - name: Build Package
+            - name: Build package into sdist & wheels
               run: uv build --no-sources --build
 
-            - name: Save Build Artifacts
+            - name: Save build artifacts
               uses: actions/upload-artifact@v7
               with:
                 name: built-typed_classproperties-package
                 path: dist/
 
-    # yamllint disable-line rule:key-ordering
-    publish:
+    publish:  # yamllint disable-line rule:key-ordering
         environment: publish
 
         if: always() && github.ref_type == 'tag' && needs.build.result == 'success'
 
+        name: Publish built package to PyPI
         needs: [build]
         permissions:
-            id-token: write
+            id-token: write  # Needed to authenticate to PyPI
         runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
             - name: Install uv
@@ -416,7 +433,7 @@ jobs:
               with:
                 enable-cache: true
 
-            - name: Download Build Artifacts
+            - name: Download build artifacts
               uses: actions/download-artifact@v8
               with:
                 name: built-typed_classproperties-package
@@ -425,8 +442,7 @@ jobs:
             - name: Publish to PyPI
               run: uv publish
 
-    # yamllint disable-line rule:key-ordering
-    test-publish:
+    test-publish:  # yamllint disable-line rule:key-ordering
         environment: test-publish
 
         if: |
@@ -438,14 +454,16 @@ jobs:
             )
             && needs.build.result == 'success'
 
+        name: Publish built package to Test-PyPI
         needs: [build]
         permissions:
-            id-token: write
+            id-token: write  # Needed to authenticate to Test-PyPI
         runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
             - name: Install uv
@@ -453,7 +471,7 @@ jobs:
               with:
                 enable-cache: true
 
-            - name: Download Build Artifacts
+            - name: Download build artifacts
               uses: actions/download-artifact@v8
               with:
                 name: built-typed_classproperties-package
@@ -462,31 +480,32 @@ jobs:
             - name: Publish to Test-PyPI
               run: uv publish --index Test-PyPI
 
-    # yamllint disable-line rule:key-ordering
-    release:
+    release:  # yamllint disable-line rule:key-ordering
         if: always() && github.ref_type == 'tag' && needs.publish.result == 'success'
 
+        name: Create an online GitHub release
         needs: [publish]
         permissions:
-            contents: write
-            id-token: write
+            contents: write  # Needed to create a release in the GitHub repository
+            id-token: write  # Needed to authenticate to GitHub API
         runs-on: ubuntu-latest
 
         steps:
-            - name: Download Build Artifacts
+            - name: Download build artifacts
               uses: actions/download-artifact@v8
               with:
                 name: built-typed_classproperties-package
                 path: dist/
 
-            - name: Sign Build Artifacts
+            - name: Sign build artifacts
               uses: sigstore/gh-action-sigstore-python@v3.4.0
               with:
                 inputs: ./dist/typed_classproperties-*.tar.gz ./dist/typed_classproperties-*.whl
 
-            - name: Create GitHub Release
-              # yamllint disable-line rule:key-ordering
-              env:
+            - name: Create GitHub release
+              env:  # yamllint disable-line rule:key-ordering
                 GITHUB_TOKEN: ${{github.token}}
-              run: gh release create '${{github.ref_name}}' dist/** --repo '${{github.repository}}'
-                --verify-tag --generate-notes
+                RELEASE_REPOSITORY: ${{github.repository}}
+                RELEASE_TAG: ${{github.ref_name}}
+              run: gh release create "${RELEASE_TAG}" dist/** --repo "${RELEASE_REPOSITORY}" --verify-tag
+                --generate-notes

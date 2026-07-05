@@ -65,6 +65,12 @@ repos:
           additional_dependencies: [github.com/wasilibs/go-shellcheck/cmd/shellcheck@latest]  # yamllint disable-line rule:key-ordering
           args: [-pyflakes=]
 
+    - repo: https://github.com/zizmorcore/zizmor-pre-commit
+      rev: v1.26.1
+      hooks:
+        - id: zizmor
+          args: [--no-progress, --fix, --persona=auditor]
+
     - repo: https://github.com/adrienverge/yamllint.git
       rev: v1.38.0
       hooks:

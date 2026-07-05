@@ -1,7 +1,14 @@
-name: Type-Check All Code Using Alternative Type-Checkers
+name: Type-check code using alternative type-checkers
 
 "on":
     workflow_dispatch: ~
+
+concurrency:  # yamllint disable-line rule:key-ordering
+    cancel-in-progress: true
+    group: ${{github.workflow}}-${{github.event.pull_request.number || github.ref}}
+
+permissions:
+    contents: read
 
 jobs:
     pyrefly:
@@ -10,6 +17,7 @@ jobs:
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        name: Type-check code with Pyrefly
         runs-on: ubuntu-latest
 
         strategy:
@@ -26,35 +34,36 @@ jobs:
         steps:
             - uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
             - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Set Up Python (Using Matrix Version)
+              name: Set up Python (using matrix version)
               uses: actions/setup-python@v6
               with:
                 python-version: ${{matrix.python-version}}
 
             - if: matrix.component == 'scripts'
-              name: Set Up Python (Using .python-version File)
+              name: Set up Python (using `.python-version` file)
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
 
             - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Install uv (With Matrix Python Version)
+              name: Install uv (with matrix Python version)
               uses: astral-sh/setup-uv@v8.2.0
               with:
                 enable-cache: true
                 python-version: ${{matrix.python-version}}
 
             - if: matrix.component == 'scripts'
-              name: Install uv (With .python-version File)
+              name: Install uv (with `.python-version` file)
               uses: astral-sh/setup-uv@v8.2.0
               with:
                 enable-cache: true
 
-            - name: Install Pyrefly From Locked Dependencies
-              run: |
+            - name: Install Pyrefly from locked dependencies
+              run: |  # zizmor: ignore[template-injection]
                 if [ "${{matrix.component}}" == "package" ]; then
                     ARGS=("--no-group" "dev" "--group" "alternative-type-checkers")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
@@ -69,7 +78,7 @@ jobs:
                 uv sync "${ARGS[@]}"
 
             - name: Run Pyrefly
-              run: |
+              run: |  # zizmor: ignore[template-injection]
                 if [ "${{matrix.component}}" == "package" ]; then
                     FILES=("typed_classproperties/")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
@@ -86,11 +95,13 @@ jobs:
                 done
 
     pyright:
+        name: Type-check code with Pyright
         runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
             - uses: jakebailey/pyright-action@v3

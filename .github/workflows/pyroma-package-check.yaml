@@ -6,6 +6,13 @@ name: Check Conformance to Packaging Best Practises
 
     workflow_dispatch: ~
 
+concurrency:  # yamllint disable-line rule:key-ordering
+    cancel-in-progress: true
+    group: ${{github.workflow}}-${{github.event.pull_request.number || github.ref}}
+
+permissions:
+    contents: read
+
 jobs:
     pyroma:
         env:
@@ -13,6 +20,7 @@ jobs:
             UV_FROZEN: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+        name: Check conformance to packaging best practises with pyroma
         runs-on: ubuntu-latest
 
         steps:
@@ -24,11 +32,12 @@ jobs:
                 == '1'
               uses: actions/checkout@v7
               with:
+                persist-credentials: false
                 submodules: true
 
             - if: github.event_name == 'workflow_dispatch' || steps.store-current-week-number-is-even.outputs.current-week-number-is-even
                 == '1'
-              name: Set Up Python
+              name: Set up Python
               uses: actions/setup-python@v6
               with:
                 python-version-file: .python-version
@@ -42,7 +51,7 @@ jobs:
 
             - if: github.event_name == 'workflow_dispatch' || steps.store-current-week-number-is-even.outputs.current-week-number-is-even
                 == '1'
-              name: Install pyroma From Locked Dependencies
+              name: Install pyroma from locked dependencies
               run: uv sync --only-group package-analysis
 
             - if: github.event_name == 'workflow_dispatch' || steps.store-current-week-number-is-even.outputs.current-week-number-is-even
