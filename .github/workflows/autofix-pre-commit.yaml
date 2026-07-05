@@ -78,7 +78,7 @@ jobs:
                     ARGS=()
                 fi
 
-                uv run -- prek run --all-files --hook-stage manual --color never --skip ruff-check --skip uv-lock "${ARGS[@]}" | tee /tmp/prek.log
+                uv run -- prek run --all-files --hook-stage manual --color never --skip flake8 --skip ruff-check --skip uv-lock "${ARGS[@]}" | tee /tmp/prek.log
 
             - name: Ensure no warnings
               run: "if grep -q '^warning: ' /tmp/prek.log; then exit 1; fi"
