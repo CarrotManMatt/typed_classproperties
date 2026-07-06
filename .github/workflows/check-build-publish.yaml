@@ -402,7 +402,7 @@ jobs:
             - name: Install downdoc
               run: uv tool install Pydowndoc-bin
 
-            - name: Build package into sdist & wheels
+            - name: Build package into sdist & wheel
               run: uv build --no-sources --build
 
             - name: Save build artifacts
