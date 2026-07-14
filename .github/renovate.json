@@ -5,8 +5,7 @@
     "enabledManagers": [
         "github-actions",
         "pep621",
-        "pep723",
-        "pre-commit"
+        "pep723"
     ],
     "extends": [
         "github>CarrotManMatt/renovate-config"
