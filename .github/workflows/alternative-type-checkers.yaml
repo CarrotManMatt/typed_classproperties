@@ -39,13 +39,13 @@ jobs:
 
             - if: matrix.component == 'package' || matrix.component == 'tests'
               name: Set up Python (using matrix version)
-              uses: actions/setup-python@v6
+              uses: actions/setup-python@v7
               with:
                 python-version: ${{matrix.python-version}}
 
             - if: matrix.component == 'scripts'
               name: Set up Python (using `.python-version` file)
-              uses: actions/setup-python@v6
+              uses: actions/setup-python@v7
               with:
                 python-version-file: .python-version
 
