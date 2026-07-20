@@ -38,7 +38,7 @@ jobs:
             - if: github.event_name == 'workflow_dispatch' || steps.store-current-week-number-is-even.outputs.current-week-number-is-even
                 == '1'
               name: Set up Python
-              uses: actions/setup-python@v6
+              uses: actions/setup-python@v7
               with:
                 python-version-file: .python-version
 
