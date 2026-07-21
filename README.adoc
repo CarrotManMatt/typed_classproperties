@@ -11,6 +11,7 @@
 :_url-github: https://github.com
 :_url-github-wiki: https://docs.github.com
 :_url-pypi: https://pypi.org
+:_url-peps: https://peps.python.org
 
 :url-project-repository: {_url-github}/CarrotManMatt/typed_classproperties
 :url-project-pypi: {_url-pypi}/project/typed_classproperties
@@ -19,6 +20,7 @@
 :url-python: {url-python-home}
 :url-python-download: {url-python-home}/downloads
 :url-python-wiki: https://docs.python.org/3
+:url-python-wiki-virtual-environments: {url-python-wiki}/tutorial/venv
 :url-python-wiki-virtual-environments: {url-python-wiki}/tutorial/venv
 :url-pre-commit-home: https://pre-commit.com
 :url-pre-commit: {url-pre-commit-home}
@@ -40,6 +42,7 @@
 :url-pip-home: https://pip.pypa.io
 :url-pip: {url-pip-home}
 :url-library-typing-extensions: {_url-github}/python/typing_extensions
+:url-pep767: {_url-peps}/pep-0767
 
 :labelled-url-python: {url-python}[Python]
 :labelled-url-pypi: {url-pypi}[PyPI]
@@ -48,6 +51,7 @@
 :labelled-url-uv: {url-uv}[uv]
 :labelled-url-mypy: {url-mypy}[mypy]
 :labelled-url-library-typing-extensions: {url-library-typing-extensions}[typing_extensions]
+:labelled-url-pep767: {url-pep767}[PEP767]
 
 image:https://img.shields.io/badge/%F0%9F%A5%95-typed__classproperties-blue[Pydowndoc,link={url-project-repository}]
 image:https://img.shields.io/pypi/v/typed_classproperties[PyPI Version,link={url-project-pypi}]
@@ -117,11 +121,14 @@ assert CachedFoo(bar="bar").FOO == 1
 
 == Supported Type-Checkers
 
-This package makes use of some reasonably advanced Python functionality, not supported by all static type checkers.
-While we will attempt to fix type bugs in this project for alternative type-checkers, our focus is on the following officially supported type checkersfootnote:[The list of officially supported type checkers is subject to change between any minor version release]:
+This package makes use of some reasonably advanced Python functionality that could be considered a hack.
+The appropriate solution to correctly annotate the types matching the runtime behaviour of classproperties is explained in {labelled-url-pep767}.
+This PEP, however, is still in draft and not yet accepted; therefore, not all type checkers are supported.
+
+While we will attempt to fix type annotation bugs in this project for alternative type-checkers, our focus is on the following officially supported type checkersfootnote:[The list of officially supported type checkers is subject to change between any minor version release]:
 
 * {labelled-url-mypy}
-* {labelled-url-ty}footnote:[Support for {labelled-url-ty} is provided for preview only until {labelled-url-ty} provides its first non-beta full release. Our support for {labelled-url-ty} may be revoked at any time, while it is still in preview.]
+* {labelled-url-ty} &le; 0.0.59footnote:[Support for {labelled-url-ty} is capped to below https://github.com/astral-sh/ty/releases/tag/0.0.60[0.0.60], which began to find type-errors with the hacks used in this project]
 
 IMPORTANT: Patches to fix bugs in this project for alternative type-checkers are welcome and much appreciated!
 

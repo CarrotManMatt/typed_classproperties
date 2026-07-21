@@ -777,7 +777,7 @@ dev = [
     { name = "prek", specifier = ">=0.3.8" },
     { name = "pytest", specifier = ">=9" },
     { name = "ruff", specifier = ">=0.4" },
-    { name = "ty", specifier = ">=0.0.27" },
+    { name = "ty", specifier = ">=0.0.27,<0.0.60" },
 ]
 lint-format = [
     { name = "flake8-carrot", marker = "python_full_version >= '3.14'", specifier = ">=0.1.2" },
@@ -789,7 +789,7 @@ pre-commit = [{ name = "prek", specifier = ">=0.3.8" }]
 test = [{ name = "pytest", specifier = ">=9" }]
 type-check = [
     { name = "mypy", specifier = ">=1.20" },
-    { name = "ty", specifier = ">=0.0.27" },
+    { name = "ty", specifier = ">=0.0.27,<0.0.60" },
 ]
 
 [[package]]
