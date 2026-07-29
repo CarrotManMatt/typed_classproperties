@@ -498,7 +498,7 @@ jobs:
                 path: dist/
 
             - name: Sign build artifacts
-              uses: sigstore/gh-action-sigstore-python@v3.4.0
+              uses: sigstore/gh-action-sigstore-python@v3.5.0
               with:
                 inputs: ./dist/typed_classproperties-*.tar.gz ./dist/typed_classproperties-*.whl
 
