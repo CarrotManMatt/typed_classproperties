@@ -344,7 +344,7 @@ jobs:
                 enable-cache: true
 
             - name: Install ruff from locked dependencies
-              run: uv sync --only-group lint-format
+              run: uv sync --only-group lint-format --no-install-project
 
             - id: store-hashed-python-version
               name: Store hashed Python version
