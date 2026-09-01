@@ -15,11 +15,13 @@
     },
     "packageRules": [
         {
-            "matchPackageNames": ["ty"],
-            "rangeStrategy": "bump",
+            "matchPackageNames": [
+                "ty"
+            ],
             "patch": {
                 "enabled": false
-            }
+            },
+            "rangeStrategy": "bump"
         }
     ]
 }
