@@ -57,11 +57,10 @@ repos:
           args: [--autofix, --indent, "4"]
         - id: trailing-whitespace
 
-    - repo: https://github.com/rhysd/actionlint
-      rev: v1.7.12
+    - repo: https://github.com/kjanat/actionlint
+      rev: v1.13.0
       hooks:
-        - id: actionlint
-          additional_dependencies: [github.com/wasilibs/go-shellcheck/cmd/shellcheck@latest]  # yamllint disable-line rule:key-ordering
+        - id: actionlint-shellcheck
           args: [-pyflakes=]
 
     - repo: https://github.com/zizmorcore/zizmor-pre-commit

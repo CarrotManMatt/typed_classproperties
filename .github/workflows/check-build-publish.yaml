@@ -248,7 +248,7 @@ jobs:
         if: github.event_name == 'push'
 
         name: Verify pre-commit hooks (push)
-        uses: ./.github/workflows/autofix-pre-commit.yaml
+        uses: $/.github/workflows/autofix-pre-commit.yaml
         with:
             skip-autofix: true
 
