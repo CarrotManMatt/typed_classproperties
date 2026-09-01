@@ -12,5 +12,14 @@
     ],
     "git-submodules": {
         "enabled": true
-    }
+    },
+    "packageRules": [
+        {
+            "matchPackageNames": ["ty"],
+            "rangeStrategy": "bump",
+            "patch": {
+                "enabled": false
+            }
+        }
+    ]
 }
