@@ -5,7 +5,7 @@ default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.12.9
+      rev: 0.12.15
       hooks:
         - id: uv-lock
         - id: uv-audit
@@ -21,7 +21,7 @@ repos:
         - id: codespell
 
     - repo: https://github.com/tombi-toml/tombi-pre-commit
-      rev: v1.5.0
+      rev: v1.5.5
       hooks:
         - exclude: \A.+\.lock\Z
           id: tombi-format
@@ -33,38 +33,14 @@ repos:
       hooks:
         - id: sync-with-uv
 
-    - repo: builtin
-      hooks:
-        - id: check-added-large-files
-        - id: check-case-conflict
-        - id: check-executables-have-shebangs
-        - id: check-illegal-windows-names
-        - id: check-json
-        - id: check-merge-conflict
-        - id: check-shebang-scripts-are-executable
-        - id: check-symlinks
-        - id: check-toml
-        - id: check-vcs-permalinks
-        - id: check-xml
-        - id: check-yaml
-        - id: destroyed-symlinks
-        - id: detect-private-key
-        - id: end-of-file-fixer
-        - id: fix-byte-order-marker
-        - id: mixed-line-ending
-          args: [--fix=lf]
-        - id: pretty-format-json
-          args: [--autofix, --indent, "4"]
-        - id: trailing-whitespace
-
     - repo: https://github.com/kjanat/actionlint
-      rev: v1.14.0
+      rev: v1.17.0
       hooks:
         - id: actionlint-shellcheck
           args: [-pyflakes=]
 
     - repo: https://github.com/zizmorcore/zizmor-pre-commit
-      rev: v1.30.0
+      rev: v1.30.1
       hooks:
         - id: zizmor
           args: [--no-progress, --fix, --persona=auditor]
@@ -76,7 +52,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 44.59.1
+      rev: 44.93.3
       hooks:
         - id: renovate-config-validator
           args: [--strict]
@@ -95,6 +71,38 @@ repos:
       hooks:
         - id: gitlint
         - id: gitlint-ci
+
+    - repo: builtin
+      hooks:
+        - id: check-added-large-files
+        - id: check-case-conflict
+        - id: check-executables-have-shebangs
+        - id: check-illegal-windows-names
+        - id: check-json
+        - id: check-jsonc
+        - id: check-merge-conflict
+        - id: check-shebang-scripts-are-executable
+        - id: check-symlinks
+        - id: check-toml
+        - id: check-vcs-permalinks
+        - id: check-xml
+        - id: check-yaml
+        - id: destroyed-symlinks
+        - id: detect-private-key
+        - id: end-of-file-fixer
+        - id: fix-byte-order-marker
+        - id: mixed-line-ending
+          args: [--fix=lf]
+        - id: pretty-format-json
+          args: [--autofix, --indent, "4"]
+        - id: require-filename-pattern
+          files: (^|/)tests/(?!(?:.+/)?_[a-z_]+/).+\.py$s  # yamllint disable-line rule:key-ordering
+          args:
+            - ^test_.*\.py$
+            - ^__init__\.py$
+            - ^conftest\.py$
+            - ^_.*\.py$
+        - id: trailing-whitespace
 
     - repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v6.0.0
