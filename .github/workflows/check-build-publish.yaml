@@ -167,7 +167,7 @@ jobs:
                     - component: scripts
                 include:  # yamllint disable-line rule:key-ordering
                     - component: scripts
-                      python-version: ""
+                      python-version: "3.15"
 
         steps:
             - uses: actions/checkout@v7
@@ -204,20 +204,17 @@ jobs:
               run: |  # zizmor: ignore[template-injection]
                 if [ "${{matrix.component}}" == "package" ]; then
                     FILES=("typed_classproperties/")
-                    ARGS=("--python-version" "${{matrix.python-version}}")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
                     FILES=("hatch_build.custom.py")
-                    ARGS=()
                 elif [ "${{matrix.component}}" == "tests" ]; then
                     FILES=("tests.py")
-                    ARGS=("--python-version" "${{matrix.python-version}}")
                 else
                     echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
                     exit 1
                 fi
 
                 for FILE in "${FILES[@]}"; do
-                  uv run -- ty check "$FILE" --output-format=github --error-on-warning "${ARGS[@]}"
+                  uv run -- ty check "$FILE" --output-format=github --error-on-warning --python-version "${{matrix.python-version}}"
                 done
 
     pre-commit-PUSH:  # yamllint disable-line rule:key-ordering
