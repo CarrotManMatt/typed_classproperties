@@ -20,6 +20,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3.15",
+    "Programming Language :: Python :: 3.16",
     "Topic :: Software Development",
     "Topic :: Utilities",
     "Typing :: Typed",
@@ -44,12 +45,12 @@ build-dev = ["hatchling"]
 lint-format = [
     "flake8-carrot>=0.1.2; python_version >= '3.14'",
     "flake8-pyproject>=1.2; python_version >= '3.14'",
-    "ruff>=0.4"
+    "ruff>=0.17"
 ]
 package-analysis = ["pyroma>=5.0"]
 pre-commit = ["prek>=0.5.3"]
 test = ["pytest>=9"]
-type-check = ["mypy>=1.20", "ty>=0.0.27,<0.0.60"]
+type-check = ["mypy>=2.4", "ty>=0.0.27,<0.0.60"]
 
 [build-system]
 requires = [
@@ -61,6 +62,7 @@ requires = [
 build-backend = "hatchling.build"
 
 [tool.flake8]
+ignore = ["CAR110"]
 select = ["CAR"]
 extend_exclude = [".venv/", "local/"]
 require_plugins = ["flake8-carrot"]
@@ -214,6 +216,9 @@ max-returns = 10
 
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
+
+[tool.ruff.per-file-target-version]
+"**/hatch_build*.py" = "py315"
 
 [tool.tombi.format.rules]
 indent-width = 4

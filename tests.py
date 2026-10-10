@@ -1,5 +1,8 @@
 """Full test suite for 'typed_classproperties' library."""
 
+__all__: "Sequence[str]" = ("TestCachedClassProperty", "TestClassProperty")
+__lazy_modules__: "Sequence[str]" = ("typed_classproperties",)
+
 import abc
 import sys
 from typing import TYPE_CHECKING, Protocol, TypeVar
@@ -13,8 +16,6 @@ from typed_classproperties import cached_classproperty, classproperty
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
-
-__all__: "Sequence[str]" = ("TestCachedClassProperty", "TestClassProperty")
 
 
 T_class = TypeVar("T_class")

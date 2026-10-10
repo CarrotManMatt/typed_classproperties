@@ -1,5 +1,7 @@
 """Typed decorators for classproperty and cached_classproperty."""
 
+__all__: "Sequence[str]" = ("cached_classproperty", "classproperty")
+
 import functools
 import sys
 from typing import TYPE_CHECKING, Generic, TypeVar, cast, overload
@@ -14,9 +16,6 @@ if TYPE_CHECKING:
     from typing import Final
 
     from typing_extensions import Self
-
-
-__all__: "Sequence[str]" = ("cached_classproperty", "classproperty")
 
 
 T_class = TypeVar("T_class")
