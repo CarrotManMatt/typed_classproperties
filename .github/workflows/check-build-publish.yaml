@@ -252,7 +252,7 @@ jobs:
         env:
             SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
-            UV_NO_PROJECT: true
+            UV_NO_INSTALL_PROJECT: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
 
@@ -292,11 +292,10 @@ jobs:
                 name: built-typed_classproperties-package
                 path: dist/
 
-            - name: Install local project as a wheel
-              run: uv pip install dist/*.whl
-
             - name: Install pytest from locked dependencies
-              run: uv sync --no-group dev --group test
+              run: |
+                uv sync --no-group dev --group test
+                uv pip install dist/*.whl
 
             - id: store-hashed-python-version
               name: Store hashed Python version
