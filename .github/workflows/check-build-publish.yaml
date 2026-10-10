@@ -292,10 +292,10 @@ jobs:
                 name: built-typed_classproperties-package
                 path: dist/
 
-            - name: Install pytest from locked dependencies
+            - name: Install pytest & project from locked dependencies
               run: |
                 uv sync --no-group dev --group test
-                uv pip install dist/*.whl
+                uv pip install dist/*.whl --only-binary typed_classproperties
 
             - id: store-hashed-python-version
               name: Store hashed Python version
