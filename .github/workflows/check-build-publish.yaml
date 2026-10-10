@@ -214,7 +214,10 @@ jobs:
                 fi
 
                 for FILE in "${FILES[@]}"; do
-                  uv run -- ty check "$FILE" --output-format=github --error-on-warning --python-version "${{matrix.python-version}}"
+                  uv run -- ty check "$FILE" \
+                  --output-format=github \
+                  --error-on-warning \
+                  --python-version "${{matrix.python-version}}"
                 done
 
     pre-commit-PUSH:  # yamllint disable-line rule:key-ordering
@@ -249,10 +252,11 @@ jobs:
         env:
             SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: true
+            UV_NO_PROJECT: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
         name: Run test suite with pytest
-        needs: [uv-check]
+        needs: [uv-check, build]
         runs-on: ubuntu-latest
 
         strategy:
@@ -278,6 +282,15 @@ jobs:
 
             - name: Install pytest from locked dependencies
               run: uv sync --no-group dev --group test
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v8
+              with:
+                name: built-typed_classproperties-package
+                path: dist/
+
+            - name: Install local project as a wheel
+              run: uv pip install dist/*.whl
 
             - id: store-hashed-python-version
               name: Store hashed Python version
@@ -347,12 +360,11 @@ jobs:
                 needs.pre-commit-PUSH.result == 'success'
                 || needs.pre-commit-PULL_REQUEST.result == 'success'
             )
-            && needs.pytest.result == 'success'
             && needs.ruff-lint.result == 'success'
             && needs.uv-check.result == 'success'
 
         name: Build `typed_classproperties` package
-        needs: [flake8, mypy, pre-commit-PUSH, pre-commit-PULL_REQUEST, pytest, ruff-lint, uv-check]
+        needs: [flake8, mypy, pre-commit-PUSH, pre-commit-PULL_REQUEST, ruff-lint, uv-check]
         runs-on: ubuntu-latest
 
         steps:
@@ -387,10 +399,13 @@ jobs:
     publish:  # yamllint disable-line rule:key-ordering
         environment: publish
 
-        if: always() && github.ref_type == 'tag' && needs.build.result == 'success'
+        if: |
+            always()
+            && github.ref_type == 'tag' && needs.pytest.result == 'success'
+            && needs.build.result == 'success'
 
         name: Publish built package to PyPI
-        needs: [build]
+        needs: [build, pytest]
         permissions:
             id-token: write  # Needed to authenticate to PyPI
         runs-on: ubuntu-latest
@@ -425,10 +440,11 @@ jobs:
                 github.event_name != 'pull_request'
                 || github.event.pull_request.head.repo.full_name == 'CarrotManMatt/typed_classproperties'
             )
+            && needs.pytest.result == 'success'
             && needs.build.result == 'success'
 
         name: Publish built package to Test-PyPI
-        needs: [build]
+        needs: [build, pytest]
         permissions:
             id-token: write  # Needed to authenticate to Test-PyPI
         runs-on: ubuntu-latest
