@@ -93,27 +93,12 @@ jobs:
                 persist-credentials: false
                 submodules: true
 
-            - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Set up Python (using matrix version)
-              uses: actions/setup-python@v7
-              with:
-                python-version: ${{matrix.python-version}}
-
-            - if: matrix.component == 'scripts'
-              name: Set up Python (using `.python-version` file)
+            - name: Set up Python (using `.python-version` file)
               uses: actions/setup-python@v7
               with:
                 python-version-file: .python-version
 
-            - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Install uv (with matrix Python version)
-              uses: astral-sh/setup-uv@v10.3.0
-              with:
-                enable-cache: true
-                python-version: ${{matrix.python-version}}
-
-            - if: matrix.component == 'scripts'
-              name: Install uv (with `.python-version` file)
+            - name: Install uv (with `.python-version` file)
               uses: astral-sh/setup-uv@v10.3.0
               with:
                 enable-cache: true
@@ -147,17 +132,20 @@ jobs:
               run: |  # zizmor: ignore[template-injection]
                 if [ "${{matrix.component}}" == "package" ]; then
                     FILES=("typed_classproperties/")
+                    ARGS=("--python-version" "${{matrix.python-version}}")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
                     FILES=("hatch_build.custom.py")
+                    ARGS=()
                 elif [ "${{matrix.component}}" == "tests" ]; then
                     FILES=("tests.py")
+                    ARGS=("--python-version" "${{matrix.python-version}}")
                 else
                     echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
                     exit 1
                 fi
 
                 for FILE in "${FILES[@]}"; do
-                  uv run -- mypy "$FILE"
+                  uv run -- mypy "$FILE" "${ARGS[@]}"
                 done
 
     ty:  # yamllint disable-line rule:key-ordering
@@ -187,27 +175,12 @@ jobs:
                 persist-credentials: false
                 submodules: true
 
-            - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Set up Python (using matrix version)
-              uses: actions/setup-python@v7
-              with:
-                python-version: ${{matrix.python-version}}
-
-            - if: matrix.component == 'scripts'
-              name: Set up Python (using `.python-version` file)
+            - name: Set up Python (using `.python-version` file)
               uses: actions/setup-python@v7
               with:
                 python-version-file: .python-version
 
-            - if: matrix.component == 'package' || matrix.component == 'tests'
-              name: Install uv (with matrix Python version)
-              uses: astral-sh/setup-uv@v10.3.0
-              with:
-                enable-cache: true
-                python-version: ${{matrix.python-version}}
-
-            - if: matrix.component == 'scripts'
-              name: Install uv (with `.python-version` file)
+            - name: Install uv (with `.python-version` file)
               uses: astral-sh/setup-uv@v10.3.0
               with:
                 enable-cache: true
@@ -231,17 +204,20 @@ jobs:
               run: |  # zizmor: ignore[template-injection]
                 if [ "${{matrix.component}}" == "package" ]; then
                     FILES=("typed_classproperties/")
+                    ARGS=("--python-version" "${{matrix.python-version}}")
                 elif [ "${{matrix.component}}" == "scripts" ]; then
                     FILES=("hatch_build.custom.py")
+                    ARGS=()
                 elif [ "${{matrix.component}}" == "tests" ]; then
                     FILES=("tests.py")
+                    ARGS=("--python-version" "${{matrix.python-version}}")
                 else
                     echo "Error: Unknown matrix.component value: '${{matrix.component}}'" >&2
                     exit 1
                 fi
 
                 for FILE in "${FILES[@]}"; do
-                  uv run -- ty check "$FILE" --output-format=github --error-on-warning
+                  uv run -- ty check "$FILE" --output-format=github --error-on-warning "${ARGS[@]}"
                 done
 
     pre-commit-PUSH:  # yamllint disable-line rule:key-ordering
@@ -508,4 +484,5 @@ jobs:
                 RELEASE_REPOSITORY: ${{github.repository}}
                 RELEASE_TAG: ${{github.ref_name}}
               run: gh release create "${RELEASE_TAG}" dist/** --repo "${RELEASE_REPOSITORY}" --verify-tag
-                --generate-notes
+                --generate-notes --notes "$(git tag -l --format='%(contents:subject)%0a%0a%(contents:body)'
+                "${RELEASE_TAG}")"
