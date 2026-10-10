@@ -255,6 +255,12 @@ jobs:
             UV_NO_PROJECT: true
             UV_NO_SYNC: true
             UV_PYTHON_DOWNLOADS: never
+
+        if: |
+            always()
+            && needs.uv-check.result == 'success'
+            && needs.build.result == 'success'
+
         name: Run test suite with pytest
         needs: [uv-check, build]
         runs-on: ubuntu-latest
