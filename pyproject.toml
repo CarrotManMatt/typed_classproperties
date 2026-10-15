@@ -226,7 +226,9 @@ line-width = 95
 
 [tool.uv]
 default-groups = ["dev"]
-no-binary-package = ["typed_classproperties"]
+no-binary-package = [
+    "typed_classproperties"  # TODO: Remove explicit `no-binary-package` for current project once https://github.com/astral-sh/uv/issues/17416 is resolved
+]
 no-build = true
 package = true
 required-version = ">=0.11.20"
