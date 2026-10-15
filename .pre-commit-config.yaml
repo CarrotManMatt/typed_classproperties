@@ -5,7 +5,7 @@ default_stages: [pre-commit, pre-merge-commit, manual]
 
 repos:
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.13.0
+      rev: 0.13.1
       hooks:
         - id: uv-lock
         - id: uv-audit
@@ -21,7 +21,7 @@ repos:
         - id: codespell
 
     - repo: https://github.com/tombi-toml/tombi-pre-commit
-      rev: v1.8.0
+      rev: v1.8.2
       hooks:
         - exclude: \A.+\.lock\Z
           id: tombi-format
@@ -40,7 +40,7 @@ repos:
           args: [-pyflakes=]
 
     - repo: https://github.com/zizmorcore/zizmor-pre-commit
-      rev: v1.30.1
+      rev: v1.31.0
       hooks:
         - id: zizmor
           args: [--no-progress, --fix, --persona=auditor]
@@ -52,7 +52,7 @@ repos:
           args: [--strict]
 
     - repo: https://github.com/renovatebot/pre-commit-hooks
-      rev: 44.149.2
+      rev: 44.164.2
       hooks:
         - id: renovate-config-validator
           args: [--strict]
