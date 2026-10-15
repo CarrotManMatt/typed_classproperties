@@ -12,11 +12,13 @@ if sys.version_info >= (3, 12):
 else:
     from typing_extensions import override
 
+import typed_classproperties
 from typed_classproperties import cached_classproperty, classproperty
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+raise RuntimeError(str(typed_classproperties.__file__))  # noqa: TID255
 
 T_class = TypeVar("T_class")
 T_func = TypeVar("T_func")
