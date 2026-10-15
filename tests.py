@@ -1,3 +1,4 @@
+# ruff: noqa: TRY003
 """Full test suite for 'typed_classproperties' library."""
 
 __all__: "Sequence[str]" = ("TestCachedClassProperty", "TestClassProperty")
@@ -18,7 +19,7 @@ from typed_classproperties import cached_classproperty, classproperty
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-raise RuntimeError(str(typed_classproperties.__file__))  # noqa: TID255
+raise RuntimeError(f"{sys.path}\n{typed_classproperties.__file__}")  # noqa: EM102, TID255
 
 T_class = TypeVar("T_class")
 T_func = TypeVar("T_func")
