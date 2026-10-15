@@ -17,8 +17,8 @@ jobs:
     pyroma:
         env:
             SKIP_MISSING_DOWNDOC: "True"
-            UV_FROZEN: true
-            UV_NO_SYNC: true
+            UV_FROZEN: "true"
+            UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
         name: Check conformance to packaging best practises with pyroma
         runs-on: ubuntu-latest

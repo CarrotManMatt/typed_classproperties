@@ -14,8 +14,8 @@ jobs:
     pyrefly:
         env:
             SKIP_MISSING_DOWNDOC: "True"
-            UV_FROZEN: true
-            UV_NO_SYNC: true
+            UV_FROZEN: "true"
+            UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
         name: Type-check code with Pyrefly
         runs-on: ubuntu-latest

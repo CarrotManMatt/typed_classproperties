@@ -37,8 +37,8 @@ jobs:
     flake8:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "True"
-            UV_FROZEN: true
-            UV_NO_SYNC: true
+            UV_FROZEN: "true"
+            UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
         name: Lint code with Flake8
         needs: [uv-check]
@@ -69,8 +69,8 @@ jobs:
     mypy:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "True"
-            UV_FROZEN: true
-            UV_NO_SYNC: true
+            UV_FROZEN: "true"
+            UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
         name: Type-check code with mypy
         needs: [uv-check]
@@ -151,8 +151,8 @@ jobs:
     ty:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "True"
-            UV_FROZEN: true
-            UV_NO_SYNC: true
+            UV_FROZEN: "true"
+            UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
         name: Type-check code with ty
         needs: [uv-check]
@@ -251,9 +251,9 @@ jobs:
     pytest:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "True"
-            UV_FROZEN: true
-            UV_NO_INSTALL_PROJECT: true
-            UV_NO_SYNC: true
+            UV_FROZEN: "true"
+            UV_NO_INSTALL_PROJECT: "true"
+            UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
 
         name: Run test suite with pytest
@@ -282,8 +282,7 @@ jobs:
                 python-version: ${{matrix.python-version}}
 
             - name: Install pytest from locked dependencies
-              run: |
-                uv sync --no-group dev --group test
+              run: uv sync --no-group dev --group test
 
             - id: store-hashed-python-version
               name: Store hashed Python version
@@ -300,8 +299,8 @@ jobs:
 
     ruff-lint:  # yamllint disable-line rule:key-ordering
         env:
-            UV_FROZEN: true
-            UV_NO_SYNC: true
+            UV_FROZEN: "true"
+            UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
         name: Lint code with ruff
         runs-on: ubuntu-latest
@@ -341,8 +340,8 @@ jobs:
     build:  # yamllint disable-line rule:key-ordering
         env:
             SKIP_MISSING_DOWNDOC: "False"
-            UV_FROZEN: true
-            UV_NO_SYNC: true
+            UV_FROZEN: "true"
+            UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
 
         if: |
