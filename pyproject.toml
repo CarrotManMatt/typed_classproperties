@@ -25,7 +25,7 @@ classifiers = [
     "Topic :: Utilities",
     "Typing :: Typed",
 ]
-dependencies = ["typing-extensions; python_version < '3.12'"]
+dependencies = ["typing-extensions>=4.5.0; python_version < '3.12'"]
 dynamic = ["description", "readme", "version"]
 
 [project.urls]
@@ -57,7 +57,7 @@ requires = [
     "hatch-docstring-description",
     "hatch-vcs",
     "hatchling",
-    "typing-extensions; python_version < '3.12'",
+    "typing-extensions>=4.5.0; python_version < '3.12'",
 ]
 build-backend = "hatchling.build"
 
