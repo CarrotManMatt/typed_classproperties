@@ -217,9 +217,6 @@ max-returns = 10
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
 
-[tool.ruff.per-file-target-version]
-"**/hatch_build*.py" = "py315"
-
 [tool.tombi.format.rules]
 indent-width = 4
 line-width = 95
