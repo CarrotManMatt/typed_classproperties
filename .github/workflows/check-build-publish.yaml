@@ -252,7 +252,7 @@ jobs:
         env:
             SKIP_MISSING_DOWNDOC: "True"
             UV_FROZEN: "true"
-            UV_NO_INSTALL_PROJECT: "true"
+            UV_NO_INSTALL_PROJECT: "true"  # NOTE: The build script only supports Python 3.15, though somehow the project is still importable and tests work correctly 🤷
             UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
 
