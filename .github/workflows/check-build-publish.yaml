@@ -380,7 +380,7 @@ jobs:
               run: uv tool install Pydowndoc-bin
 
             - name: Build package into sdist & wheel
-              run: uv build --no-sources --build
+              run: uv build --no-sources
 
             - name: Save build artifacts
               uses: actions/upload-artifact@v7
