@@ -221,7 +221,7 @@ jobs:
                 done
 
     pre-commit-PUSH:  # yamllint disable-line rule:key-ordering
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
 
         name: Verify pre-commit hooks (push)
         uses: $/.github/workflows/autofix-pre-commit.yaml
