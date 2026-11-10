@@ -1,4 +1,4 @@
-name: Type-check code using alternative type-checkers
+name: Type-check tests using alternative type-checkers
 
 "on":
     workflow_dispatch: ~
@@ -17,7 +17,7 @@ jobs:
             UV_FROZEN: "true"
             UV_NO_SYNC: "true"
             UV_PYTHON_DOWNLOADS: never
-        name: Type-check code with Pyrefly
+        name: Type-check tests with Pyrefly
         runs-on: ubuntu-latest
 
         strategy:
@@ -49,7 +49,7 @@ jobs:
               run: uv run -- pyrefly check tests.py
 
     pyright:
-        name: Type-check code with Pyright
+        name: Type-check tests with Pyright
         runs-on: ubuntu-latest
 
         strategy:
