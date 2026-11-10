@@ -85,13 +85,11 @@ path/to/venv/python -m pip install typed_classproperties
 
 [source,python]
 ----
-from typing import override
-
-from typed_classproperties import classproperty, cached_classproperty
+from typed_classproperties import classproperty, cached_classproperty, protect_classproperties
 
 
+@protect_classproperties
 class Foo:
-    @override
     def __init__(self, bar: str) -> None:
         self.bar: str = bar
 
@@ -105,7 +103,6 @@ assert Foo(bar="one").BAR == 1
 
 
 class CachedFoo:
-    @override
     def __init__(self, bar: str) -> None:
         self.bar: str = bar
 
