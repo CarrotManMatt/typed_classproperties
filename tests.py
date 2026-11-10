@@ -34,11 +34,11 @@ class Holder(Protocol[T_class]):  # ty: ignore[invalid-protocol]
     cached_prop_exec_count: "ClassVar[int]"
 
     @classproperty
-    def HELD_VALUE(cls: type["Self"]) -> T_class:  # noqa: N802
+    def HELD_VALUE(cls: type["Self"]) -> T_class:  # type: ignore[misc]  # noqa: N802
         ...
 
     @cached_classproperty
-    def CACHED_HELD_VALUE(cls: type["Self"]) -> T_class:  # noqa: N802
+    def CACHED_HELD_VALUE(cls: type["Self"]) -> T_class:  # type: ignore[misc]  # noqa: N802
         ...
 
 
@@ -53,12 +53,12 @@ class BaseTestClassProperty(abc.ABC):  # noqa: B024
 
             @classproperty
             @override
-            def HELD_VALUE(cls: type["Self"]) -> T_func:
+            def HELD_VALUE(cls: type["Self"]) -> T_func:  # type: ignore[misc]
                 return test_value
 
             @cached_classproperty
             @override
-            def CACHED_HELD_VALUE(cls: type["Self"]) -> T_func:
+            def CACHED_HELD_VALUE(cls: type["Self"]) -> T_func:  # type: ignore[misc]
                 cls.cached_prop_exec_count += 1
                 return test_value
 
@@ -96,7 +96,7 @@ class TestClassProperty(BaseTestClassProperty):
         holder_class: type[Holder[int]] = self._get_cls_definition(3000)
 
         with pytest.raises(AttributeError, match=r"\Aclassproperty '.+ has no setter\Z"):
-            holder_class.HELD_VALUE = 4000  # type: ignore[ty:invalid-assignment]
+            holder_class.HELD_VALUE = 4000  # type: ignore[assignment]  # ty: ignore[invalid-assignment]  # noqa: CAR123
 
     def test_classproperty_not_writeable_on_instance(self) -> None:
         """Test that a classproperty cannot be overwritten on a class."""
@@ -113,15 +113,15 @@ class TestCachedClassProperty(BaseTestClassProperty):
         """Test that a `cached_classproperty` correctly returns its value from a class."""
         created_class: type[Holder[int]] = self._get_cls_definition(3000)
         assert created_class.cached_prop_exec_count == 0
-        assert created_class.CACHED_HELD_VALUE == 3000  # ty: ignore[unresolved-attribute]
-        assert created_class.cached_prop_exec_count == 1
+        assert created_class.CACHED_HELD_VALUE == 3000  # type: ignore[comparison-overlap]  # ty: ignore[unresolved-attribute]  # noqa: CAR123
+        assert created_class.cached_prop_exec_count == 1  # type: ignore[unreachable]
 
     def test_cached_classproperty_executed_once(self) -> None:
         """Test that a `cached_classproperty` correctly returns the cached value."""
         created_class: type[Holder[int]] = self._get_cls_definition(4000)
         assert created_class.cached_prop_exec_count == 0
-        assert created_class.CACHED_HELD_VALUE == 4000  # ty: ignore[unresolved-attribute]
-        assert created_class.cached_prop_exec_count == 1
+        assert created_class.CACHED_HELD_VALUE == 4000  # type: ignore[comparison-overlap]  # ty: ignore[unresolved-attribute]  # noqa: CAR123
+        assert created_class.cached_prop_exec_count == 1  # type: ignore[unreachable]
         assert created_class.CACHED_HELD_VALUE == 4000
         assert created_class.cached_prop_exec_count == 1
 
@@ -129,8 +129,8 @@ class TestCachedClassProperty(BaseTestClassProperty):
         """Test that removing a `cached_classproperty`'s cached value functions correctly."""
         created_class: type[Holder[int]] = self._get_cls_definition(5000)
         assert created_class.cached_prop_exec_count == 0
-        assert created_class.CACHED_HELD_VALUE == 5000  # ty: ignore[unresolved-attribute]
-        assert created_class.cached_prop_exec_count == 1
+        assert created_class.CACHED_HELD_VALUE == 5000  # type: ignore[comparison-overlap]  # ty: ignore[unresolved-attribute]  # noqa: CAR123
+        assert created_class.cached_prop_exec_count == 1  # type: ignore[unreachable]
         cached_classproperty.remove_cached_value(created_class, "CACHED_HELD_VALUE")
         assert created_class.CACHED_HELD_VALUE == 5000
         assert created_class.cached_prop_exec_count == 2
@@ -164,8 +164,8 @@ class TestCachedClassProperty(BaseTestClassProperty):
         assert created_instance.cached_prop_exec_count == 1
 
         assert created_class.cached_prop_exec_count == 1
-        assert created_class.CACHED_HELD_VALUE == 9000
-        assert created_class.cached_prop_exec_count == 1
+        assert created_class.CACHED_HELD_VALUE == 9000  # type: ignore[comparison-overlap]
+        assert created_class.cached_prop_exec_count == 1  # type: ignore[unreachable]
 
         created_instance = created_class()
         assert created_instance.cached_prop_exec_count == 1
@@ -179,7 +179,7 @@ class TestCachedClassProperty(BaseTestClassProperty):
         with pytest.raises(
             AttributeError, match=r"\Acached_classproperty '.+ has no setter\Z"
         ):
-            holder_class.CACHED_HELD_VALUE = 4000  # type: ignore[ty:invalid-assignment]
+            holder_class.CACHED_HELD_VALUE = 4000  # type: ignore[assignment]  # ty: ignore[invalid-assignment]  # noqa: CAR123
 
     def test_classproperty_not_writeable_on_instance(self) -> None:
         """Test that a classproperty cannot be overwritten on a class."""

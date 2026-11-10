@@ -47,11 +47,11 @@ class classproperty(_ClassPropertyBase, property, Generic[T_value]):
     Credit to Denis Rhyzhkov on Stackoverflow: https://stackoverflow.com/a/13624858/1280629
     """
 
-    def __init__(self, func: "Callable[..., T_value]", /) -> None:  # type: ignore[explicit-any]
+    def __init__(self, func: "Callable[..., T_value]", /) -> None:
         """Initialise the classproperty object."""
         super().__init__(func)
 
-    @overload  # type: ignore[override]
+    @overload
     def __get__(self, owner_self: None, owner_cls: type, /) -> T_value: ...
 
     @overload
@@ -105,7 +105,7 @@ class cached_classproperty(
     as this will completely remove the cached value and the cached property setter.
     """
 
-    def __init__(self, func: "Callable[..., T_value]", /) -> None:  # type: ignore[explicit-any]
+    def __init__(self, func: "Callable[..., T_value]", /) -> None:
         super().__init__(func)
         self._cache: dict[type, T_value] = {}
 
@@ -253,7 +253,7 @@ def protect_classproperties(cls: type[T]) -> type[T]:
     for slot in cast("Iterable[str]", cls.__dict__.get("__slots__", ())):
         cls_dict.pop(slot, None)
 
-    meta: type = _ProtectedClassPropertiesMeta._merge_with_existing_meta(cls.__class__)  # type: ignore[arg-type] # noqa: SLF001
+    meta: type = _ProtectedClassPropertiesMeta._merge_with_existing_meta(cls.__class__)  # noqa: SLF001
     cls_dict["__wrapped__"] = cls
 
     return cast("type[T]", meta(cls.__name__, cls.__bases__, cls_dict))
