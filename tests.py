@@ -70,7 +70,7 @@ class TestClassProperty(BaseTestClassProperty):
 
     def test_classproperty_class(self) -> None:
         """Test that a classproperty correctly returns its value from a class."""
-        assert self._get_cls_definition(1000).HELD_VALUE == 1000  # ty: ignore[unresolved-attribute]
+        assert self._get_cls_definition(1000).HELD_VALUE == 1000  # ty: ignore[missing-attribute]
 
     def test_classproperty_instance(self) -> None:
         """Test that a classproperty correctly returns its value from an instance."""
@@ -113,14 +113,14 @@ class TestCachedClassProperty(BaseTestClassProperty):
         """Test that a `cached_classproperty` correctly returns its value from a class."""
         created_class: type[Holder[int]] = self._get_cls_definition(3000)
         assert created_class.cached_prop_exec_count == 0
-        assert created_class.CACHED_HELD_VALUE == 3000  # type: ignore[comparison-overlap]  # ty: ignore[unresolved-attribute]  # noqa: CAR123
+        assert created_class.CACHED_HELD_VALUE == 3000  # type: ignore[comparison-overlap]  # ty: ignore[missing-attribute]  # noqa: CAR123
         assert created_class.cached_prop_exec_count == 1  # type: ignore[unreachable]
 
     def test_cached_classproperty_executed_once(self) -> None:
         """Test that a `cached_classproperty` correctly returns the cached value."""
         created_class: type[Holder[int]] = self._get_cls_definition(4000)
         assert created_class.cached_prop_exec_count == 0
-        assert created_class.CACHED_HELD_VALUE == 4000  # type: ignore[comparison-overlap]  # ty: ignore[unresolved-attribute]  # noqa: CAR123
+        assert created_class.CACHED_HELD_VALUE == 4000  # type: ignore[comparison-overlap]  # ty: ignore[missing-attribute]  # noqa: CAR123
         assert created_class.cached_prop_exec_count == 1  # type: ignore[unreachable]
         assert created_class.CACHED_HELD_VALUE == 4000
         assert created_class.cached_prop_exec_count == 1
@@ -129,7 +129,7 @@ class TestCachedClassProperty(BaseTestClassProperty):
         """Test that removing a `cached_classproperty`'s cached value functions correctly."""
         created_class: type[Holder[int]] = self._get_cls_definition(5000)
         assert created_class.cached_prop_exec_count == 0
-        assert created_class.CACHED_HELD_VALUE == 5000  # type: ignore[comparison-overlap]  # ty: ignore[unresolved-attribute]  # noqa: CAR123
+        assert created_class.CACHED_HELD_VALUE == 5000  # type: ignore[comparison-overlap]  # ty: ignore[missing-attribute]  # noqa: CAR123
         assert created_class.cached_prop_exec_count == 1  # type: ignore[unreachable]
         cached_classproperty.remove_cached_value(created_class, "CACHED_HELD_VALUE")
         assert created_class.CACHED_HELD_VALUE == 5000

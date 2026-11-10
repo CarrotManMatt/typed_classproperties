@@ -110,7 +110,7 @@ class cached_classproperty(
         self._cache: dict[type, T_value] = {}
 
     @override
-    def __set_name__(self, owner: type, name: str, /) -> None:  # ty: ignore[invalid-method-override]
+    def __set_name__(self, owner: type, name: str, /) -> None:  # ty: ignore[lost-keyword-for-regular-parameter]
         """Store the lookup key of the cached-classproperty."""
         super().__set_name__(owner, name)
 
@@ -140,7 +140,7 @@ class cached_classproperty(
     def __get__(self, instance: object, owner: type | None = None, /) -> T_value: ...
 
     @override
-    def __get__(self, instance: object, owner: type | None = None, /) -> "Self | T_value":  # ty: ignore[invalid-method-override]
+    def __get__(self, instance: object, owner: type | None = None, /) -> "Self | T_value":  # ty: ignore[lost-keyword-for-regular-parameter]
         """Retrieve the value of the property."""
         if self.attrname is None:
             NO_NAME_SET_MESSAGE: Final[str] = (
@@ -193,7 +193,7 @@ class cached_classproperty(
                 return
 
     @override
-    def __set__(self, obj: object, value: object, /) -> None:  # ty: ignore[invalid-method-override]
+    def __set__(self, obj: object, value: object, /) -> None:  # ty: ignore[lost-keyword-for-regular-parameter]
         self._raise_bad_descriptor_error(
             property_name=getattr(self, "attrname", None),
             owner_name=type(obj).__qualname__ if obj is not None else None,
